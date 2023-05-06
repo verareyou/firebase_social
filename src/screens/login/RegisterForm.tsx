@@ -51,9 +51,9 @@ const RegisterForm = () => {
                 })
                 console.log(res)
 
-                if (res) {
-                    dispatch(SetUser(res))
-                }
+                // if (res) {
+                //     dispatch(SetUser(res))
+                // }
             } else {
                 const res = await register({
                     name: values.name,
@@ -63,9 +63,11 @@ const RegisterForm = () => {
                     image: values.profileImage
                 })
 
-                if (res) {
-                    dispatch(SetUser(res))
-                }
+                setIsLogin(true)
+
+                // if (res) {
+                //     dispatch(SetUser(res))
+                // }
             }
 
 
@@ -131,7 +133,7 @@ const RegisterForm = () => {
                                 type="text"
                                 id="username"
                                 name="username"
-                                onChange={ async (event: any) => {
+                                onChange={async (event: any) => {
                                     setFieldValue("username", event.currentTarget.value.replace(/\s/g, ''))
                                     const res = await isSameUsername(event.currentTarget.value.replace(/\s/g, ''))
                                     SetInvalidUsername(res)
@@ -143,7 +145,7 @@ const RegisterForm = () => {
                                 name="username"
                                 className="text-red-500 text-sm mt-1"
                             />
-                            
+
                             <div className={` 
                             duration-300 ease-in-out transition-all
                             ${invalidUsername ? 'block' : 'hidden'}
@@ -196,8 +198,11 @@ const RegisterForm = () => {
                                 </span>
                             </h1>
                         </div>
-                        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Register
+                        <button
+                            disabled={isLogin ? false : invalidUsername}
+                            type="submit"
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            {isLogin ? "Login" : "Register"}
                         </button>
                     </Form>
                 )}

@@ -6,31 +6,10 @@ import { ResizeFile } from "../utils/ResizeImage";
 import { useDispatch } from "react-redux";
 import { SetUser } from "../redux/Slice";
 import { string } from "yup";
+import { RegisterProps, UserProps } from "../models/UserModel";
 
 
 // register and create user
-
-interface RegisterProps {
-    name: string;
-    username: string;
-    email: string;
-    password: string;
-    image: File;
-}
-
-interface UserProps {
-    uid: string;
-    email: string;
-    name: string;
-    username: string;
-    profileImage?: string;
-    createdAt: number;
-    bio: string;
-    website: string;
-    Followers: string[];
-    Following: string[];
-    Posts: string[];
-}
 
 export const register = async ({ name, username, email, password, image }: RegisterProps) => {
     console.log("Registering user...");
@@ -47,12 +26,12 @@ export const register = async ({ name, username, email, password, image }: Regis
         if (user) {
 
             const resizeImage = await ResizeFile(image);
-            
+
             const uploadRef = ref(storage, `images/${user.uid}/profile.jpg`);
             const uploaded = await uploadBytes(uploadRef, resizeImage as File);
 
             const profileImageUrl = await getDownloadURL(uploaded.ref);
-            
+
             const userData: UserProps = {
                 uid: user.uid,
                 email,
@@ -106,6 +85,28 @@ export const login = async ({ email, password }: { email: string; password: stri
     }
 }
 
+// get user by uid
+
+export const getUserByUid = async (uid: string) => {
+    console.log("Getting user by uid...");
+
+    if (!uid) return null;
+
+    try {
+        const userRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userRef);
+
+        const userData = docSnap.data() as UserProps;
+
+        console.log("User found successfully!");
+
+        return userData;
+    } catch (error) {
+        console.error("Error getting user", error);
+        return null;
+    }
+}
+
 // logout user
 
 export const logout = async () => {
@@ -124,9 +125,9 @@ export const logout = async () => {
 // sign in with google
 
 export const signInWithGoogle = async () => {
-    try{
+    try {
         const provider = new GoogleAuthProvider();
-        
+
         const res = await signInWithPopup(auth, provider);
 
         const { user } = res;
@@ -195,9 +196,9 @@ export const updateProfile = async ({ name, username, bio, website, image }: Upd
             const resizeImage = await ResizeFile(image);
 
             // delete old profile image
-            
+
             const oldProfileImageRef = ref(storage, user.profileImage);
-            
+
             const uploadRef = ref(storage, `images/${user.uid}/profile.jpg`);
             const uploaded = await uploadBytes(uploadRef, resizeImage as File);
 

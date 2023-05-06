@@ -7,6 +7,8 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { auth } from '../config/firebase'
 import { SetAuth, SetUser } from '../redux/Slice'
+import { getUserByUid } from '../services/Auth'
+import { AuthStateListener } from '../redux/AuthStateListener'
 
 // import { store, persistor } from '../redux/store'
 
@@ -17,18 +19,7 @@ const AppRouter = () => {
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            console.log(user)
-            if (user) {
-                dispatch(SetAuth(true))
-            } else {
-                dispatch(SetUser(null))
-            }
-        })
-
-        return unsubscribe
-    }, [])
+    AuthStateListener();
     return (
             <Router>
                 <Routes>
