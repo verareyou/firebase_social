@@ -9,11 +9,11 @@ const LoginRegisterPage = () => {
   const {isAuth, name, user} = useSelector((state: any) => state)
   const navigate = useNavigate()
 
-  useEffect(() => {
-  if( isAuth ) {
-    navigate('/')
-  }
-  }, [isAuth])
+  // useEffect(() => {
+  // if( isAuth ) {
+  //   navigate('/')
+  // }
+  // }, [isAuth])
 
   return (
     <div className=' h-full text-white '>

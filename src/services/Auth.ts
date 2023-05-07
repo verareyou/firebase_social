@@ -2,7 +2,6 @@ import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase
 import { auth, db, storage } from "../config/firebase";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
-import { ResizeFile } from "../utils/ResizeImage";
 import { useDispatch } from "react-redux";
 import { SetUser } from "../redux/Slice";
 import { string } from "yup";
@@ -25,10 +24,9 @@ export const register = async ({ name, username, email, password, image }: Regis
 
         if (user) {
 
-            const resizeImage = await ResizeFile(image);
 
-            const uploadRef = ref(storage, `images/${user.uid}/profile.jpg`);
-            const uploaded = await uploadBytes(uploadRef, resizeImage as File);
+            const uploadRef = ref(storage, `images/profiles/${username}`);
+            const uploaded = await uploadBytes(uploadRef, image as File);
 
             const profileImageUrl = await getDownloadURL(uploaded.ref);
 
@@ -81,28 +79,6 @@ export const login = async ({ email, password }: { email: string; password: stri
         }
     } catch (error) {
         console.error("Error logging in user", error);
-        return null;
-    }
-}
-
-// get user by uid
-
-export const getUserByUid = async (uid: string) => {
-    console.log("Getting user by uid...");
-
-    if (!uid) return null;
-
-    try {
-        const userRef = doc(db, "users", uid);
-        const docSnap = await getDoc(userRef);
-
-        const userData = docSnap.data() as UserProps;
-
-        console.log("User found successfully!");
-
-        return userData;
-    } catch (error) {
-        console.error("Error getting user", error);
         return null;
     }
 }
@@ -174,56 +150,3 @@ export const signInWithGoogle = async () => {
     }
 }
 
-// update user profile
-
-interface UpdateProfileProps {
-    name: string;
-    username: string;
-    bio: string;
-    website: string;
-    image: File;
-}
-
-export const updateProfile = async ({ name, username, bio, website, image }: UpdateProfileProps, user: any) => {
-    console.log("Updating user profile...");
-
-    if (!name || !username || !bio || !website || !image || !user) return null;
-
-    try {
-        // const user = auth.currentUser;
-        if (user) {
-
-            const resizeImage = await ResizeFile(image);
-
-            // delete old profile image
-
-            const oldProfileImageRef = ref(storage, user.profileImage);
-
-            const uploadRef = ref(storage, `images/${user.uid}/profile.jpg`);
-            const uploaded = await uploadBytes(uploadRef, resizeImage as File);
-
-            const profileImageUrl = await getDownloadURL(uploaded.ref);
-
-            const userRef = doc(db, "users", user.uid);
-            await setDoc(userRef, {
-                name,
-                username,
-                bio,
-                website,
-                profileImage: profileImageUrl,
-            }, { merge: true });
-
-            console.log("User profile updated successfully!");
-
-            const dispatch = useDispatch();
-            dispatch(
-                SetUser({ ...user, name, username, bio, website, profileImage: uploadRef.fullPath })
-            );
-
-            return true;
-        }
-    } catch (error) {
-        console.error("Error updating user profile", error);
-        return null;
-    }
-}

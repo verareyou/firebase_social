@@ -2,17 +2,22 @@ import React, { useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { login, register } from '../../services/Auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SetUser } from '../../redux/Slice';
-import { isSameUsername } from '../../services/Validations';
+import { isEmailExists, isSameUsername } from '../../services/Validations';
+import { useNavigate } from 'react-router-dom';
 
 
 const RegisterForm = () => {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const {isAuth} = useSelector((state: any) => state)
 
     const [isLogin, setIsLogin] = useState(true)
     const [invalidUsername, SetInvalidUsername] = useState(false)
+    const [invalidEmail, SetInvalidEmail] = useState(false)
 
     const SignInitialValues = {
         name: '',
@@ -51,9 +56,9 @@ const RegisterForm = () => {
                 })
                 console.log(res)
 
-                // if (res) {
-                //     dispatch(SetUser(res))
-                // }
+                if (res) {
+                    navigate('/')
+                }
             } else {
                 const res = await register({
                     name: values.name,
@@ -65,9 +70,9 @@ const RegisterForm = () => {
 
                 setIsLogin(true)
 
-                // if (res) {
-                //     dispatch(SetUser(res))
-                // }
+                if (res) {
+                    navigate('/')
+                }
             }
 
 
@@ -86,7 +91,7 @@ const RegisterForm = () => {
                 {({ values, errors, touched, setFieldValue }) => (
                     <Form className="max-w-md mx-auto text-white">
 
-
+                        <h1 className="text-3xl font-bold mb-4">{isLogin ? "Login" : "Register"} {isAuth ? 'true' : 'false'} </h1>
 
                         <div className={' previewImage flex flex-col justify-center items-center ' +
                             (isLogin && 'hidden')
@@ -94,8 +99,9 @@ const RegisterForm = () => {
                             <img
                                 src={values.profileImage ? URL.createObjectURL(values.profileImage) : "https://via.placeholder.com/300"}
                                 alt="profile"
-                                className="rounded bg-transparent-full w-32 h-32 object-cover" />
+                                className="rounded-full bg-transparent-full w-32 h-32 object-cover" />
                         </div>
+
                         <div className={`mb-4  ${isLogin && 'hidden'}`}>
                             <label htmlFor="profileImage" className="block text-gray-700 font-bold mb-2">Profile Image</label>
                             <input
@@ -113,6 +119,7 @@ const RegisterForm = () => {
                                 className="text-red-500 text-sm mt-1"
                             />
                         </div>
+
                         <div className={`mb-4 ${isLogin && 'hidden'} `}>
                             <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Name</label>
                             <Field
@@ -127,6 +134,7 @@ const RegisterForm = () => {
                                 className="text-red-500 text-sm mt-1"
                             />
                         </div>
+
                         <div className={`mb-4 ${isLogin && 'hidden'}`}>
                             <label htmlFor="username" className="block text-gray-700 font-bold mb-2">Username</label>
                             <input
@@ -154,15 +162,28 @@ const RegisterForm = () => {
                             </div>
 
                         </div>
+
+
                         <div className={`mb-4`}>
                             <label htmlFor="email" className="block text-gray-700 font-bold mb-2">Email</label>
                             <Field
                                 type="email"
                                 id="email"
                                 name="email"
+                                onChange={async (event: any) => {
+                                    setFieldValue("email", event.currentTarget.value)
+                                    if(isLogin) return
+                                    const res = await isEmailExists(event.currentTarget.value)
+                                    SetInvalidEmail(res)
+                                }}
                                 className={`border rounded bg-transparent w-full py-2 px-3 ${touched.email && errors.email ? "border-red-500" : ""}`}
                             />
-
+                            <div className={` 
+                            duration-300 ease-in-out transition-all
+                            ${invalidEmail && !isLogin ? 'block' : 'hidden'}
+                            `}>
+                                <span className="text-red-500 text-sm mt-1">Email already exists</span>
+                            </div>
                             <ErrorMessage component="div" name="email" className="text-red-500 text-sm mt-1" />
                         </div>
                         <div className={`mb-4`}>
@@ -171,8 +192,11 @@ const RegisterForm = () => {
                                 type="password"
                                 id="password"
                                 name="password"
+
                                 className={`border rounded bg-transparent w-full py-2 px-3 ${touched.password && errors.password ? "border-red-500" : ""}`} />
                             <ErrorMessage component="div" name="password" className="text-red-500 text-sm mt-1" />
+
+
                         </div>
                         <div className={`mb-4 ${isLogin && 'hidden'}`}>
                             <label htmlFor="confirmPassword" className="block text-gray-700 font-bold mb-2">Confirm Password</label>
