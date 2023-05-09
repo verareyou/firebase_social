@@ -1,20 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { login, register } from '../../services/Auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { SetUser } from '../../redux/Slice';
 import { isEmailExists, isSameUsername } from '../../services/Validations';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
+import userpng from '../../assets/Icons/user.png';
+import { CompressImage } from '../../utils/Operations';
 
 const RegisterForm = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const {isAuth} = useSelector((state: any) => state)
+    const { isAuth, theme } = useSelector((state: any) => state)
 
+    const [loading, setLoading] = useState('')
     const [isLogin, setIsLogin] = useState(true)
     const [invalidUsername, SetInvalidUsername] = useState(false)
     const [invalidEmail, SetInvalidEmail] = useState(false)
@@ -47,6 +50,10 @@ const RegisterForm = () => {
         password: '',
     }
 
+    useEffect(() => {
+        isAuth && navigate('/')
+    }, [isAuth])
+
     const onSubmit = async (values: any) => {
         try {
             if (isLogin) {
@@ -70,9 +77,9 @@ const RegisterForm = () => {
 
                 setIsLogin(true)
 
-                if (res) {
-                    navigate('/')
-                }
+                // if (res) {
+                //     navigate('/')
+                // }
             }
 
 
@@ -81,34 +88,83 @@ const RegisterForm = () => {
         }
     }
 
+    const motionProps = {
+        initial: {
+            opacity: 0,
+        },
+        animate: {
+            opacity: isLogin ? 0 : 1,
+            height: isLogin ? 0 : 'auto',
+            display: isLogin ? 'none' : '',
+        },
+        transition: {
+            duration: 0.2,
+        },
+    }
+
     return (
         <div>
+
+            <style>
+                {`
+                .fields:focus {
+                    border-color: ${theme.text};
+                }
+                .fields::placeholder {
+                    color: ${theme.lightText};
+                }
+                .fields {
+                    color: ${theme.text};
+                    border: 1px solid #${theme.lightBorder.split('#')[1]}};
+                    border-color: ${theme.text};
+
+                }
+                .fields:-webkit-autofill,
+                .fields:-webkit-autofill:hover,
+                .fields:-webkit-autofill:focus,
+                .fields:-webkit-autofill:active  {
+                    -webkit-box-shadow: 0 0 0 30px ${theme.background} inset !important;
+                }
+                
+                `}
+            </style>
+
             <Formik
                 initialValues={isLogin ? LoginInitialValues : SignInitialValues}
                 validationSchema={isLogin ? LoginValidationSchema : SignupValidationSchema}
                 onSubmit={onSubmit}
             >
                 {({ values, errors, touched, setFieldValue }) => (
-                    <Form className="max-w-md mx-auto text-white">
+                    <Form className="max-w-md mx-auto flex w-[300px] duration-300 flex-col gap-4">
+                        <h1 className="text-3xl font-bold ">{isLogin ? "Login" : "Register"} </h1>
 
-                        <h1 className="text-3xl font-bold mb-4">{isLogin ? "Login" : "Register"} {isAuth ? 'true' : 'false'} </h1>
+                        { isAuth && <h1 className="text-3xl font-bold ">Already Logged In</h1>}
 
-                        <div className={' previewImage flex flex-col justify-center items-center ' +
-                            (isLogin && 'hidden')
-                        }>
+                        <motion.div
+                            {...motionProps}
+                            className={' previewImage flex flex-col justify-center items-center '
+                                // + (isLogin && 'hidden')
+                            }>
                             <img
-                                src={values.profileImage ? URL.createObjectURL(values.profileImage) : "https://via.placeholder.com/300"}
+                                src={values.profileImage ? URL.createObjectURL(values.profileImage) : userpng}
                                 alt="profile"
-                                className="rounded-full bg-transparent-full w-32 h-32 object-cover" />
-                        </div>
+                                className={` bg-transparent-full object-cover my-4 ${theme.mode === 'dark' && !values.profileImage && 'invert'} ${values.profileImage ? 'rounded-full h-32 w-32' : ' h-20 w-20'}  `}
+                            />
+                        </motion.div>
 
-                        <div className={`mb-4  ${isLogin && 'hidden'}`}>
-                            <label htmlFor="profileImage" className="block text-gray-700 font-bold mb-2">Profile Image</label>
+                        <motion.div
+                            {...motionProps}
+                            className={` duration-300 flex`}>
                             <input
+                                // select only image files
                                 type="file"
+                                accept="image/*"
+                                placeholder='Profile'
                                 id="profileImage"
                                 name="profileImage"
-                                className={`border rounded bg-transparent w-full py-2 px-3 ${touched.profileImage && errors.profileImage ? "border-red-500" : ""}`}
+                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 
+                                before:content-none
+                                ${touched.profileImage && errors.profileImage ? "border-red-500" : ""}`}
                                 onChange={(event: any) => {
                                     setFieldValue("profileImage", event.currentTarget.files[0])
                                 }}
@@ -118,35 +174,39 @@ const RegisterForm = () => {
                                 name="profileImage"
                                 className="text-red-500 text-sm mt-1"
                             />
-                        </div>
+                        </motion.div>
 
-                        <div className={`mb-4 ${isLogin && 'hidden'} `}>
-                            <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Name</label>
+                        <motion.div 
+                        {...motionProps}
+                        className={` `}>
                             <Field
                                 type="text"
+                                placeholder='Full Name'
                                 id="name"
                                 name="name"
-                                className={`border rounded bg-transparent w-full py-2 px-3 ${touched.name && errors.name ? "border-red-500" : ""}`}
+                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.name && errors.name ? "border-red-500" : ""}`}
                             />
                             <ErrorMessage
                                 component="div"
                                 name="name"
                                 className="text-red-500 text-sm mt-1"
                             />
-                        </div>
+                        </motion.div>
 
-                        <div className={`mb-4 ${isLogin && 'hidden'}`}>
-                            <label htmlFor="username" className="block text-gray-700 font-bold mb-2">Username</label>
+                        <motion.div
+                        {...motionProps}
+                        className={``}>
                             <input
                                 type="text"
+                                placeholder='Username'
                                 id="username"
                                 name="username"
                                 onChange={async (event: any) => {
-                                    setFieldValue("username", event.currentTarget.value.replace(/\s/g, ''))
-                                    const res = await isSameUsername(event.currentTarget.value.replace(/\s/g, ''))
+                                    setFieldValue("username", event.currentTarget.value)
+                                    const res = await isSameUsername(event.currentTarget.value)
                                     SetInvalidUsername(res)
                                 }}
-                                className={`border rounded bg-transparent w-full py-2 px-3 ${touched.username && errors.username ? "border-red-500" : ""}`}
+                                className={` fields border-1 rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.username && errors.username ? "border-red-500" : ""}`}
                             />
                             <ErrorMessage
                                 component="div"
@@ -154,29 +214,33 @@ const RegisterForm = () => {
                                 className="text-red-500 text-sm mt-1"
                             />
 
-                            <div className={` 
-                            duration-300 ease-in-out transition-all
-                            ${invalidUsername ? 'block' : 'hidden'}
-                            `}>
+                            <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: invalidUsername ? 1 : 0 }}
+                            className={` 
+                            duration-500 ease-in-out transition-all
+                            ${invalidUsername ? 'h-fit' : 'h-0'}
+                            `}
+                            >
                                 <span className="text-red-500 text-sm mt-1">Username already taken</span>
-                            </div>
+                            </motion.div>
 
-                        </div>
+                        </motion.div>
 
 
-                        <div className={`mb-4`}>
-                            <label htmlFor="email" className="block text-gray-700 font-bold mb-2">Email</label>
+                        <div className={``}>
                             <Field
                                 type="email"
+                                placeholder='Email'
                                 id="email"
                                 name="email"
                                 onChange={async (event: any) => {
                                     setFieldValue("email", event.currentTarget.value)
-                                    if(isLogin) return
+                                    if (isLogin) return
                                     const res = await isEmailExists(event.currentTarget.value)
                                     SetInvalidEmail(res)
                                 }}
-                                className={`border rounded bg-transparent w-full py-2 px-3 ${touched.email && errors.email ? "border-red-500" : ""}`}
+                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.email && errors.email ? "border-red-500" : ""}`}
                             />
                             <div className={` 
                             duration-300 ease-in-out transition-all
@@ -186,33 +250,35 @@ const RegisterForm = () => {
                             </div>
                             <ErrorMessage component="div" name="email" className="text-red-500 text-sm mt-1" />
                         </div>
-                        <div className={`mb-4`}>
-                            <label htmlFor="password" className="block text-gray-700 font-bold mb-2">Password</label>
+                        <div className={``}>
                             <Field
                                 type="password"
+                                placeholder='Password'
                                 id="password"
                                 name="password"
 
-                                className={`border rounded bg-transparent w-full py-2 px-3 ${touched.password && errors.password ? "border-red-500" : ""}`} />
+                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.password && errors.password ? "border-red-500" : ""}`} />
                             <ErrorMessage component="div" name="password" className="text-red-500 text-sm mt-1" />
 
 
                         </div>
-                        <div className={`mb-4 ${isLogin && 'hidden'}`}>
-                            <label htmlFor="confirmPassword" className="block text-gray-700 font-bold mb-2">Confirm Password</label>
+                        <motion.div 
+                        {...motionProps}
+                         className={``}>
                             <Field
                                 type="password"
+                                placeholder='Confirm Password'
                                 id="confirmPassword"
                                 name="confirmPassword"
-                                className={`border rounded bg-transparent w-full py-2 px-3 ${touched.confirmPassword && errors.confirmPassword ? "border-red-500" : ""}`}
+                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.confirmPassword && errors.confirmPassword ? "border-red-500" : ""}`}
                             />
                             <ErrorMessage
                                 component="div"
                                 name="confirmPassword"
                                 className="text-red-500 text-sm mt-1"
                             />
-                        </div>
-                        <div className={`mb-4`}>
+                        </motion.div>
+                        <div className={``}>
                             <h1>
                                 <span className="mr-2">{isLogin ? "Don't have an account?" : "Already have an account?"}</span>
                                 <span
@@ -223,9 +289,10 @@ const RegisterForm = () => {
                             </h1>
                         </div>
                         <button
-                            disabled={isLogin ? false : invalidUsername}
+                            disabled={isLogin ? false : invalidUsername || invalidEmail}
                             type="submit"
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            className={"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" + (isLogin ? "" : " disabled:opacity-50")}
+                        >
                             {isLogin ? "Login" : "Register"}
                         </button>
                     </Form>

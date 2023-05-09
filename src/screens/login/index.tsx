@@ -5,8 +5,8 @@ import RegisterForm from './RegisterForm'
 import { redirect, useNavigate } from 'react-router-dom'
 import { auth } from '../../config/firebase'
 
-const LoginRegisterPage = () => {
-  const {isAuth, name, user} = useSelector((state: any) => state)
+const LoginRegisterScreen = () => {
+  const { isAuth, name, user, theme } = useSelector((state: any) => state)
   const navigate = useNavigate()
 
   // useEffect(() => {
@@ -16,7 +16,13 @@ const LoginRegisterPage = () => {
   // }, [isAuth])
 
   return (
-    <div className=' h-full text-white '>
+    <div
+      style={{
+        backgroundColor: theme.background,
+        color: theme.text
+      }}
+      className=' duration-300 min-h-screen flex flex-col justify-center items-center'
+      >
       <RegisterForm />
       <div>
         {isAuth && auth.currentUser?.email}
@@ -25,4 +31,4 @@ const LoginRegisterPage = () => {
   )
 }
 
-export default LoginRegisterPage
+export default LoginRegisterScreen
