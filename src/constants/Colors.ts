@@ -1,10 +1,15 @@
 
 export const LightTheme = {
-    background: "#fff",
+    mode: "light",
+    background: "#e2e2e2",
+    secBackground: "#fff",
+    insecBackground: "#efefef",
     text: "#000",
+    lightText: "#888",
     primary: "#0095f6",
     secondary: "#262626",
-    borderColor: "#dbdbdb",
+    border: "#dbdbdb",
+    lightBorder: "#aaa",
     gray: "#8e8e8e",
     white: "#fff",
     black: "#000",  
@@ -17,11 +22,16 @@ export const LightTheme = {
 };
 
 export const DarkTheme = {
+    mode: "dark",
     background: "#000",
+    secBackground: "#111",
+    insecBackground: "#222",
     text: "#fff",
+    lightText: "#999",
     primary: "#0095f6",
     secondary: "#262626",
-    borderColor: "#dbdbdb",
+    border: "#999",
+    lightBorder: "#444",
     gray: "#8e8e8e",
     white: "#fff",
     black: "#000",

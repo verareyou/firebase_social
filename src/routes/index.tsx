@@ -3,9 +3,10 @@ import { useSelector } from 'react-redux'
 import { AuthStateListener } from '../redux/AuthStateListener'
 
 // Screens imports
-import HomePage from '../screens/home'
-import LoginRegisterPage from '../screens/login'
-import Profile from '../screens/home/ProfileScreen/Profile'
+import HomeScreen from '../screens/Home/HomeScreen'
+import LoginRegisterPage from '../screens/Login'
+import ProfileScreen from '../screens/Profile/ProfileScreen'
+import { ToggleTheme } from '../components'
 
 const AppRouter = () => {
     const { isAuth } = useSelector((state: any) => state)
@@ -13,9 +14,10 @@ const AppRouter = () => {
     AuthStateListener();
     return (
         <Router>
+            <ToggleTheme />
             <Routes>
-                <Route path="/" element={<HomePage />} />
-                    <Route path="/:id" element={<Profile />} />
+                <Route path="/" element={<HomeScreen />} />
+                <Route path="/:id" element={<ProfileScreen />} />
                 <Route path="/accounts" >
                     <Route path="login" element={<LoginRegisterPage />} />
                 </Route>
