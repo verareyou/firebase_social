@@ -2,45 +2,64 @@ import React, { useEffect, useState } from 'react'
 import { logout } from '../../services/Auth'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { LoadingScreen, SideBar } from '../../components'
+import Details from './Details'
+import { getUserByUsername } from '../../services/User'
 
 const ProfileScreen = () => {
     const Navigate = useNavigate()
     const { user, theme, isAuth } = useSelector((state: any) => state)
-    
+    const [loading, setLoading] = useState<boolean>(false)
+    const [CurrentUser, setCurrentUser] = useState<any>(false)
+    const [displayUser, setDisplayUser] = useState<any>({
+        username: '',
+        name: '',
+        profileImage: '',
+        bio: '',
+        website: '',
+        Posts: [],
+        Followers: [],
+        Following: []
+    })
+
     useEffect(() => {
         if (!isAuth) {
-            // console.log('not auth')
             Navigate('/accounts/login')
         }
     }, [isAuth])
-    const [followers, setFollowers] = useState([user.followers])
+
+    const fetchUser = async () => {
+        setLoading(true)
+        const newUser = await getUserByUsername(window.location.pathname.split('/')[1])
+        !newUser && Navigate('/')
+        if (newUser.username === user.username){
+            setCurrentUser(true)
+            setDisplayUser(newUser)
+        } else {
+            setDisplayUser(newUser)
+            setCurrentUser(false)
+        }
+        setLoading(false)
+    }
+    useEffect(() => {
+        fetchUser()
+    }, [])
+
     return (
-        <div 
-        style={{
-            backgroundColor: theme.background,
-        }}
-        className=''>
+        <div
+            style={{
+                backgroundColor: theme.background,
+                color: theme.text
+            }}
+            className=' min-h-screen flex '
+        >
+            <LoadingScreen loading={loading} icon='' />
+            <SideBar />
+            <Details
+                user={displayUser}
+                isCurrent={CurrentUser}
+            />
 
-            <div>
-                <h1>Profile</h1>
-                <img
-                    className='w-20 h-20 rounded-full'
-                    src={user.profileImage ? user.profileImage : 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'}
-                    alt="" />
-                <h2>{user.name}</h2>
-                <h2>{user.email}</h2>
-                <div
-                    className='flex flex-row'
-                >
-                    <h2>Followers: {followers.length - 1}</h2>
-                    <h2>Following: {user.following}</h2>
-                </div>
-            </div>
-
-            <button onClick={async () => {
-                await logout()
-                // Navigate('/accounts/login')
-            }}>Logout</button>
         </div>
     )
 }
