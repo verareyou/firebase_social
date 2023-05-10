@@ -1,9 +1,9 @@
 
 export const LightTheme = {
     mode: "light",
-    background: "#e2e2e2",
-    secBackground: "#fff",
-    insecBackground: "#efefef",
+    background: "#fff",
+    secBackground: "#f5f5f5",
+    insecBackground: "#f0f0f0",
     text: "#000",
     lightText: "#888",
     primary: "#0095f6",

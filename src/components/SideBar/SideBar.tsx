@@ -2,10 +2,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 
-const SideBar = ({ user, theme }: any) => {
+const SideBar = () => {
 
-    const { isAuth } = useSelector((state: any) => state)
-    
+    const { isAuth, user, theme } = useSelector((state: any) => state)
+
     const animate = {
         initial: {
             x: '-100vw'
@@ -18,7 +18,7 @@ const SideBar = ({ user, theme }: any) => {
                 bounce: 0.25,
                 when: 'beforeChildren',
                 staggerChildren: 0.2
-                
+
 
             }
         },
@@ -28,11 +28,12 @@ const SideBar = ({ user, theme }: any) => {
         <>
 
             {/* sidebar */}
+            
             <motion.div
-                variants={animate}
-                initial='initial'
-                animate='animate'
-                exit='exit'
+                // variants={animate}
+                // initial='initial'
+                // animate='animate'
+                // exit='exit'
 
                 style={{
                     backgroundColor: theme.secBackground,
@@ -40,7 +41,7 @@ const SideBar = ({ user, theme }: any) => {
                 }}
                 className={`fixed top-4 bottom-4 rounded-lg md:flex flex-col hidden left-4 box-border p-4  `}
             >
-
+                {/* {console.log(innerHeight)} */}
                 <div className='flex flex-col justify-center items-center'>
                     <div
                         className=' flex flex-col justify-center items-center w-full gap-2'

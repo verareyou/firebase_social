@@ -9,11 +9,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: all 0.15s ease;
+  /* transition: all 0.15s ease; */
 }
 
-body {
+body, #root  {
   font-family: 'Poppins', sans-serif;
   background: #131313;
-  
+  min-height: 100vh;
 }
+
