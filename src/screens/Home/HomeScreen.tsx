@@ -3,6 +3,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import Profile from '../Profile/ProfileScreen'
 import { useSelector } from 'react-redux'
 import { SideBar } from '../../components'
+import { NavigateProfile } from '../../utils/Operations'
 
 const HomeScreen = () => {
   const { user, theme, isAuth } = useSelector((state: any) => state)
@@ -21,12 +22,10 @@ const HomeScreen = () => {
         color: theme.text
       }}
     >
-      <SideBar
-        user={user}
-        theme={theme}
-      />
+      <SideBar /> 
       <h1>Home</h1>
       <h1 onClick={() => {
+        // NavigateProfile('himanshuu',user,navigate)
         navigate(`/${user.username}`)
       }} >
         profile
