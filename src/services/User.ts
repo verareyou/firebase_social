@@ -1,6 +1,6 @@
 
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db, storage } from "../config/firebase";
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { auth, db, storage } from "../config/firebase";
 import { ResizeFile } from "../utils/ResizeImage";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { UserProps } from "../models/UserModel";
@@ -26,6 +26,29 @@ export const getUserByUid = async (uid: string) => {
         return null;
     }
 }
+
+// get user by username
+
+export const getUserByUsername = async (username: string) => {
+    // console.log("Getting user by username...");
+
+    if (!username) return null;
+
+    try {
+        const querySnapshot = query(collection(db, "users"), where("username", "==", username));
+        const querySnapshotData = await getDocs(querySnapshot);
+
+        const userData = querySnapshotData.docs[0].data() as UserProps;
+
+        // console.log("User found successfully!");
+
+        return userData;
+    } catch (error) {
+        console.error("Error getting user", error);
+        return null;
+    }
+}
+
 
 // get all users
 
