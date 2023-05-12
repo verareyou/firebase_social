@@ -2,7 +2,11 @@ import { doc, updateDoc } from "firebase/firestore"
 import { db } from "../config/firebase"
 
 
-export const updateUserByField = async (user, field, value) => {
+export const updateUserByField = async (
+    user: any,
+    field: string,
+    value: string
+) => {
     
     console.log(user, field, value)
     try{

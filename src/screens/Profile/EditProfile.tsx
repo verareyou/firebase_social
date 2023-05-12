@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import EditField from '../../components/EditField'
 import { isSameUsername } from '../../services/Validations'
-import { Button } from '../../components'
+import { Button, LoadingScreen } from '../../components'
 import { updateProfile } from '../../services/User'
 import { SetUser } from '../../redux/Slice'
 
@@ -18,8 +18,11 @@ const EditProfile = ({ toggle }: any) => {
     const [website, setWebsite] = useState<string>(user.website)
     const [username, setUsername] = useState<string>(user.username)
     const [usernameTaken, setUsernameTaken] = useState<boolean>(false)
+    const [close, setClose] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
-    const handleUpdateProfile = async() => {
+    const handleUpdateProfile = async () => {
+        setLoading(true)
         const res = await updateProfile({
             name,
             username,
@@ -27,19 +30,34 @@ const EditProfile = ({ toggle }: any) => {
             website,
             image,
         }, user)
-
+        
         if (res) {
             dispatch(SetUser(res))
-            navigate(`/${res.username}`)
-            toggle(false)
+            setLoading(false)
+            setClose(true)
+            setTimeout(() => {
+                toggle(false)
+                navigate(`/${user.username}`)
+            }, 200);
         }
     }
 
     return (
         <div
             // onClick={handleEdit}
-            className={` fixed top-0 right-0 left-0 bottom-0 flex justify-center items-center bg-[#f8f8f800] backdrop-blur-[5px] z-[9]`}
+            className={` EditProfileForm fixed top-0 right-0 left-0 bottom-0 flex justify-center items-center bg-[#f8f8f800] backdrop-blur-[5px] z-[9]`}
         >
+            <LoadingScreen
+                loading={loading}
+                icon='🤞🤞'
+            />
+            <style>
+                {`
+                .EditProfileForm{
+                    animation: ${close ? 'fadeOut' : 'fadeIn'} 0.3s ease-in-out;
+                }
+                `}
+            </style>
             <style>
                 {`
                 // .imageInput::-webkit-file-upload-button {
@@ -83,7 +101,7 @@ const EditProfile = ({ toggle }: any) => {
                             placeholder='Profile Image'
                             className={' file:border-none box file:text-sm font-light file:font-bold text-sm file:text-[#ffffff] file:bg-black file:rounded-full file:px-4 file:py-2 file:cursor-pointer file:mr-6 flex-shrink ' + (theme.mode === 'dark' && 'file:invert')}
                             onChange={(e) => {
-                                setImage(e.target.files[0])
+                                e.target.files && setImage(e.target.files[0])
                             }}
                         />
                     </div>
@@ -91,14 +109,14 @@ const EditProfile = ({ toggle }: any) => {
                         className=' flex flex-col gap-2'
                     >
                         <EditField
-                            
+
                             type='text'
                             placeholder='Name'
                             value={name}
                             onChange={(e: any) => setName(e.target.value)}
                         />
                         <EditField
-                            
+
                             style={{
                                 border: usernameTaken ? '1px solid red' : `1px solid ${theme.lightBorder}`
                             }}
@@ -117,7 +135,7 @@ const EditProfile = ({ toggle }: any) => {
 
                         />
                         <EditField
-                            
+
                             textArea
                             // type='text'
                             placeholder='Bio'
@@ -135,14 +153,21 @@ const EditProfile = ({ toggle }: any) => {
                             className=' flex justify-center items-center gap-4'
                         >
                             <Button
-                                onClick={()=>toggle(false) + navigate(`/${user.username}`)}
+                                onClick={() => {
+
+                                    setClose(true)
+                                    setTimeout(() => {
+                                        toggle(false)
+                                        navigate(`/${user.username}`)
+                                    }, 200);
+                                }}
                                 text='Cancel'
                                 theme={theme}
                                 style={{
                                     backgroundColor: 'transparent',
                                     color: theme.text
                                 }}
-                                // tailw='w'
+                            // tailw='w'
                             />
                             <Button
                                 onClick={handleUpdateProfile}

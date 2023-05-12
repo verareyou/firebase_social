@@ -28,12 +28,12 @@ const Details = ({ user, isCurrent }: any) => {
             <div className=' flex-grow items-center flex-col flex max-w-[1000px] p-4'>
 
                 {/* upper profile details */}
-                <div 
+                <div
                     style={{
                         // backgroundColor: theme.secBackground,
                         // border: `1px solid ${theme.lightBorder}`
                     }}
-                className={' flex flex-col w-full items-center justify-center py-4 gap-4 md:px-4 md:py-8'}
+                    className={' flex flex-col w-full items-center justify-center py-4 gap-4 md:px-4 md:py-8'}
                 >
 
                     <div className=' flex flex-col gap-4 justify-center items-center '>
@@ -43,25 +43,25 @@ const Details = ({ user, isCurrent }: any) => {
                             alt="" />
                         <div className=' flex justify-center items-center gap-4'>
                             <div>
-                            <h1
-                                onClick={() => {
-                                    if (isCurrent) {
-                                        console.log('edit username')
-                                        setEditUsername(true)
-                                    }
-                                }}
-                                className={` ${isCurrent ? 'cursor-pointer flex items-center flex-row hover:opacity-70' : ''} font-bold `}
-                            >
-                                {user.username}
-                                {/* edit */}
-                                {isCurrent && <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-1 -mt-[3px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" />
-                                </svg>}
-                            </h1>
-                            <h1 className=' text-sm text-gray-500'>
-                                {user.name}
-                            </h1>
+                                <h1
+                                    onClick={() => {
+                                        if (isCurrent) {
+                                            console.log('edit username')
+                                            setEditUsername(true)
+                                        }
+                                    }}
+                                    className={` ${isCurrent ? 'cursor-pointer flex items-center flex-row hover:opacity-70' : ''} font-bold `}
+                                >
+                                    {user.username}
+                                    {/* edit */}
+                                    {isCurrent && <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-1 -mt-[3px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" />
+                                    </svg>}
+                                </h1>
+                                <h1 className=' text-sm text-gray-500'>
+                                    {user.name}
+                                </h1>
                             </div>
 
                             {isCurrent && <>
@@ -81,8 +81,8 @@ const Details = ({ user, isCurrent }: any) => {
                         </div>
                     </div>
                     <div className=' flex flex-col h-full justify-center gap-4 '>
-                        <div className={`flex gap-2 justify-center items-center ${ !user.bio && !user.website && isCurrent ? ' flex-row' : 'flex-col '}`
-                    }>
+                        <div className={`flex gap-2 justify-center items-center ${!user.bio && !user.website && isCurrent ? ' flex-row' : 'flex-col '}`
+                        }>
                             {user.bio ?
                                 <h1
                                     style={{
@@ -108,9 +108,10 @@ const Details = ({ user, isCurrent }: any) => {
                             }
                             {user.website ?
                                 <a
-                                    className=' text-blue-500 cursor-pointer text-[14px]'
-                                href={user.website}>
-                                    {user.website}d
+                                    target='_blank'
+                                    className=' text-blue-500 cursor-pointer text-[12px] hover:underline'
+                                    href={user.website}>
+                                    {user.website}
                                 </a>
                                 : <>
                                     {isCurrent &&
@@ -128,18 +129,28 @@ const Details = ({ user, isCurrent }: any) => {
                             }
                         </div>
                         <div className='flex justify-center items-center gap-4'>
-                            <h1>
+                            {/* <h1>
                                 {user.Posts.length} posts
-                            </h1>
-                            <h1>
+                            </h1> */}
+                            <h1
+                                style={{
+                                    backgroundColor: theme.secBackground,
+                                }}
+                                className=' TouchableBlur rounded-full font-bold px-4 py-2'
+                                >
                                 {user.Followers.length} followers
                             </h1>
-                            <h1>
+                            <h1
+                                style={{
+                                    backgroundColor: theme.secBackground,
+                                }}
+                                className=' TouchableBlur rounded-full font-bold px-4 py-2'
+                            >
                                 {user.Following.length} following
                             </h1>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 {/* posts */}

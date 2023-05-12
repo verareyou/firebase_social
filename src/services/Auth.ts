@@ -2,9 +2,6 @@ import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase
 import { auth, db, storage } from "../config/firebase";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
-import { useDispatch } from "react-redux";
-import { SetUser } from "../redux/Slice";
-import { string } from "yup";
 import { RegisterProps, UserProps } from "../models/UserModel";
 
 
@@ -98,55 +95,46 @@ export const logout = async () => {
     }
 }
 
-// sign in with google
+// // sign in with google
 
-export const signInWithGoogle = async () => {
-    try {
-        const provider = new GoogleAuthProvider();
+// export const signInWithGoogle = async () => {
+//     try {
+//         const provider = new GoogleAuthProvider();
 
-        const res = await signInWithPopup(auth, provider);
+//         const res = await signInWithPopup(auth, provider);
 
-        const { user } = res;
+//         const { user } = res;
 
-        if (user) {
-            const userRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(userRef);
+//         if (user) {
+//             const userRef = doc(db, "users", user.uid);
+//             const docSnap = await getDoc(userRef);
 
-            if (!docSnap.exists()) {
+//             if (!docSnap.exists()) {
 
-                const userData: UserProps = {
-                    uid: user.uid,
-                    email: user.email,
-                    name: user.displayName,
-                    username: user.displayName,
-                    profileImage: user.photoURL,
-                    bio: "",
-                    website: "",
-                    Followers: [],
-                    Following: [],
-                    Posts: [],
-                    createdAt: Date.now(),
-                };
-                await setDoc(userRef, userData);
-            }
+//                 const userData: UserProps = {
+//                     uid: user.uid,
+//                     email: user.email,
+//                     name: user.displayName,
+//                     username: user.displayName,
+//                     profileImage: user.photoURL,
+//                     bio: "",
+//                     website: "",
+//                     Followers: [],
+//                     Following: [],
+//                     Posts: [],
+//                     createdAt: Date.now(),
+//                 };
+//                 await setDoc(userRef, userData);
+//             }
 
-            const userData = docSnap.data() as UserProps;
+//             const userData = docSnap.data() as UserProps;
 
-            console.log("User logged in successfully!");
-
-            const dispatch = useDispatch();
-            dispatch(
-                SetUser(userData)
-            );
-            dispatch(
-                SetAuth(true)
-            );
-
-            return userData;
-        }
-    } catch (error) {
-        console.error("Error logging in user", error);
-        return null;
-    }
-}
+//             console.log("User logged in successfully!");
+//             return userData;
+//         }
+//     } catch (error) {
+//         console.error("Error logging in user", error);
+//         return null;
+//     }
+// }
 

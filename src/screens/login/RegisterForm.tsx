@@ -17,7 +17,7 @@ const RegisterForm = () => {
     const { isAuth, theme } = useSelector((state: any) => state)
 
     const [loading, setLoading] = useState('')
-    const [isLogin, setIsLogin] = useState(true)
+    const [isLogin, setIsLogin] = useState(false)
     const [invalidUsername, SetInvalidUsername] = useState(false)
     const [invalidEmail, SetInvalidEmail] = useState(false)
 
@@ -31,23 +31,23 @@ const RegisterForm = () => {
     }
 
     const SignupValidationSchema = Yup.object({
-        name: Yup.string().required('Required'),
-        username: Yup.string().required('Required'),
+        name: isLogin ? Yup.string().notRequired() : Yup.string().required('Required'),
+        username:isLogin ? Yup.string().notRequired() : Yup.string().required('Required'),
         email: Yup.string().email('Invalid email format').required('Required'),
         password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
-        confirmPassword: Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match').required('Required'),
-        profileImage: Yup.mixed().required('Required'),
+        confirmPassword: isLogin ? Yup.string().notRequired() : Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match').required('Required'),
+        profileImage: isLogin ? Yup.mixed().notRequired():Yup.mixed().required('Required'),
     })
 
-    const LoginValidationSchema = Yup.object({
-        email: Yup.string().email('Invalid email format').required('Required'),
-        password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
-    })
+    // const LoginValidationSchema = Yup.object({
+    //     email: Yup.string().email('Invalid email format').required('Required'),
+    //     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
+    // })
 
-    const LoginInitialValues = {
-        email: '',
-        password: '',
-    }
+    // const LoginInitialValues = {
+    //     email: '',
+    //     password: '',
+    // }
 
     useEffect(() => {
         isAuth && navigate('/')
@@ -129,8 +129,8 @@ const RegisterForm = () => {
             </style>
 
             <Formik
-                initialValues={isLogin ? LoginInitialValues : SignInitialValues}
-                validationSchema={isLogin ? LoginValidationSchema : SignupValidationSchema}
+                initialValues={SignInitialValues}
+                validationSchema={SignupValidationSchema}
                 onSubmit={onSubmit}
             >
                 {({ values, errors, touched, setFieldValue }) => (

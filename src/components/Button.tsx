@@ -18,7 +18,8 @@ const Button = ({
             border: isBlue ? 'none' : `1px solid ${theme.lightBorder}`,
             ...style
         }}
-        className={` py-2 px-4 rounded-full hover:opacity-70 duration-100 outline-none ${tailw} `}
+        className={` py-2 px-4 TouchableBlur
+        TouchableBlur rounded-full hover:opacity-70 duration-100 outline-none ${tailw} `}
     >
         {text}
     </button>
