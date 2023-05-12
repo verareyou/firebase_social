@@ -9,7 +9,7 @@ export const isSameUsername = async (username: string) => {
     const users = await getDocs(collection(db, "users"));
     const usersData = users.docs.map(doc => doc.data());
     const usernames = usersData.map(user => user.username);
-
+    console.log(usernames)
     return usernames.includes(username);
 }
 

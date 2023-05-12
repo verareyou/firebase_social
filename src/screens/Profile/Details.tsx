@@ -4,31 +4,45 @@ import { logout } from '../../services/Auth'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getUserByUsername } from '../../services/User'
 import { getUserProfile } from '../../utils/Operations'
-import { UsernameEdit } from '../../components'
+import { Button, UsernameEdit } from '../../components'
+import EditProfile from './EditProfile'
 
 
-const Details = ({user, isCurrent}: any) => {
+const Details = ({ user, isCurrent }: any) => {
     const Navigate = useNavigate()
     const { theme, isAuth } = useSelector((state: any) => state)
     const [loading, setLoading] = useState<boolean>(false)
     const [editUsername, setEditUsername] = useState(false)
+    const [editProfile, setEditProfile] = useState(false)
 
+    const isEdit = window.location.pathname.split('/')[2] === 'edit'
+    useEffect(() => {
+        setEditProfile(isEdit)
+    }, [isEdit])
     return (
         <div
-            className=' outline flex flex-1 justify-center md:pl-36 p-4 '
+            className=' w-[100vw] flex flex-1 justify-center md:pl-36 p-4 '
         >
             {editUsername && <UsernameEdit toggle={setEditUsername} />}
-            <div className='outline flex-grow max-w-[1000px] p-4'>
-                <div className=' grid grid-flow-col grid-cols-3 gap-6 '>
-                    <div className=' outline col-span-1 flex justify-center items-center '>
+            {editProfile && <EditProfile toggle={setEditProfile} />}
+            <div className=' flex-grow items-center flex-col flex max-w-[1000px] p-4'>
+
+                {/* upper profile details */}
+                <div 
+                    style={{
+                        // backgroundColor: theme.secBackground,
+                        // border: `1px solid ${theme.lightBorder}`
+                    }}
+                className={' flex flex-col w-full items-center justify-center py-4 gap-4 md:px-4 md:py-8'}
+                >
+
+                    <div className=' flex flex-col gap-4 justify-center items-center '>
                         <img
-                            className=' md:w-[150px] md:h-[150px] rounded-full object-cover overflow-hidden'
+                            className=' md:h-[150px] h-[100px] md:w-[150px] w-[100px] rounded-full object-cover overflow-hidden'
                             src={user.profileImage ? user.profileImage : 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'}
                             alt="" />
-                    </div>
-                            {editUsername && <h1> edit username </h1>}
-                    <div className=' outline col-span-2 p-2 gap-4 flex flex-col '>
-                        <div className=' flex gap-4'>
+                        <div className=' flex justify-center items-center gap-4'>
+                            <div>
                             <h1
                                 onClick={() => {
                                     if (isCurrent) {
@@ -36,22 +50,84 @@ const Details = ({user, isCurrent}: any) => {
                                         setEditUsername(true)
                                     }
                                 }}
-                                className={` ${isCurrent ? 'cursor-pointer hover:opacity-70' : ''} font-bold `}
-                                >
+                                className={` ${isCurrent ? 'cursor-pointer flex items-center flex-row hover:opacity-70' : ''} font-bold `}
+                            >
                                 {user.username}
                                 {/* edit */}
-                                {isCurrent && '#'}
+                                {isCurrent && <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-1 -mt-[3px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" />
+                                </svg>}
                             </h1>
+                            <h1 className=' text-sm text-gray-500'>
+                                {user.name}
+                            </h1>
+                            </div>
+
                             {isCurrent && <>
-                                <h1>
-                                    {user.username}
-                                </h1>
-                                <h1>
-                                    {user.username}
-                                </h1>
+                                <Button
+                                    style={{
+                                        backgroundColor: theme.text,
+                                        color: theme.background
+                                    }}
+                                    // tailw='px-2 py-[5px]'
+                                    text='Edit Profile'
+                                    theme={theme}
+                                    onClick={() => {
+                                        Navigate(`/${user.username}/edit`)
+                                    }}
+                                />
                             </>}
                         </div>
-                        <div className='flex gap-4'>
+                    </div>
+                    <div className=' flex flex-col h-full justify-center gap-4 '>
+                        <div className={`flex gap-2 justify-center items-center ${ !user.bio && !user.website && isCurrent ? ' flex-row' : 'flex-col '}`
+                    }>
+                            {user.bio ?
+                                <h1
+                                    style={{
+                                        backgroundColor: theme.secBackground,
+                                    }}
+                                    className={`text-sm max-w-[300px] text-center p-4 rounded-3xl`}
+                                >
+                                    {user.bio}
+                                </h1>
+                                : <>
+                                    {isCurrent &&
+                                        <a
+                                            onClick={() => {
+                                                Navigate('/accounts/edit')
+                                            }}
+
+                                            className=' text-blue-500 cursor-pointer text-[14px]'
+                                        >
+                                            Add bio
+                                        </a>
+                                    }
+                                </>
+                            }
+                            {user.website ?
+                                <a
+                                    className=' text-blue-500 cursor-pointer text-[14px]'
+                                href={user.website}>
+                                    {user.website}d
+                                </a>
+                                : <>
+                                    {isCurrent &&
+                                        <a
+                                            onClick={() => {
+                                                Navigate('/accounts/edit')
+                                            }}
+
+                                            className=' text-blue-500 cursor-pointer text-[14px]'
+                                        >
+                                            Add website
+                                        </a>
+                                    }
+                                </>
+                            }
+                        </div>
+                        <div className='flex justify-center items-center gap-4'>
                             <h1>
                                 {user.Posts.length} posts
                             </h1>
@@ -62,23 +138,18 @@ const Details = ({user, isCurrent}: any) => {
                                 {user.Following.length} following
                             </h1>
                         </div>
-                        <div className='flex flex-col gap-4'>
-                            <h1>
-                                {user.name}
-                            </h1>
-                            {user.bio &&
-                                <h1>
-                                    {user.bio}
-                                </h1>
-                            }
-                            {user.website &&
-                                <a href={user.website}>
-                                    {user.website}d
-                                </a>
-                            }
-                        </div>
                     </div>
+                    
                 </div>
+
+                {/* posts */}
+
+                <div
+                    className=' w-full my-8'
+                    style={{
+                        borderBottom: `1px solid ${theme.lightBorder}`
+                    }}
+                />
                 <button onClick={async () => {
                     await logout()
                     // Navigate('/accounts/login')

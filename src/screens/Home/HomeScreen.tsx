@@ -10,7 +10,9 @@ const HomeScreen = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    !isAuth && navigate('/accounts/login')
+    if (!isAuth) {
+      return navigate('/accounts/login')
+    }
   }, [isAuth])
 
   return (

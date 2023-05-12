@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import userpng from '../../assets/Icons/user.png';
-import { CompressImage } from '../../utils/Operations';
 
 const RegisterForm = () => {
 
@@ -154,7 +153,7 @@ const RegisterForm = () => {
 
                         <motion.div
                             {...motionProps}
-                            className={` duration-300 flex`}>
+                            className={` duration-300 flex items-center justify-center`}>
                             <input
                                 // select only image files
                                 type="file"
@@ -162,17 +161,15 @@ const RegisterForm = () => {
                                 placeholder='Profile'
                                 id="profileImage"
                                 name="profileImage"
-                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 
-                                before:content-none
-                                ${touched.profileImage && errors.profileImage ? "border-red-500" : ""}`}
+                                className={' pl-6 file:border-none box file:text-sm font-light file:font-bold text-sm file:text-[#ffffff] file:bg-black file:rounded-full file:px-4 file:py-2 file:cursor-pointer file:mr-6 flex-shrink ' + (theme.mode === 'dark' && 'file:invert')}
                                 onChange={(event: any) => {
                                     setFieldValue("profileImage", event.currentTarget.files[0])
                                 }}
-                            ></input>
+                            />
                             <ErrorMessage
                                 component="div"
                                 name="profileImage"
-                                className="text-red-500 text-sm mt-1"
+                                className="text-red-500 text-[12px] font-light mt-1 -mb-2 "
                             />
                         </motion.div>
 
@@ -184,19 +181,19 @@ const RegisterForm = () => {
                                 placeholder='Full Name'
                                 id="name"
                                 name="name"
-                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.name && errors.name ? "border-red-500" : ""}`}
+                                className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.name && errors.name ? "border-red-500" : ""}`}
                             />
                             <ErrorMessage
                                 component="div"
                                 name="name"
-                                className="text-red-500 text-sm mt-1"
+                                className="text-red-500 text-[12px] font-light mt-1 -mb-2 "
                             />
                         </motion.div>
 
                         <motion.div
                         {...motionProps}
                         className={``}>
-                            <input
+                            <Field
                                 type="text"
                                 placeholder='Username'
                                 id="username"
@@ -206,23 +203,23 @@ const RegisterForm = () => {
                                     const res = await isSameUsername(event.currentTarget.value)
                                     SetInvalidUsername(res)
                                 }}
-                                className={` fields border-1 rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.username && errors.username ? "border-red-500" : ""}`}
+                                className={` fields border-1 py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.username && errors.username ? "border-red-500" : ""}`}
                             />
                             <ErrorMessage
                                 component="div"
                                 name="username"
-                                className="text-red-500 text-sm mt-1"
+                                className="text-red-500 text-[12px] font-light mt-1 -mb-2 "
                             />
 
                             <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: invalidUsername ? 1 : 0 }}
                             className={` 
-                            duration-500 ease-in-out transition-all
+                            duration-500 ease-in-out transition-all mt-1 -mb-2
                             ${invalidUsername ? 'h-fit' : 'h-0'}
                             `}
                             >
-                                <span className="text-red-500 text-sm mt-1">Username already taken</span>
+                                <span className="text-red-500 text-[12px] font-light  ">Username already taken</span>
                             </motion.div>
 
                         </motion.div>
@@ -240,15 +237,17 @@ const RegisterForm = () => {
                                     const res = await isEmailExists(event.currentTarget.value)
                                     SetInvalidEmail(res)
                                 }}
-                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.email && errors.email ? "border-red-500" : ""}`}
+                                className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.email && errors.email ? "border-red-500" : ""}`}
                             />
-                            <div className={` 
-                            duration-300 ease-in-out transition-all
+                            <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: invalidUsername ? 1 : 0 }}className={` 
+                            duration-300 ease-in-out transition-all mt-1 -mb-2
                             ${invalidEmail && !isLogin ? 'block' : 'hidden'}
                             `}>
-                                <span className="text-red-500 text-sm mt-1">Email already exists</span>
-                            </div>
-                            <ErrorMessage component="div" name="email" className="text-red-500 text-sm mt-1" />
+                                <span className="text-red-500 text-[12px] font-light">Email already exists</span>
+                            </motion.div>
+                            <ErrorMessage component="div" name="email" className="text-red-500 text-[12px] font-light mt-1 -mb-2 " />
                         </div>
                         <div className={``}>
                             <Field
@@ -257,8 +256,8 @@ const RegisterForm = () => {
                                 id="password"
                                 name="password"
 
-                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.password && errors.password ? "border-red-500" : ""}`} />
-                            <ErrorMessage component="div" name="password" className="text-red-500 text-sm mt-1" />
+                                className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.password && errors.password ? "border-red-500" : ""}`} />
+                            <ErrorMessage component="div" name="password" className="text-red-500 text-[12px] font-light mt-1 -mb-2 " />
 
 
                         </div>
@@ -270,20 +269,20 @@ const RegisterForm = () => {
                                 placeholder='Confirm Password'
                                 id="confirmPassword"
                                 name="confirmPassword"
-                                className={` fields rounded-md outline-none bg-transparent w-full py-2 px-3 ${touched.confirmPassword && errors.confirmPassword ? "border-red-500" : ""}`}
+                                className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.confirmPassword && errors.confirmPassword ? "border-red-500" : ""}`}
                             />
                             <ErrorMessage
                                 component="div"
                                 name="confirmPassword"
-                                className="text-red-500 text-sm mt-1"
+                                className="text-red-500 text-[12px] font-light mt-1 -mb-2 "
                             />
                         </motion.div>
-                        <div className={``}>
+                        <div className={`flex justify-center`}>
                             <h1>
-                                <span className="mr-2">{isLogin ? "Don't have an account?" : "Already have an account?"}</span>
+                                <span className="mr-2 text-sm ">{isLogin ? "Don't have an account?" : "Already have an account?"}</span>
                                 <span
                                     onClick={() => setIsLogin(!isLogin)}
-                                    className="text-blue-500 cursor-pointer hover:text-blue-700">
+                                    className="text-blue-500 text-sm cursor-pointer hover:text-blue-700">
                                     {isLogin ? "Register" : "Login"}
                                 </span>
                             </h1>
@@ -291,7 +290,7 @@ const RegisterForm = () => {
                         <button
                             disabled={isLogin ? false : invalidUsername || invalidEmail}
                             type="submit"
-                            className={"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" + (isLogin ? "" : " disabled:opacity-50")}
+                            className={"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" + (isLogin ? "" : " disabled:opacity-50")}
                         >
                             {isLogin ? "Login" : "Register"}
                         </button>

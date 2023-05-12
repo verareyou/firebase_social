@@ -43,7 +43,7 @@ const ProfileScreen = () => {
     }
     useEffect(() => {
         fetchUser()
-    }, [])
+    }, [user])
 
     return (
         <div

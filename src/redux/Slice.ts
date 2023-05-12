@@ -1,11 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { LightTheme, DarkTheme } from "../constants/Colors";
+import { UserProps } from "../models/UserModel";
 
 const initialState = {
-    user: null,
+    user: {
+        uid: "",
+        email: "",
+        name: "",
+        username: "",
+        profileImage: "",
+        createdAt: 0,
+        bio: "",
+        website: "",
+        Followers: [],
+        Following: [],
+        Posts: [],
+    },
     isAuth: false,
-    name: "himanshu",
+    // name: "himanshu",
     theme: DarkTheme,
+    ProfileUpdateListener: 1242,
+    PostUpdateListener: 1242,
 };
 
 const slice = createSlice({
@@ -21,10 +36,17 @@ const slice = createSlice({
         },
         SetTheme: (state) => {
             state.theme = state.theme.mode === "light" ? DarkTheme : LightTheme;
-        }
+        },
+        setProfileListener: (state) => {
+            state.ProfileUpdateListener = Math.random() * 1000;
+        },
+        setPostListener: (state) => {
+            state.PostUpdateListener = Math.random() * 1000;
+        },
+
     }
 });
 
-export const { SetUser, SetAuth, SetTheme } = slice.actions;
+export const { SetUser, SetAuth, SetTheme, setPostListener, setProfileListener } = slice.actions;
 
 export default slice.reducer;
