@@ -49,3 +49,13 @@ body, #root  {
 .TouchableBlur:hover {
   filter: blur(1px);
 }
+
+.TouchableBlur:focus {
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .TouchableBlur:hover {
+    filter: none;
+  }
+}

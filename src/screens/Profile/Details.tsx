@@ -7,6 +7,9 @@ import { getUserProfile } from '../../utils/Operations'
 import { Button, UsernameEdit } from '../../components'
 import EditProfile from './EditProfile'
 
+import userpng from '../../assets/Icons/user.png';
+
+
 
 const Details = ({ user, isCurrent }: any) => {
     const Navigate = useNavigate()
@@ -39,7 +42,7 @@ const Details = ({ user, isCurrent }: any) => {
                     <div className=' flex flex-col gap-4 justify-center items-center '>
                         <img
                             className=' md:h-[150px] h-[100px] md:w-[150px] w-[100px] rounded-full object-cover overflow-hidden'
-                            src={user.profileImage ? user.profileImage : 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'}
+                            src={user.profileImage ? user.profileImage : userpng}
                             alt="" />
                         <div className=' flex justify-center items-center gap-4'>
                             <div>
@@ -109,9 +112,9 @@ const Details = ({ user, isCurrent }: any) => {
                             {user.website ?
                                 <a
                                     target='_blank'
-                                    className=' text-blue-500 cursor-pointer text-[12px] hover:underline'
+                                    className=' cursor-pointer text-[12px] hover:underline'
                                     href={user.website}>
-                                    {user.website}
+                                    {user.website.replace(/(^\w+:|^)\/\//, '')}
                                 </a>
                                 : <>
                                     {isCurrent &&

@@ -39,16 +39,6 @@ const RegisterForm = () => {
         profileImage: isLogin ? Yup.mixed().notRequired():Yup.mixed().required('Required'),
     })
 
-    // const LoginValidationSchema = Yup.object({
-    //     email: Yup.string().email('Invalid email format').required('Required'),
-    //     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
-    // })
-
-    // const LoginInitialValues = {
-    //     email: '',
-    //     password: '',
-    // }
-
     useEffect(() => {
         isAuth && navigate('/')
     }, [isAuth])

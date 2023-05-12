@@ -1,9 +1,10 @@
 
 export const LightTheme = {
     mode: "light",
-    background: "#fff",
+    background: "#ffffff",
     secBackground: "#f5f5f5",
     insecBackground: "#f0f0f0",
+    blurBackground: "#f0f0f0aa",
     text: "#000",
     lightText: "#888",
     primary: "#0095f6",
@@ -23,9 +24,10 @@ export const LightTheme = {
 
 export const DarkTheme = {
     mode: "dark",
-    background: "#000",
+    background: "#000000",
     secBackground: "#111",
     insecBackground: "#222",
+    blurBackground: "#2f2f2faa",
     text: "#fff",
     lightText: "#999",
     primary: "#0095f6",

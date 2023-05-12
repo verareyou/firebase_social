@@ -14,7 +14,7 @@ const LoadingScreen = ({ loading, icon }: any) => {
       <style>
         {`
           .loading-screen{
-              animation: ${loading ? 'fadeIn' : 'fadeOut'} 0.3s ease-in-out;
+              animation: ${loading ? 'fadeIn' : 'fadeOut'} 0.2s ease-in-out;
           }
         `}
       </style>
