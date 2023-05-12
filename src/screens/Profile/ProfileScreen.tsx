@@ -31,7 +31,12 @@ const ProfileScreen = () => {
     const fetchUser = async () => {
         setLoading(true)
         const newUser = await getUserByUsername(window.location.pathname.split('/')[1])
-        !newUser && Navigate('/')
+        
+        if (!newUser) {
+            Navigate('/')
+            return
+        }
+        
         if (newUser.username === user.username){
             setCurrentUser(true)
             setDisplayUser(newUser)
