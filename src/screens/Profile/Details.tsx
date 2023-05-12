@@ -88,7 +88,7 @@ const Details = ({ user, isCurrent }: any) => {
                                     style={{
                                         backgroundColor: theme.secBackground,
                                     }}
-                                    className={`text-sm max-w-[300px] text-center p-4 rounded-3xl`}
+                                    className={`text-sm max-w-[300px] text-center p-4 whitespace-pre-line rounded-3xl`}
                                 >
                                     {user.bio}
                                 </h1>

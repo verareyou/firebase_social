@@ -19,7 +19,7 @@ const Button = ({
             ...style
         }}
         className={` py-2 px-4 TouchableBlur
-        TouchableBlur rounded-full hover:opacity-70 duration-100 outline-none ${tailw} `}
+        TouchableBlur rounded-full hover:opacity-70 duration-100 outline-none  ` + tailw}
     >
         {text}
     </button>

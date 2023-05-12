@@ -141,6 +141,7 @@ const EditProfile = ({ toggle }: any) => {
                             placeholder='Bio'
                             value={bio}
                             onChange={(e: any) => setBio(e.target.value)}
+                            tailw='h-[150px]'
                         />
                         <EditField
                             type='url'
