@@ -17,7 +17,7 @@ const RegisterForm = () => {
     const { isAuth, theme } = useSelector((state: any) => state)
 
     const [loading, setLoading] = useState('')
-    const [isLogin, setIsLogin] = useState(false)
+    const [isLogin, setIsLogin] = useState(true)
     const [invalidUsername, SetInvalidUsername] = useState(false)
     const [invalidEmail, SetInvalidEmail] = useState(false)
 
