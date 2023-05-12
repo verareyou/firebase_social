@@ -4,9 +4,9 @@ import { AuthStateListener } from '../redux/AuthStateListener'
 
 // Screens imports
 import HomeScreen from '../screens/Home/HomeScreen'
-import LoginRegisterPage from '../screens/Login/LoginRegisterScreen'
 import ProfileScreen from '../screens/Profile/ProfileScreen'
 import { ToggleTheme } from '../components'
+import LoginRegisterPage from '../screens/Login/LoginRegisterScreen'
 
 const AppRouter = () => {
     const { isAuth,theme, ProfileUpdateListener } = useSelector((state: any) => state)
