@@ -43,6 +43,7 @@ const ProfileScreen = () => {
             const newUser = await getUserByUsername(username)
             
             if (!newUser) {
+                dispatch(setLoading(false))
                 Navigate('/')
                 return
             }
@@ -69,7 +70,7 @@ const ProfileScreen = () => {
             }}
             className=' min-h-screen flex '
         >
-            <SideBar />
+            {/* <SideBar /> */}
             <Details
                 user={displayUser}
                 isCurrent={CurrentUser}

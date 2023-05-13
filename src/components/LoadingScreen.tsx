@@ -4,6 +4,17 @@ import { randomEmoji } from '../utils/Operations'
 
 const LoadingScreen = () => {
   const { theme,Loading } = useSelector((state: any) => state)
+  const [LoadingScreen, setLoadingScreen] = React.useState(false)
+
+  // useEffect(() => {
+  //   if (Loading) {
+  //     setLoadingScreen(true)
+  //   } else {
+  //     setTimeout(() => {
+  //       setLoadingScreen(false)
+  //     }, 500)
+  //   }
+  // }, [Loading])
 
   return (
     <div
@@ -15,7 +26,7 @@ const LoadingScreen = () => {
       <style>
         {`
           .Loading-screen{
-              animation: ${Loading ? 'fadeIn' : 'fadeOut'} 0.2s ease-in-out;
+              animation: ${Loading ? 'fadeIn' : 'fadeOut'} 0.1s ease-in-out;
           }
         `}
       </style>

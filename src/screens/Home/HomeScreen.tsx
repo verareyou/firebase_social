@@ -15,7 +15,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (!isAuth) {
-      dispatch(setLoading(false))
+      // dispatch(setLoading(false))
       return navigate('/accounts/login')
     }
   }, [isAuth])
@@ -48,9 +48,8 @@ const HomeScreen = () => {
         color: theme.text
       }}
     >
-      <SideBar /> 
+      {/* <SideBar />  */}
       <Feed
-
         Posts={FeedPosts}
         user={user}
         

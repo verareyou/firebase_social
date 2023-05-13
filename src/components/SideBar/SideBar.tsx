@@ -11,12 +11,13 @@ import CreatePost from '../Post/CreatePost'
 
 const SideBar = () => {
 
-    const { user, theme } = useSelector((state: any) => state)
+    const { user, theme, isAuth } = useSelector((state: any) => state)
     const [visible, setVisible] = useState({ visible: false, pos: { x: 0, y: 0 } })
     const navigate = useNavigate()
     const [isMobile, setIsMobile] = useState<boolean>(false)
     const [route, setRoute] = useState<string>('home')
     const [createPost, setCreatePost] = useState<boolean>(false)
+    const [disabled, setDisabled] = useState<boolean>(true)
 
     useEffect(() => {
         if (window.innerWidth < 768) {
@@ -27,6 +28,14 @@ const SideBar = () => {
     useEffect(() => {
         setRoute(window.location.pathname.split('/')[1] === '' ? 'home' : window.location.pathname.split('/')[1])
     }, [])
+
+    useEffect(() => {
+        if(isAuth) {
+            setDisabled(false)
+        } else {
+            setDisabled(true)
+        }
+    }, [isAuth])
 
 
     const animate = {
@@ -46,9 +55,14 @@ const SideBar = () => {
     }
 
     return (
-        <>
+        !disabled && <>
             {createPost && <CreatePost setRoute={setRoute} toggle={setCreatePost} />}
             <motion.div
+                variants={animate}
+                initial='initial'
+                animate='animate'
+                exit='initial'
+                
                 style={{
                     background: isMobile ? theme.blurBackground
                         : theme.background,
@@ -128,18 +142,18 @@ const SideBar = () => {
                     className='flex TouchableBlur justify-center items-center overflow-hidden h-[28px] w-[28px] m-2 rounded-full '
                 >
                     <img
-                        onMouseEnter={(e) => {
-                            if (isMobile) return
-                            setTimeout(() => {
-                                setVisible({ ...visible, visible: true, pos: { x: e.pageX, y: e.pageY } })
-                            }, 500)
-                        }}
-                        onMouseLeave={() => {
-                            if (isMobile) return
-                            if (visible.visible) {
-                                setVisible({ ...visible, visible: false })
-                            }
-                        }}
+                        // onMouseEnter={(e) => {
+                        //     if (isMobile) return
+                        //     setTimeout(() => {
+                        //         setVisible({ ...visible, visible: true, pos: { x: e.pageX, y: e.pageY } })
+                        //     }, 500)
+                        // }}
+                        // onMouseLeave={() => {
+                        //     if (isMobile) return
+                        //     if (visible.visible) {
+                        //         setVisible({ ...visible, visible: false })
+                        //     }
+                        // }}
                         className='object-cover overflow-hidden '
                         src={user.profileImage}
                         alt="profile" />
