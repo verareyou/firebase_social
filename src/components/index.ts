@@ -4,3 +4,4 @@ export { default as SideBar } from './SideBar/SideBar';
 export { default as UsernameEdit } from './Edit Profile/UsernameEdit';
 export { default as Button } from './Button';
 export { default as ProfileView } from './ProfileView';
+export { default as PostCard } from './Post/PostCard';

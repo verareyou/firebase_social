@@ -30,3 +30,48 @@ export const getUserProfile = async (username: string,CurrentUser: any ,setUser:
         setCurrent(false)
     }
 }
+
+export const getDate = () => {
+    const date = new Date();
+        const todaydate = date.toISOString().slice(0, 10);
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+
+        const fulldate = todaydate + " " + hour + ":" + minute;
+
+        return fulldate;
+}
+
+
+export const sortPostsByTime = (posts: any) => {
+    const copyPosts = [...posts];
+    const sortedPosts = copyPosts.sort((a: any, b: any) => {
+        const aDate = new Date(a.createdAt).getTime();
+        const bDate = new Date(b.createdAt).getTime();
+
+        return bDate - aDate;
+    })
+
+    return sortedPosts;
+}
+
+export const randomEmoji = () => {
+    const emojis = ["😈", "🥴", "😒", "👾", "💩"]
+    const random = Math.floor(Math.random() * emojis.length)
+    return emojis[random]
+}
+
+// an array of posts to two different arrays of posts by even and odd index
+
+export const splitPosts =  (posts: any) => {
+    const even = [];
+    const odd = [];
+    for (let i = 0; i < posts.length; i++) {
+        if (i % 2 === 0) {
+            even.push(posts[i])
+        } else {
+            odd.push(posts[i])
+        }
+    }
+    return [ even, odd]
+}

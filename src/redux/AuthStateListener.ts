@@ -8,15 +8,15 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 export const AuthStateListener = (listener: any) => {
-    console.log(listener)
+    // console.log(listener)
     const dispatch = useDispatch()
     const {isAuth, user} = useSelector((state: any) => state)
-    console.log(isAuth, user)
-    return useEffect(() => {
+    // console.log(isAuth, user)
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log(user.uid)
                 getUserByUid(user.uid).then((res) => {
+                    // console.log(res)
                     dispatch(SetUser(res))
                 })
                 // dispatch(SetAuth(true))
@@ -26,6 +26,6 @@ export const AuthStateListener = (listener: any) => {
         })
 
         return unsubscribe
-    }, [listener])
+    }, [])
     
 }

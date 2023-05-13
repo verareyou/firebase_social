@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { logout } from '../../services/Auth'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { LoadingScreen, SideBar } from '../../components'
 import Details from './Details'
 import { getUserByUsername } from '../../services/User'
+import { setLoading } from '../../redux/Slice'
 
 
 const ProfileScreen = () => {
     const Navigate = useNavigate()
+    const dispatch = useDispatch()
     const location = useLocation()
     const { user, theme, isAuth } = useSelector((state: any) => state)
-    const [loading, setLoading] = useState<boolean>(false)
     const [CurrentUser, setCurrentUser] = useState<any>(false)
     const [displayUser, setDisplayUser] = useState<any>({
         username: '',
@@ -32,13 +33,13 @@ const ProfileScreen = () => {
     // }, [isAuth])
 
     const fetchUser = async () => {
-        console.log('hey2')
+
         const username = window.location.pathname.split('/')[1]
         if (username === user.username){
             setCurrentUser(true)
             setDisplayUser(user)
         } else {
-            setLoading(true)
+            dispatch(setLoading(true))
             const newUser = await getUserByUsername(username)
             
             if (!newUser) {
@@ -50,12 +51,15 @@ const ProfileScreen = () => {
             setCurrentUser(false)
         }
         setTimeout(() => {
-        setLoading(false)
+            dispatch(setLoading(false))
         }, 300)
     }
     useEffect(() => {
         fetchUser()
-    }, [window.location.pathname])
+    }, [])
+    useEffect(() => {
+        fetchUser()
+    }, [user,window.location.pathname])
     
     return (
         <div
@@ -65,8 +69,6 @@ const ProfileScreen = () => {
             }}
             className=' min-h-screen flex '
         >
-            {loading && <LoadingScreen loading={loading} icon='' />}
-            {/* <LoadingScreen loading={loading} icon='' /> */}
             <SideBar />
             <Details
                 user={displayUser}

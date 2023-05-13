@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../services/Auth'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getUserByUsername } from '../../services/User'
@@ -8,15 +8,23 @@ import { Button, UsernameEdit } from '../../components'
 import EditProfile from './EditProfile'
 
 import userpng from '../../assets/Icons/user.png';
+import ProfilePosts from './ProfilePosts'
+import { setLoading } from '../../redux/Slice'
 
 
 
 const Details = ({ user, isCurrent }: any) => {
+    const dispatch = useDispatch()
     const Navigate = useNavigate()
     const { theme, isAuth } = useSelector((state: any) => state)
-    const [loading, setLoading] = useState<boolean>(false)
     const [editUsername, setEditUsername] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
+
+    useEffect(() => {
+        if (!isAuth) {
+            Navigate('/accounts/login')
+        }
+    }, [isAuth])
 
     const isEdit = window.location.pathname.split('/')[2] === 'edit'
     useEffect(() => {
@@ -24,11 +32,11 @@ const Details = ({ user, isCurrent }: any) => {
     }, [isEdit])
     return (
         <div
-            className=' w-[100vw] flex flex-1 justify-center md:pl-36 p-4 '
+            className=' w-[100vw] flex flex-1 flex-col items-center md:pl-36 p-2 md:p-4 '
         >
             {editUsername && <UsernameEdit toggle={setEditUsername} />}
             {editProfile && <EditProfile toggle={setEditProfile} />}
-            <div className=' flex-grow items-center flex-col flex max-w-[1000px] p-4'>
+            <div className=' flex-grow items-center flex-col flex w-full max-w-[1000px]'>
 
                 {/* upper profile details */}
                 <div
@@ -140,7 +148,7 @@ const Details = ({ user, isCurrent }: any) => {
                                     backgroundColor: theme.secBackground,
                                 }}
                                 className=' TouchableBlur rounded-full font-bold px-4 py-2'
-                                >
+                            >
                                 {user.Followers.length} followers
                             </h1>
                             <h1
@@ -158,16 +166,24 @@ const Details = ({ user, isCurrent }: any) => {
 
                 {/* posts */}
 
+
                 <div
-                    className=' w-full my-8'
+                    className=' w-full my-4'
                     style={{
                         borderBottom: `1px solid ${theme.lightBorder}`
                     }}
                 />
+                <ProfilePosts
+                    user={user}
+                    isCurrent={isCurrent}
+                />
                 <button onClick={async () => {
+                    dispatch(setLoading(true))
                     await logout()
-                    // Navigate('/accounts/login')
+                    Navigate('/')
+                    dispatch(setLoading(false))
                 }}>Logout</button>
+
             </div>
         </div>
     )

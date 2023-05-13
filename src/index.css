@@ -56,6 +56,6 @@ body, #root  {
 
 @media (max-width: 768px) {
   .TouchableBlur:hover {
-    filter: none;
+    filter: blur(0px)
   }
 }

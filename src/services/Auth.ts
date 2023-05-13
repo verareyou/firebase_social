@@ -3,6 +3,7 @@ import { auth, db, storage } from "../config/firebase";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { RegisterProps, UserProps } from "../models/UserModel";
+import imageCompression from "browser-image-compression";
 
 
 // register and create user
@@ -21,9 +22,11 @@ export const register = async ({ name, username, email, password, image }: Regis
 
         if (user) {
 
+        const compressImage = await imageCompression(image as File, {maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true, maxIteration: 10, fileType: "image/jpeg"});
+
 
             const uploadRef = ref(storage, `images/profiles/${username}`);
-            const uploaded = await uploadBytes(uploadRef, image as File);
+            const uploaded = await uploadBytes(uploadRef, compressImage as File);
 
             const profileImageUrl = await getDownloadURL(uploaded.ref);
 

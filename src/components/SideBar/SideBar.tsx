@@ -7,14 +7,16 @@ import ExporeIcon from '../Icons/ExploreIcon'
 import HomeIcon from '../Icons/HomeIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import CreateIcon from '../Icons/CreateIcon'
+import CreatePost from '../Post/CreatePost'
 
 const SideBar = () => {
 
-    const { isAuth, user, theme } = useSelector((state: any) => state)
+    const { user, theme } = useSelector((state: any) => state)
     const [visible, setVisible] = useState({ visible: false, pos: { x: 0, y: 0 } })
     const navigate = useNavigate()
     const [isMobile, setIsMobile] = useState<boolean>(false)
     const [route, setRoute] = useState<string>('home')
+    const [createPost, setCreatePost] = useState<boolean>(false)
 
     useEffect(() => {
         if (window.innerWidth < 768) {
@@ -25,8 +27,6 @@ const SideBar = () => {
     useEffect(() => {
         setRoute(window.location.pathname.split('/')[1] === '' ? 'home' : window.location.pathname.split('/')[1])
     }, [])
-
-
 
 
     const animate = {
@@ -47,6 +47,7 @@ const SideBar = () => {
 
     return (
         <>
+            {createPost && <CreatePost setRoute={setRoute} toggle={setCreatePost} />}
             <motion.div
                 style={{
                     background: isMobile ? theme.blurBackground
@@ -95,13 +96,15 @@ const SideBar = () => {
 
                 </div>
                 <div
-                    onClick={() => { setRoute('create') }}
+                    onClick={() => { setRoute('create'); setCreatePost(true) }}
                     className='flex TouchableBlur justify-center items-center overflow-hidden w-[48px] h-[48px] rounded-full '
                 >
                     <CreateIcon
                         color={theme.text}
                         route={route}
                     />
+
+
 
                 </div>
 
@@ -118,25 +121,25 @@ const SideBar = () => {
 
 
                 <div
-                    onClick={() => { 
+                    onClick={() => {
                         // setRoute('profile')
-                        navigate(`/${user.username}`, { state: { user: user } }) 
-                 }}
-                    className='flex TouchableBlur justify-center items-center overflow-hidden h-[28px] w-[28px] rounded-full '
+                        navigate(`/${user.username}`, { state: { user: user } })
+                    }}
+                    className='flex TouchableBlur justify-center items-center overflow-hidden h-[28px] w-[28px] m-2 rounded-full '
                 >
                     <img
-                        // onMouseEnter={(e) => {
-                        //     if (isMobile) return
-                        //     setTimeout(() => {
-                        //         setVisible({ ...visible, visible: true, pos: { x: e.pageX, y: e.pageY } })
-                        //     }, 500)
-                        // }}
-                        // onMouseLeave={() => {
-                        //     if (isMobile) return
-                        //     if (visible.visible) {
-                        //         setVisible({ ...visible, visible: false })
-                        //     }
-                        // }}
+                        onMouseEnter={(e) => {
+                            if (isMobile) return
+                            setTimeout(() => {
+                                setVisible({ ...visible, visible: true, pos: { x: e.pageX, y: e.pageY } })
+                            }, 500)
+                        }}
+                        onMouseLeave={() => {
+                            if (isMobile) return
+                            if (visible.visible) {
+                                setVisible({ ...visible, visible: false })
+                            }
+                        }}
                         className='object-cover overflow-hidden '
                         src={user.profileImage}
                         alt="profile" />

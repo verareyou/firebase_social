@@ -5,7 +5,7 @@ import { AuthStateListener } from '../redux/AuthStateListener'
 // Screens imports
 import HomeScreen from '../screens/Home/HomeScreen'
 import ProfileScreen from '../screens/Profile/ProfileScreen'
-import { ToggleTheme } from '../components'
+import { LoadingScreen, ToggleTheme } from '../components'
 import LoginRegisterPage from '../screens/Login/LoginRegisterScreen'
 import ExploreScreen from '../screens/Explore/ExploreScreen'
 
@@ -17,6 +17,7 @@ const AppRouter = () => {
     return (
         <Router>
             <ToggleTheme />
+            <LoadingScreen />
             <Routes>
                 <Route path="/" element={
                     isAuth ? <HomeScreen /> : <LoginRegisterPage />

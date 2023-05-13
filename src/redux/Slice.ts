@@ -17,10 +17,11 @@ const initialState = {
         Posts: [],
     },
     isAuth: false,
-    // name: "himanshu",
+    posts: [],
     theme: DarkTheme,
     ProfileUpdateListener: 1242,
     PostUpdateListener: 1242,
+    Loading: false
 };
 
 const slice = createSlice({
@@ -43,10 +44,16 @@ const slice = createSlice({
         setPostListener: (state) => {
             state.PostUpdateListener = Math.random() * 1000;
         },
+        setPosts: (state, action) => {
+            state.posts = action.payload;
+        },
+        setLoading: (state, action) => {
+            state.Loading= action.payload;
+        }
 
     }
 });
 
-export const { SetUser, SetAuth, SetTheme, setPostListener, setProfileListener } = slice.actions;
+export const { SetUser, SetAuth, SetTheme, setPostListener, setProfileListener, setPosts,setLoading } = slice.actions;
 
 export default slice.reducer;

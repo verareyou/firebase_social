@@ -5,7 +5,7 @@ import EditField from '../../components/EditField'
 import { isSameUsername } from '../../services/Validations'
 import { Button, LoadingScreen } from '../../components'
 import { updateProfile } from '../../services/User'
-import { SetUser } from '../../redux/Slice'
+import { SetUser, setLoading } from '../../redux/Slice'
 
 const EditProfile = ({ toggle }: any) => {
     const navigate = useNavigate()
@@ -19,10 +19,9 @@ const EditProfile = ({ toggle }: any) => {
     const [username, setUsername] = useState<string>(user.username)
     const [usernameTaken, setUsernameTaken] = useState<boolean>(false)
     const [close, setClose] = useState<boolean>(false)
-    const [loading, setLoading] = useState<boolean>(false)
 
     const handleUpdateProfile = async () => {
-        setLoading(true)
+        dispatch(setLoading(true))
         const res = await updateProfile({
             name,
             username,
@@ -33,7 +32,8 @@ const EditProfile = ({ toggle }: any) => {
         
         if (res) {
             dispatch(SetUser(res))
-            setLoading(false)
+            dispatch(setLoading(false))
+
             setClose(true)
             setTimeout(() => {
                 toggle(false)
@@ -45,12 +45,9 @@ const EditProfile = ({ toggle }: any) => {
     return (
         <div
             // onClick={handleEdit}
+            
             className={` EditProfileForm fixed top-0 right-0 left-0 bottom-0 flex justify-center items-center bg-[#f8f8f800] backdrop-blur-[5px] z-[9]`}
         >
-            <LoadingScreen
-                loading={loading}
-                icon='🤞🤞'
-            />
             <style>
                 {`
                 .EditProfileForm{

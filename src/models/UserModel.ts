@@ -1,3 +1,11 @@
+import { PostModel } from "./PostModel";
+
+
+export interface FollowModel {
+    user: { user_id: string, username: string, profileImage?: string };
+    createdAt: number;
+}
+
 export interface RegisterProps {
     name: string;
     username: string;
@@ -17,5 +25,5 @@ export interface UserProps {
     website: string;
     Followers: string[];
     Following: string[];
-    Posts: string[];
+    Posts: PostModel[];
 }

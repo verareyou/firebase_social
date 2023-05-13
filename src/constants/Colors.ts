@@ -25,7 +25,7 @@ export const LightTheme = {
 export const DarkTheme = {
     mode: "dark",
     background: "#000000",
-    secBackground: "#111",
+    secBackground: "#151515",
     insecBackground: "#222",
     blurBackground: "#2f2f2faa",
     text: "#fff",

@@ -1,19 +1,43 @@
-import React, { useEffect } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import Profile from '../Profile/ProfileScreen'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { SideBar } from '../../components'
-import { NavigateProfile } from '../../utils/Operations'
+import { sortPostsByTime } from '../../utils/Operations'
+import { getAllPosts } from '../../services/Post'
+import Feed from './Feed'
+import { setLoading } from '../../redux/Slice'
 
 const HomeScreen = () => {
   const { user, theme, isAuth } = useSelector((state: any) => state)
   const navigate = useNavigate()
+  const [FeedPosts, setFeedPosts] = useState<any>([])
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!isAuth) {
+      dispatch(setLoading(false))
       return navigate('/accounts/login')
     }
   }, [isAuth])
+
+
+
+  const fetchFeedPosts = async () => {
+    dispatch(setLoading(true))  
+    const res = await getAllPosts()
+
+    
+    // console.log(res)
+    if (res) {
+      const sortedPosts =  sortPostsByTime(res)
+      setFeedPosts(sortedPosts)
+    }
+    dispatch(setLoading(false))
+  }
+  useEffect(() => {
+    fetchFeedPosts()
+  }, [user])
+
 
   return (
     <div
@@ -25,13 +49,13 @@ const HomeScreen = () => {
       }}
     >
       <SideBar /> 
-      <h1>Home</h1>
-      <h1 onClick={() => {
-        // NavigateProfile('himanshuu',user,navigate)
-        navigate(`/${user.username}`)
-      }} >
-        profile
-      </h1>
+      <Feed
+
+        Posts={FeedPosts}
+        user={user}
+        
+      />
+
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import userpng from '../../assets/Icons/user.png';
+import { setLoading } from '../../redux/Slice';
 
 const RegisterForm = () => {
 
@@ -16,7 +17,6 @@ const RegisterForm = () => {
 
     const { isAuth, theme } = useSelector((state: any) => state)
 
-    const [loading, setLoading] = useState('')
     const [isLogin, setIsLogin] = useState(true)
     const [invalidUsername, SetInvalidUsername] = useState(false)
     const [invalidEmail, SetInvalidEmail] = useState(false)
@@ -39,11 +39,12 @@ const RegisterForm = () => {
         profileImage: isLogin ? Yup.mixed().notRequired():Yup.mixed().required('Required'),
     })
 
-    useEffect(() => {
-        isAuth && navigate('/')
-    }, [isAuth])
+    // useEffect(() => {
+    //     isAuth && navigate('/')
+    // }, [isAuth])
 
     const onSubmit = async (values: any) => {
+        dispatch(setLoading(true))
         try {
             if (isLogin) {
                 const res = await login({
@@ -55,6 +56,8 @@ const RegisterForm = () => {
                 if (res) {
                     navigate('/')
                 }
+
+                dispatch(setLoading(false))
             } else {
                 const res = await register({
                     name: values.name,
@@ -65,6 +68,7 @@ const RegisterForm = () => {
                 })
 
                 setIsLogin(true)
+                dispatch(setLoading(false))
 
                 // if (res) {
                 //     navigate('/')

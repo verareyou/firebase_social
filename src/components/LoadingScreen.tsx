@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { randomEmoji } from '../utils/Operations'
 
-const LoadingScreen = ({ loading, icon }: any) => {
-  const { theme } = useSelector((state: any) => state)
+const LoadingScreen = () => {
+  const { theme,Loading } = useSelector((state: any) => state)
 
   return (
     <div
       style={{
         color: theme.text,
       }}
-      className={' loading-screen top-0 right-0 left-0 bottom-0 fixed flex flex-col justify-center items-center bg-[#f8f8f800] backdrop-blur-[10px] z-[9999] pointer-events-none opacity-0 ' + (loading && 'pointer-events-auto opacity-100')}
+      className={' Loading-screen top-0 right-0 left-0 bottom-0 fixed flex flex-col justify-center items-center bg-[#f8f8f800] backdrop-blur-sm z-[999999] pointer-events-none opacity-0 ' + (Loading && 'pointer-events-auto opacity-100')}
     >
       <style>
         {`
-          .loading-screen{
-              animation: ${loading ? 'fadeIn' : 'fadeOut'} 0.2s ease-in-out;
+          .Loading-screen{
+              animation: ${Loading ? 'fadeIn' : 'fadeOut'} 0.2s ease-in-out;
           }
         `}
       </style>
@@ -22,7 +23,7 @@ const LoadingScreen = ({ loading, icon }: any) => {
       <h1
         className='text-7xl symbol font-bold '
       >
-        {icon ? icon : '💩'}
+        {randomEmoji()}
       </h1>
     </div>
   )
