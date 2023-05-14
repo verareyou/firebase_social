@@ -6,6 +6,7 @@ import { sortPostsByTime } from '../../utils/Operations'
 import { getAllPosts, getAllPostsIds } from '../../services/Post'
 import Feed from './Feed'
 import { setLoading } from '../../redux/Slice'
+import SuggestionCard from './SuggestionCard'
 
 const HomeScreen = () => {
   const { user, theme, isAuth } = useSelector((state: any) => state)
@@ -19,8 +20,6 @@ const HomeScreen = () => {
       return navigate('/accounts/login')
     }
   }, [isAuth])
-
-
 
   const fetchFeedPosts = async () => {
     dispatch(setLoading(true))  
@@ -39,7 +38,7 @@ const HomeScreen = () => {
 
   return (
     <div
-      className=' min-h-screen flex flex-col overflow-x-hidden justify-center items-center'
+      className=' min-h-screen flex md:pl-[300px] p-4 gap-4 flex-row overflow-clip justify-center '
 
       style={{
         backgroundColor: theme.background,
@@ -51,6 +50,8 @@ const HomeScreen = () => {
         Posts={FeedPosts}
         user={user}
       />
+
+      <SuggestionCard />
 
     </div>
   )

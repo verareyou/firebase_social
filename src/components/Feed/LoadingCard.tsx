@@ -4,19 +4,9 @@ import { motion } from 'framer-motion'
 
 const LoadingCard = ({loading}: any) => {
     return (
-        <motion.div
-            initial={{ 
-                // opacity: 0,
-                backdropFilter: 'blur(10px)',
-            }}
-            animate={{
-                backdropFilter: 'blur(0px)',
-            }}
-            // whileInView={{
-            //     backdropFilter: 'blur(0px)',
-            // }}
-            transition={{ duration: 2 }}
-            className={'absolute flex justify-center items-center top-0 left-0 right-0  z-[9] pointer-events-none bottom-0  '}
+        <div
+            
+            className={'absolute flex justify-center items-center top-0 left-0 right-0  z-[9999999] pointer-events-none bottom-0  '}
         >
             <motion.h1
             initial={{
@@ -32,15 +22,15 @@ const LoadingCard = ({loading}: any) => {
                 type: 'spring',
                 bounce: 0.5,
             }}
-            className='text-[100px] pointer-events-none '
+            className={'text-[100px] pointer-events-none '}
             >
             {loading.type === 'like' && '👍'}
             {loading.type === 'comment' && '💬'}
             {loading.type === 'random' && randomEmoji()}
-            {loading.type === 'random' && randomEmoji()}
-            {loading.type === 'random' && randomEmoji()}
+            {/* {loading.type === 'random' && randomEmoji()}
+            {loading.type === 'random' && randomEmoji()} */}
             </motion.h1>
-        </motion.div>
+        </div>
     )
 }
 

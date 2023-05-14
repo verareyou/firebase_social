@@ -26,6 +26,7 @@ const EditField = ({
         placeholder={placeholder}
     /> :
     <textarea
+        maxLength={50}
         value={value}
         onChange={onChange}
         style={{

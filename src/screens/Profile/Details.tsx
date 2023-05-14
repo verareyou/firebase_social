@@ -9,16 +9,40 @@ import EditProfile from './EditProfile'
 
 import userpng from '../../assets/Icons/user.png';
 import ProfilePosts from './ProfilePosts'
-import { setLoading } from '../../redux/Slice'
+import { SetUser, setLoading } from '../../redux/Slice'
+import { FollowUser } from '../../services/Mutations'
 
 
 
 const Details = ({ user, isCurrent }: any) => {
     const dispatch = useDispatch()
     const Navigate = useNavigate()
-    const { theme, isAuth } = useSelector((state: any) => state)
+    const { theme, isAuth, user:currentUser } = useSelector((state: any) => state)
     const [editUsername, setEditUsername] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
+    const [following, setFollowing] = useState(false)
+
+    const Follow = async() => {
+        dispatch(setLoading(true))
+        const res = await FollowUser(currentUser, user)
+        console.log(res)
+        if (!res) {
+            dispatch(setLoading(false))
+            return
+        }
+        dispatch(SetUser(res.updatedUser))
+        dispatch(setLoading(false))
+        setFollowing(!following)
+    }
+
+    useEffect(() => {
+        const isFollowing = currentUser.Following.find((followingUser:any) => followingUser.user_id === user.uid)
+        if (isFollowing) {
+            setFollowing(true)
+        } else {
+            setFollowing(false)
+        }
+    }, [])
 
     useEffect(() => {
         if (!isAuth) {
@@ -44,7 +68,7 @@ const Details = ({ user, isCurrent }: any) => {
                         // backgroundColor: theme.secBackground,
                         // border: `1px solid ${theme.lightBorder}`
                     }}
-                    className={' flex flex-col md:flex-row w-full items-center justify-center py-4 gap-4 md:px-4 md:py-8'}
+                    className={` ${!user.bio && !user.website && 'md:flex-col'} flex flex-col md:flex-row w-full items-center justify-center py-4 gap-2 md:px-4 md:py-8`}
                 >
 
                     <div className=' flex flex-col gap-4 justify-center items-center '>
@@ -54,27 +78,41 @@ const Details = ({ user, isCurrent }: any) => {
                             alt="" />
                         <div className=' flex justify-center items-center gap-4'>
                             <div
-                                className={`${isCurrent ? '' : ' text-center '}`}
+                                className={` flex flex-row gap-4 `}
                             >
-                                <h1
-                                    onClick={() => {
-                                        if (isCurrent) {
-                                            console.log('edit username')
-                                            setEditUsername(true)
-                                        }
-                                    }}
-                                    className={` ${isCurrent ? 'cursor-pointer flex items-center flex-row hover:opacity-70' : ''} font-bold `}
-                                >
-                                    {user.username}
-                                    {/* edit */}
-                                    {isCurrent && <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-1 -mt-[3px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" />
-                                    </svg>}
-                                </h1>
-                                <h1 className=' text-sm text-gray-500'>
-                                    {user.name}
-                                </h1>
+                                <div>
+                                    <h1
+                                        onClick={() => {
+                                            if (isCurrent) {
+                                                console.log('edit username')
+                                                setEditUsername(true)
+                                            }
+                                        }}
+                                        className={` ${isCurrent ? 'cursor-pointer flex items-center flex-row hover:opacity-70' : ''} font-bold `}
+                                    >
+                                        {user.username}
+                                        {/* edit */}
+                                        {isCurrent && <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-1 -mt-[3px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" />
+                                        </svg>}
+                                    </h1>
+                                    <h1 className=' text-sm text-gray-500'>
+                                        {user.name}
+                                    </h1>
+                                </div>
+                                <div>
+                                    {!isCurrent && <Button
+                                        style={{
+                                            backgroundColor: '#',
+                                            // color: theme.background
+                                        }}
+                                        tailw='px-6 py-[8px]'
+                                        text={following ? 'Following' : 'Follow'}
+                                        theme={theme}
+                                        onClick={Follow}
+                                    /> }
+                                </div>
                             </div>
 
                             {isCurrent && <>

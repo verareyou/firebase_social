@@ -10,10 +10,10 @@ const Feed = ({ Posts }: any) => {
             style={{
                 color: theme.text,
             }}
-            className=' flex-1 min-h-screen w-screen items-center flex flex-col gap-2 p-4 '
+            className=' items-center max-md:flex-1 flex flex-col gap-2 '
         >
 
-            <div className=' flex flex-col items-center gap-4 w-full '>
+            <div className=' flex flex-col items-center gap-4 w-full max-md:mb-16 '>
                 {Posts && Posts.map((post: any, index: any) => (
                     <FeedCard key={index} post_Id={post} />
                 ))}

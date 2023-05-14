@@ -10,6 +10,10 @@ import { motion } from 'framer-motion'
 import { randomEmoji } from '../../utils/Operations'
 import CommentCard from '../../components/Feed/CommentCard'
 import LoadingCard from '../../components/Feed/LoadingCard'
+import EditField from '../../components/EditField'
+import { Button } from '../../components'
+import { addComment } from '../../services/Mutations'
+import CommentList from '../../components/Feed/CommentList'
 
 const FeedCard = ({ post_Id }: any) => {
     const { theme, user } = useSelector((state: any) => state)
@@ -17,6 +21,10 @@ const FeedCard = ({ post_Id }: any) => {
     const [post, setPost] = useState(null as any)
     const [showPost, setShowPost] = useState<boolean>(false)
     const [trigger, setTrigger] = useState<boolean>(false)
+    const [comment, setComment] = useState<string>('')
+    const [openComment, setOpenComment] = useState<boolean>(false)
+    const [fullCaption, setFullCaption] = useState(false)
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [loading, setLoading] = useState({
@@ -34,7 +42,7 @@ const FeedCard = ({ post_Id }: any) => {
     }
 
     const fetchPost = async () => {
-        setLoad('like')
+
         const res = await getPostById(post_Id.id)
         // console.log(res)
         if (res) {
@@ -51,9 +59,9 @@ const FeedCard = ({ post_Id }: any) => {
         setLoad('')
     }
     useEffect(() => {
-
+        setLoad('random')
         fetchPost()
-
+        setLoad('')
     }, [])
 
     useEffect(() => {
@@ -61,10 +69,29 @@ const FeedCard = ({ post_Id }: any) => {
     }, [trigger])
 
     const handlePostLike = async () => {
+        if (!liked) {
+            setLoad('like')
+        }
+
         const res = await likePost(post_Id.id, user)
         if (res) {
             // setPost(res)
             setLiked(!liked)
+            setTrigger(!trigger)
+        }
+    }
+
+    const handleComment = async () => {
+        setLoad('comment')
+        if (!comment) return
+        const res = await addComment(user, post, comment)
+        // console.log(res)
+
+        setLoad('')
+        setComment('')
+        if (res) {
+            setOpenComment(false)
+            setFullCaption(false)
             setTrigger(!trigger)
         }
     }
@@ -76,16 +103,16 @@ const FeedCard = ({ post_Id }: any) => {
             style={{
                 color: theme.text,
             }}
-            className='flex relative flex-col flex-grow gap-2 justify-between items-center overflow-hidden rounded-3xl aspect-[4/5] max-sm:w-full md:h-[500px]'
+            className='flex relative flex-col flex-grow gap-2 justify-between items-center overflow-hidden rounded-3xl aspect-[4/5] max-sm:w-full md:min-w-[400px] md:h-[500px]'
         >
             <LoadingCard
-                loading={loading}  
+                loading={loading}
             />
             <div
                 style={{
-                    backgroundColor: theme.mode === 'dark' ? '#1f1f1f55' : '#f8f8f833',
+                    backgroundColor: theme.mode === 'dark' ? '#1f1f1f55' : '#33333333',
                 }}
-                className='flex backdrop-blur-[2px] z-[1] right-2 gap-4 flex-row items-center rounded-full justify-between h-[54px] px-2 mt-2 mx-2'
+                className='flex backdrop-blur-[2px] z-[1] right-2 gap-4 flex-row items-center rounded-full justify-between h-[44px] px-1.5 mt-2 mx-2'
             >
                 <div
                     onClick={() => navigate(`/${post.user.username}`)}
@@ -94,7 +121,7 @@ const FeedCard = ({ post_Id }: any) => {
                     <img
                         src={showPost ? post.user.profileImage : 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'}
                         alt=""
-                        className={'w-10 h-10 rounded-full duration-500 object-cover' + (showPost ? '' : 'blur-[5px]')}
+                        className={'w-8 h-8 rounded-full duration-500 object-cover' + (showPost ? '' : 'blur-[5px]')}
                     />
 
                     <h1
@@ -118,29 +145,61 @@ const FeedCard = ({ post_Id }: any) => {
                 </div>
             </div>
 
-                {/* post image */}
-                <img
-                    loading={'lazy'}
-                    src={showPost ? post.imageUrls[0] :
-                        'https://w7.pngwing.com/pngs/658/248/png-transparent-black-screen-of-death-color-light-others-angle-rectangle-color-thumbnail.png'}
-                    alt=""
-                    className={' object-cover duration-500 absolute h-full w-full z-0 ' + (!showPost && 'invert blur-[5px] opacity-10')}
-                />
-
-            <CommentCard
-                liked={liked}
-                onLike={handlePostLike}
-                onComment={() => console.log('comment')}
-                post={post}
-                showPost={showPost}
+            {/* post image */}
+            <img
+                loading={'lazy'}
+                src={showPost ? post.imageUrls[0] :
+                    'https://w7.pngwing.com/pngs/658/248/png-transparent-black-screen-of-death-color-light-others-angle-rectangle-color-thumbnail.png'}
+                alt=""
+                className={' object-cover duration-500 absolute h-full w-full z-0 ' + (!showPost && 'invert blur-[5px] opacity-10')}
             />
 
-            {/* <div
+            <div
                 style={{
-                    // backgroundColor: theme.lightText,
+                    backgroundColor: openComment ? '#111111dd' : theme.blurBackground,
+                    // color: theme.background,
+                    height: openComment ? '101%' : '62px',
+                    transform: openComment ? 'translateY(-99.5%)' : 'translateY(-62px)',
                 }}
-                className=' opacity-30 rounded-full mb-1 mt-1 w-full md:h-[2px] h-[3px]'
-            /> */}
+                className='flex flex-col absolute duration-200 top-[100%] left-0 right-0 z-[99] backdrop-blur-[2px] overflow-y-auto rounded-3xl md:w-full gap-2 p-2 scrollbar scrollbar-thumb-[#b8c2d073] scrollbar-track-[transparent] scrollbar-h-2 scrollbar-w-1 scrollbar-thumb-rounded-lg scrollbar-track-rounded-lg'
+            >
+                <CommentCard
+                    liked={liked}
+                    onLike={handlePostLike}
+                    onComment={() => setOpenComment(!openComment)}
+                    post={post}
+                    showPost={showPost}
+                    fullCaption={fullCaption}
+                    openComment={openComment}
+                    setOpenComment={setOpenComment}
+                    setFullCaption={setFullCaption}
+                />
+                <div
+                    className='flex flex-row items-center gap-2'
+                >
+                    <EditField
+                        textArea
+                        placeholder='Add a comment...'
+                        tailw=' h-14 flex-1'
+                        value={comment}
+                        onChange={(e: any) => setComment(e.target.value)}
+
+                    />
+                    <Button
+                        theme={theme}
+                        tailw=''
+                        onClick={() => handleComment()}
+                        text='Post'
+                        disabled={comment.length < 1}
+                    />
+                </div>
+                {showPost && post.comments.length > 0 &&
+                <CommentList
+                    post={post.comments}
+                />
+                }
+                
+            </div>
         </div>
     )
 }

@@ -14,7 +14,7 @@ const Button = ({
         disabled={disabled}
         onClick={onClick}
         style={{
-            color: isBlue ? 'white' : theme.text,
+            color: isBlue && 'white',
             border: isBlue ? 'none' : `1px solid ${theme.lightBorder}`,
             ...style
         }}
@@ -22,7 +22,7 @@ const Button = ({
         ${disabled ? 'opacity-50 cursor-not-allowed ' : 'cursor-pointer TouchableBlur'}
         ` + tailw}
     >
-        {text}
+        {text ? text : 'Button'}
     </button>
   )
 }
