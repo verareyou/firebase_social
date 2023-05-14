@@ -35,8 +35,6 @@ const ProfileScreen = () => {
     const fetchUser = async () => {
 
         const username = window.location.pathname.split('/')[1]
-        // console.log(username)
-        // console.log(location.pathname)
         dispatch(setLoading(true))
         const newUser = await getUserByUsername(username)
         
@@ -58,9 +56,9 @@ const ProfileScreen = () => {
             dispatch(setLoading(false))
         }, 300)
     }
-    // useEffect(() => {
-    //     fetchUser()
-    // }, [])
+    useEffect(() => {
+        fetchUser()
+    }, [])
     useEffect(() => {
         fetchUser()
     }, [location.pathname, user])

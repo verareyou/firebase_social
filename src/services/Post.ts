@@ -144,8 +144,6 @@ export const getPostById = async (post_uid: string) => {
         const postRef = doc(db, "posts", post_uid);
         const postDoc = await getDoc(postRef);
 
-        console.log('hey');
-
         if (postDoc.exists()) {
             const postData = postDoc.data();
             if (postData) {

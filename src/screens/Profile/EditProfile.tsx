@@ -37,8 +37,8 @@ const EditProfile = ({ toggle }: any) => {
             setTimeout(() => {
                 toggle(false)
                 
-                console.log(res.username)
-                console.log(user.username)
+                // console.log(res.username)
+                // console.log(user.username)
                 dispatch(SetUser(res))
                 navigate(`/${res.username}`)
             }, 200);
@@ -132,7 +132,7 @@ const EditProfile = ({ toggle }: any) => {
                                     setUsernameTaken(false)
                                     return
                                 }
-                                setUsernameTaken(res)
+                                setUsernameTaken(res && true)
                             }}
 
                         />
@@ -173,6 +173,7 @@ const EditProfile = ({ toggle }: any) => {
                             // tailw='w'
                             />
                             <Button
+                                disabled={usernameTaken ? true : false}
                                 onClick={handleUpdateProfile}
                                 text='Save'
                                 theme={theme}

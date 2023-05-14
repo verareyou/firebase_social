@@ -8,6 +8,8 @@ import { getUserByUid } from '../../services/User'
 import { setLoading } from '../../redux/Slice'
 import { motion } from 'framer-motion'
 import { randomEmoji } from '../../utils/Operations'
+import CommentCard from '../../components/Feed/CommentCard'
+import LoadingCard from '../../components/Feed/LoadingCard'
 
 const FeedCard = ({ post_Id }: any) => {
     const { theme, user } = useSelector((state: any) => state)
@@ -17,16 +19,24 @@ const FeedCard = ({ post_Id }: any) => {
     const [trigger, setTrigger] = useState<boolean>(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState({
+        type: '',
+        state: false
+    })
 
     // console.log(post)
 
-
+    const setLoad = (type: string) => {
+        setLoading({
+            type: type || '',
+            state: type ? true : false
+        })
+    }
 
     const fetchPost = async () => {
-        setLoading(true)
+        setLoad('like')
         const res = await getPostById(post_Id.id)
-        console.log(res)
+        // console.log(res)
         if (res) {
 
             const isLiked = res.likes.find((like: any) => like.user_id === user.uid)
@@ -38,7 +48,7 @@ const FeedCard = ({ post_Id }: any) => {
             setPost(res)
             setShowPost(true)
         }
-        setLoading(false)
+        setLoad('')
     }
     useEffect(() => {
 
@@ -62,39 +72,20 @@ const FeedCard = ({ post_Id }: any) => {
 
     return (
         <div
-            // initial={{ 
-            //     opacity: 0.7,
-            //     scale: 0.95,
-            //     // transform: 'translateY(20px)'
-            //  }}
-            // // animate={{ 
-            // //     opacity: 1,
-            // //     // scale: 1,
-            // //     // transform: 'translateY(0px)'
-            // //  }}
-            // whileInView={{ 
-            //     opacity: 1,
-            //     scale: 1,
-            //  }}
-            // transition={{ 
-            //     duration: 0.2,
-            //     // ease: 'easeInOut',
-            //  }}
+
             style={{
                 color: theme.text,
             }}
-            className='flex relative flex-col flex-grow gap-2 justify-between items-center overflow-hidden rounded-3xl outline aspect-[4/5] max-sm:w-full md:h-[500px]'
+            className='flex relative flex-col flex-grow gap-2 justify-between items-center overflow-hidden rounded-3xl aspect-[4/5] max-sm:w-full md:h-[500px]'
         >
-            {/* <div
-                className={'absolute flex justify-center items-center top-0 left-0 right-0 backdrop-blur-[2px] text-6xl z-[9] pointer-events-none bottom-0 duration-150 ' + (loading ? ' opacity-100' : ' opacity-0')}
-            >
-                {randomEmoji()}
-            </div> */}
+            <LoadingCard
+                loading={loading}  
+            />
             <div
                 style={{
                     backgroundColor: theme.mode === 'dark' ? '#1f1f1f55' : '#f8f8f833',
                 }}
-                className='flex outline backdrop-blur-[2px] z-[1] right-2 gap-4 flex-row items-center rounded-full justify-between h-[52px] px-2 mt-2 mx-2'
+                className='flex backdrop-blur-[2px] z-[1] right-2 gap-4 flex-row items-center rounded-full justify-between h-[54px] px-2 mt-2 mx-2'
             >
                 <div
                     onClick={() => navigate(`/${post.user.username}`)}
@@ -136,7 +127,13 @@ const FeedCard = ({ post_Id }: any) => {
                     className={' object-cover duration-500 absolute h-full w-full z-0 ' + (!showPost && 'invert blur-[5px] opacity-10')}
                 />
 
-            
+            <CommentCard
+                liked={liked}
+                onLike={handlePostLike}
+                onComment={() => console.log('comment')}
+                post={post}
+                showPost={showPost}
+            />
 
             {/* <div
                 style={{

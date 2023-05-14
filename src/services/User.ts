@@ -102,16 +102,22 @@ export const updateProfile = async (
     user: UserProps
 ) => {
     
-    // if (!name || !username || !bio || !website || !user ) {
-    //     console.error("Missing required fields");
-    //     return null;
-    // }
-    
     console.log("Updating user profile...");
     try {
         // const user = auth.currentUser;
         if (user) {
-            // delete old profile image
+
+            // check if username is already taken
+
+            const querySnapshot = query(collection(db, "users"), where("username", "==", username));
+            const querySnapshotData = await getDocs(querySnapshot);
+
+            const userData = querySnapshotData.docs[0].data() as UserProps;
+
+            if (userData && userData.uid !== user.uid) {
+                console.error("Username already taken!");
+                return null;
+            }
 
             if (image) {
             const oldProfileImageRef = ref(storage, user.profileImage);

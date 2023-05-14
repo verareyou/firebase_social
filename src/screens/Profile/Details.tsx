@@ -44,7 +44,7 @@ const Details = ({ user, isCurrent }: any) => {
                         // backgroundColor: theme.secBackground,
                         // border: `1px solid ${theme.lightBorder}`
                     }}
-                    className={' flex flex-col w-full items-center justify-center py-4 gap-4 md:px-4 md:py-8'}
+                    className={' flex flex-col md:flex-row w-full items-center justify-center py-4 gap-4 md:px-4 md:py-8'}
                 >
 
                     <div className=' flex flex-col gap-4 justify-center items-center '>
@@ -53,7 +53,9 @@ const Details = ({ user, isCurrent }: any) => {
                             src={user.profileImage ? user.profileImage : userpng}
                             alt="" />
                         <div className=' flex justify-center items-center gap-4'>
-                            <div>
+                            <div
+                                className={`${isCurrent ? '' : ' text-center '}`}
+                            >
                                 <h1
                                     onClick={() => {
                                         if (isCurrent) {

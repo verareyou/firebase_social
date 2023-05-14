@@ -1,5 +1,5 @@
 import React from 'react'
-import { like, likeFilled } from '../../assets/Icons'
+import { like, likeFilled, msg } from '../../assets/Icons'
 import { useSelector } from 'react-redux'
 
 const CommentCard = ({liked, onLike, onComment,post, showPost}: any) => {
@@ -9,7 +9,7 @@ const CommentCard = ({liked, onLike, onComment,post, showPost}: any) => {
                 style={{
                     backgroundColor: theme.mode === 'dark' ? '#1f1f1f55' : '#f8f8f833',
                 }}
-                className='flex flex-row backdrop-blur-[2px] mx-2 mb-2 gap-4items-center rounded-3xl justify-between min-h-[52px] px-2'
+                className='flex flex-row  backdrop-blur-[2px] mx-2 mb-2 gap-4items-center rounded-3xl justify-center items-center gap-4 min-h-[54px] px-2'
             >
                 <div
                     className='flex flex-row items-center gap-4 pl-2'
@@ -29,8 +29,8 @@ const CommentCard = ({liked, onLike, onComment,post, showPost}: any) => {
                             className={`w-6 h-6 hover:blur-[1px] duration-150 blur-0 cursor-pointer invert`}
                         />
                     </div>
-                    <div>
 
+                    <div>
                         <img
                             src={msg}
                             alt=""
@@ -38,6 +38,7 @@ const CommentCard = ({liked, onLike, onComment,post, showPost}: any) => {
                         />
                     </div>
                 </div>
+
                 <div
                     className=' TouchableBlur text-left flex flex-1'
                 >
