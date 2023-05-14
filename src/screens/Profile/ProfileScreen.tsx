@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { logout } from '../../services/Auth'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { LoadingScreen, SideBar } from '../../components'
 import Details from './Details'
@@ -12,6 +12,7 @@ const ProfileScreen = () => {
     const Navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
+    const params = useParams()
     const { user, theme, isAuth } = useSelector((state: any) => state)
     const [CurrentUser, setCurrentUser] = useState<any>(false)
     const [displayUser, setDisplayUser] = useState<any>({
@@ -34,7 +35,8 @@ const ProfileScreen = () => {
 
     const fetchUser = async () => {
 
-        const username = window.location.pathname.split('/')[1]
+        const username = params.id as string
+
         dispatch(setLoading(true))
         const newUser = await getUserByUsername(username)
         
@@ -61,7 +63,7 @@ const ProfileScreen = () => {
     }, [])
     useEffect(() => {
         fetchUser()
-    }, [location.pathname, user])
+    }, [params.id, user])
     
     return (
         <div
@@ -69,7 +71,7 @@ const ProfileScreen = () => {
                 backgroundColor: theme.background,
                 color: theme.text
             }}
-            className=' min-h-screen flex '
+            className=' min-h-screen flex p-2 md:p-4 '
         >
             {/* <SideBar /> */}
             <Details

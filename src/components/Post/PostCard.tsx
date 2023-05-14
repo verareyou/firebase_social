@@ -19,8 +19,7 @@ const PostCard = ({
     <motion.div
 
       onClick={() => {
-        console.log(post.uid)
-        navigate(`/post/${post.uid}`)
+        navigate(`/post/${post.uid}`, { state: { post } })
       }}
       className='flex flex-col relative justify-center  items-center cursor-pointer rounded-md overflow-hidden  md:rounded-md'
     >

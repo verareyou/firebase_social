@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { AuthStateListener } from '../redux/AuthStateListener'
 import { useEffect } from 'react'
@@ -13,7 +13,7 @@ import ExploreScreen from '../screens/Explore/ExploreScreen'
 import PostScreen from '../screens/Post/PostScreen'
 
 const AppRouter = () => {
-    const { isAuth,theme, ProfileUpdateListener } = useSelector((state: any) => state)
+    const { isAuth, theme, ProfileUpdateListener } = useSelector((state: any) => state)
     const dispatch = useDispatch()
 
     AuthStateListener(ProfileUpdateListener);
@@ -28,16 +28,19 @@ const AppRouter = () => {
             <SideBar />
             <LoadingScreen />
             <Routes>
-                <Route path="/" element={<HomeScreen />
-                } />
+                <Route path="/" element={<HomeScreen />} />
                 <Route path="/:id" element={<ProfileScreen />} >
                     <Route path='edit' element={<ProfileScreen />} />
                 </Route>
-                <Route path="/post/:postId" element={<PostScreen />} />
+                <Route path="/post/:id" element={<PostScreen />} />
                 <Route path="/explore" element={<ExploreScreen />} />
                 <Route path="/accounts" >
                     <Route path="login" element={<LoginRegisterPage />} />
                 </Route>
+                <Route
+                    path="*"
+                    element={<Navigate to="/" replace />}
+                />
             </Routes>
         </Router>
     )

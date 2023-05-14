@@ -56,7 +56,7 @@ const Details = ({ user, isCurrent }: any) => {
     }, [isEdit])
     return (
         <div
-            className=' w-[100vw] flex flex-1 flex-col items-center md:pl-36 p-2 md:p-4 '
+            className=' w-[100vw] flex flex-1 flex-col items-center md:pl-[100px] '
         >
             {editUsername && <UsernameEdit toggle={setEditUsername} />}
             {editProfile && <EditProfile toggle={setEditProfile} />}

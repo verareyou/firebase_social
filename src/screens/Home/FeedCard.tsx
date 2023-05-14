@@ -15,7 +15,7 @@ import { Button } from '../../components'
 import { addComment } from '../../services/Mutations'
 import CommentList from '../../components/Feed/CommentList'
 
-const FeedCard = ({ post_Id }: any) => {
+const FeedCard = ({ Post, post_Id }: any) => {
     const { theme, user } = useSelector((state: any) => state)
     const [liked, setLiked] = useState<boolean>(false)
     const [post, setPost] = useState(null as any)
@@ -42,9 +42,8 @@ const FeedCard = ({ post_Id }: any) => {
     }
 
     const fetchPost = async () => {
+        const res = await getPostById(Post.uid)
 
-        const res = await getPostById(post_Id.id)
-        // console.log(res)
         if (res) {
 
             const isLiked = res.likes.find((like: any) => like.user_id === user.uid)
@@ -59,9 +58,22 @@ const FeedCard = ({ post_Id }: any) => {
         setLoad('')
     }
     useEffect(() => {
-        setLoad('random')
-        fetchPost()
-        setLoad('')
+        if (!Post) {
+            setLoad('random')
+            fetchPost()
+            setLoad('')
+        } else {
+            setPost(Post)
+            const isLiked = Post.likes.find((like: any) => like.user_id === user.uid)
+            if (isLiked) {
+                setLiked(true)
+            } else {
+                setLiked(false)
+            }
+            setPost(Post)
+            setShowPost(true)
+            setLoad('')
+        }
     }, [])
 
     useEffect(() => {
@@ -73,7 +85,7 @@ const FeedCard = ({ post_Id }: any) => {
             setLoad('like')
         }
 
-        const res = await likePost(post_Id.id, user)
+        const res = await likePost(Post.uid, user)
         if (res) {
             // setPost(res)
             setLiked(!liked)
@@ -84,7 +96,7 @@ const FeedCard = ({ post_Id }: any) => {
     const handleComment = async () => {
         setLoad('comment')
         if (!comment) return
-        const res = await addComment(user, post, comment)
+        const res = await addComment(user, Post.uid, comment)
         // console.log(res)
 
         setLoad('')
@@ -103,7 +115,7 @@ const FeedCard = ({ post_Id }: any) => {
             style={{
                 color: theme.text,
             }}
-            className='flex relative flex-col flex-grow gap-2 justify-between items-center overflow-clip rounded-3xl aspect-[4/5] max-sm:w-full md:min-w-[400px] md:h-[500px]'
+            className='flex relative flex-col  gap-2 justify-between items-center overflow-clip rounded-3xl aspect-[4/5] max-sm:w-full max-sm:min-w-[300px] md:min-w-[400px] md:h-[500px]'
         >
             <LoadingCard
                 loading={loading}
@@ -121,7 +133,7 @@ const FeedCard = ({ post_Id }: any) => {
                     <img
                         src={showPost ? post.user.profileImage : 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'}
                         alt=""
-                        className={'w-8 h-8 rounded-full duration-500 object-cover' + (showPost ? '' : 'blur-[5px]')}
+                        className={'w-8 h-8 rounded-full duration-500 object-cover' + (showPost ? '' : ' blur-[50px]')}
                     />
 
                     <h1
@@ -156,7 +168,7 @@ const FeedCard = ({ post_Id }: any) => {
 
             <div
                 style={{
-                    backgroundColor: openComment ? '#222222aa'  : 'transparent',
+                    backgroundColor: openComment ? '#222222aa' : 'transparent',
                     // color: theme.background,
                     height: openComment ? '101%' : '62px',
                     transform: openComment ? 'translateY(-99.5%)' : 'translateY(-62px)',
@@ -200,11 +212,11 @@ const FeedCard = ({ post_Id }: any) => {
                     />
                 </div>
                 {showPost && openComment && post.comments.length > 0 &&
-                <CommentList
-                    post={post.comments}
-                />
+                    <CommentList
+                        post={post.comments}
+                    />
                 }
-                
+
             </div>
         </div>
     )

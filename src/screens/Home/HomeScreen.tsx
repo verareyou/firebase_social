@@ -23,7 +23,7 @@ const HomeScreen = () => {
 
   const fetchFeedPosts = async () => {
     dispatch(setLoading(true))  
-    const res = await getAllPostsIds()
+    const res = await getAllPosts()
 
     if (res) {
       const sortedPosts =  sortPostsByTime(res)

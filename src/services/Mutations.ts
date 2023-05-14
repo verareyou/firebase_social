@@ -78,13 +78,13 @@ export const FollowUser = async (
 
 export const addComment = async (
     user: any,
-    post: any,
+    post_Id: string,
     comment: string
 ) => {
 
     try {
 
-        const docref = doc(db, 'posts', post.uid)
+        const docref = doc(db, 'posts', post_Id)
         const docdata = (await getDoc(docref)).data()
 
             await updateDoc(docref, {

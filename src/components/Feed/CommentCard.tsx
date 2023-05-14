@@ -4,25 +4,15 @@ import { useSelector } from 'react-redux'
 
 const CommentCard = ({ liked, onLike, onComment, post, showPost, fullCaption, setFullCaption, setOpenComment, openComment }: any) => {
     const { theme } = useSelector((state: any) => state)
+    const [date, setDate] = useState<string>('')
 
-    // useEffect(() => {
-    //     if(!post.caption) return setFullCaption('')
-    //     if(post.caption.length > 30) {
-    //         setFullCaption(post.caption.slice(0, 30)+'...')
-    //     } else {
-    //         setFullCaption(post.caption)
-    //     }
-    // }, [])
-
-
-    // const showCaption = () => {
-    //     if(fullCaption.length > 33) {
-    //         console.log('...')
-    //         setFullCaption(post.caption.slice(0, 30)+'...')
-    //     } else {
-    //         setFullCaption(post.caption)
-    //     }
-    // }d
+    useEffect(() => {
+    if (showPost) {
+        const date = `${new Date(post.createdAt).getDate()} ${new Date(post.createdAt).toLocaleString('default', { month: 'short' })} ${new Date(post.createdAt).getFullYear()}`
+        setDate(date)
+    }
+    }, [showPost])
+    // const date = `${new Date(post.createdAt).getDate()} ${new Date(post.createdAt).toLocaleString('default', { month: 'short' })} ${new Date(post.createdAt).getFullYear()}`
 
     return (
         <div
@@ -50,7 +40,14 @@ const CommentCard = ({ liked, onLike, onComment, post, showPost, fullCaption, se
                     />
                 </div>
 
-                <div>
+                <div
+                    className=' flex items-center gap-2'
+                >
+                    <h1
+                        className=' text-[#bebebe] text-xs'
+                    >
+                        {showPost && post.comments.length}
+                    </h1>
                     <img
                         onClick={onComment}
                         src={msg}
@@ -75,6 +72,14 @@ const CommentCard = ({ liked, onLike, onComment, post, showPost, fullCaption, se
                     )}
                 </h1>
             </div>
+            {
+                true &&
+            <h1
+                className=' text-[#bebebe] absolute bottom-1 right-1 text-[10px] pr-2'
+            >
+                {showPost && date}
+            </h1>
+            }
         </div>
     )
 }

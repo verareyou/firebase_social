@@ -42,8 +42,9 @@ body, #root  {
 .TouchableBlur {
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 600;
+  /* font-weight: 600; */
   font-size: 14px;
+  filter: blur(0px);
 }
 
 .TouchableBlur:hover {

@@ -13,7 +13,7 @@ const ExploreScreen = () => {
       className='flex flex-col min-h-screen items-center justify-center'
     >
       <div
-      className=' flex-grow items-center flex-col md:pl-32 flex max-w-[1000px]'
+      className=' flex-grow items-center flex-col md:pl-[100px] flex max-w-[1000px]'
       >
         <ExplorePosts />
       </div>
