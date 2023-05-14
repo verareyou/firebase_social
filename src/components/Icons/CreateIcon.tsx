@@ -7,6 +7,8 @@ const CreateIcon = ({route, color}: any) => {
   useEffect(() => {
     if (route === 'create') {
       setActive(true)
+    } else {
+      setActive(false)
     }
   }, [route])
   

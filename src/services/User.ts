@@ -3,13 +3,11 @@ import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase
 import { auth, db, storage } from "../config/firebase";
 import { ResizeFile } from "../utils/ResizeImage";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { UserProps } from "../models/UserModel";
+import { FetchUserProps, UserProps } from "../models/UserModel";
 
 // get user by uid
 
 export const getUserByUid = async (uid: string) => {
-    // console.log("Getting user by uid...");
-
     if (!uid) return null;
 
     try {
@@ -18,7 +16,6 @@ export const getUserByUid = async (uid: string) => {
 
         const userData = docSnap.data() as UserProps;
 
-        // console.log("User found successfully!");
 
         return userData;
     } catch (error) {
@@ -30,7 +27,6 @@ export const getUserByUid = async (uid: string) => {
 // get user by username
 
 export const getUserByUsername = async (username: string) => {
-    // console.log("Getting user by username...");
 
     if (!username) return null;
 
@@ -40,9 +36,26 @@ export const getUserByUsername = async (username: string) => {
 
         const userData = querySnapshotData.docs[0].data() as UserProps;
 
-        // console.log("User found successfully!");
+        const postsQuerySnapshot = query(collection(db, "posts"), where("user_uid", "==", userData.uid));
+        const postsQuerySnapshotData = await getDocs(postsQuerySnapshot);
 
-        return userData;
+        const postsData = postsQuerySnapshotData.docs.map(doc => doc.data());
+
+        const fetchUserData: FetchUserProps = {
+            uid: userData.uid,
+            email: userData.email,
+            name: userData.name,
+            username: userData.username,
+            profileImage: userData.profileImage,
+            createdAt: userData.createdAt,
+            bio: userData.bio,
+            website: userData.website,
+            Followers: userData.Followers,
+            Following: userData.Following,
+            Posts: postsData,
+        }
+
+        return fetchUserData;
     } catch (error) {
         console.error("Error getting user", error);
         return null;

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { SideBar } from '../../components'
 import { sortPostsByTime } from '../../utils/Operations'
-import { getAllPosts } from '../../services/Post'
+import { getAllPosts, getAllPostsIds } from '../../services/Post'
 import Feed from './Feed'
 import { setLoading } from '../../redux/Slice'
 
@@ -24,10 +24,8 @@ const HomeScreen = () => {
 
   const fetchFeedPosts = async () => {
     dispatch(setLoading(true))  
-    const res = await getAllPosts()
+    const res = await getAllPostsIds()
 
-    
-    // console.log(res)
     if (res) {
       const sortedPosts =  sortPostsByTime(res)
       setFeedPosts(sortedPosts)
@@ -52,7 +50,6 @@ const HomeScreen = () => {
       <Feed
         Posts={FeedPosts}
         user={user}
-        
       />
 
     </div>

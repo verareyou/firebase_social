@@ -39,9 +39,6 @@ const RegisterForm = () => {
         profileImage: isLogin ? Yup.mixed().notRequired():Yup.mixed().required('Required'),
     })
 
-    // useEffect(() => {
-    //     isAuth && navigate('/')
-    // }, [isAuth])
 
     const onSubmit = async (values: any) => {
         dispatch(setLoading(true))

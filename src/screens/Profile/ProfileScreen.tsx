@@ -35,18 +35,21 @@ const ProfileScreen = () => {
     const fetchUser = async () => {
 
         const username = window.location.pathname.split('/')[1]
-        if (username === user.username){
+        // console.log(username)
+        // console.log(location.pathname)
+        dispatch(setLoading(true))
+        const newUser = await getUserByUsername(username)
+        
+        if (!newUser) {
+            // dispatch(setLoading(false))
+            Navigate('/')
+            return
+        }
+        console.log(newUser.username, user.username)
+        if (newUser.username === user.username){
             setCurrentUser(true)
-            setDisplayUser(user)
+            setDisplayUser(newUser)
         } else {
-            dispatch(setLoading(true))
-            const newUser = await getUserByUsername(username)
-            
-            if (!newUser) {
-                dispatch(setLoading(false))
-                Navigate('/')
-                return
-            }
             
             setDisplayUser(newUser)
             setCurrentUser(false)
@@ -55,12 +58,12 @@ const ProfileScreen = () => {
             dispatch(setLoading(false))
         }, 300)
     }
+    // useEffect(() => {
+    //     fetchUser()
+    // }, [])
     useEffect(() => {
         fetchUser()
-    }, [])
-    useEffect(() => {
-        fetchUser()
-    }, [user,window.location.pathname])
+    }, [location.pathname, user])
     
     return (
         <div

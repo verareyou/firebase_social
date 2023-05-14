@@ -25,11 +25,11 @@ const ProfilePosts = ({user, isCurrent}: any) => {
         style={{
             color: theme.text,
         }}
-        className=' flex md:flex-col flex-row flex-grow gap-2 p-4  '
+        className=' flex md:flex-col flex-row flex-grow gap-2   '
 
     >
         <div
-            className='h-full md:hidden max-w-[50%] gap-2 flex flex-col'
+            className='h-full md:hidden w-[50%] gap-2 flex flex-col'
         >
         {Posts && splitPosts(Posts)[0].map((post: any, index:any) => (
             <PostCard
@@ -40,7 +40,7 @@ const ProfilePosts = ({user, isCurrent}: any) => {
         ))}
         </div>
         <div
-            className='md:hidden h-full gap-2 flex flex-col'
+            className='md:hidden w-[50%] h-full gap-2 flex flex-col'
         >
 
         {Posts && splitPosts(Posts)[1].map((post: any, index:any) => (

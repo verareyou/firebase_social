@@ -7,6 +7,8 @@ const ExploreIcon = ({route, color}: any) => {
   useEffect(() => {
     if (route === 'explore') {
       setActive(true)
+    } else {
+      setActive(false)
     }
   }, [route])
   

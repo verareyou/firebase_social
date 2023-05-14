@@ -54,10 +54,9 @@ const SideBar = () => {
         },
     }
 
-    return (
-        !disabled && <>
+    return (<>
             {createPost && <CreatePost setRoute={setRoute} toggle={setCreatePost} />}
-            <motion.div
+            {!disabled && <motion.div
                 variants={animate}
                 initial='initial'
                 animate='animate'
@@ -70,7 +69,7 @@ const SideBar = () => {
                     borderRight: isMobile ? 'none' : `1px solid ${theme.lightBorder}`,
                     color: theme.text
                 }}
-                className={`fixed md:top-0 md:bottom-0 md:flex-col md:left-0 items-center box-border md:p-4 md:w-[100px] justify-evenly md:justify-normal md:gap-8 md:h-screen md:m-0 flex bottom-0 left-0 right-0 p-2 rounded-full md:rounded-none m-6 z-[999]  `}
+                className={`fixed md:top-0 md:bottom-0 md:flex-col md:left-0 md:justify-center items-center box-border md:p-4 md:w-[100px] justify-evenly md:gap-8 md:h-screen md:m-0 flex bottom-0 left-0 right-0 p-2 rounded-full md:rounded-none m-6 z-[999]  `}
             >
                 {visible.visible && <ProfileView username={user.username} visible={visible} setVisible={setVisible}
                 />}
@@ -136,7 +135,7 @@ const SideBar = () => {
 
                 <div
                     onClick={() => {
-                        // setRoute('profile')
+                        setRoute('profile')
                         navigate(`/${user.username}`, { state: { user: user } })
                     }}
                     className='flex TouchableBlur justify-center items-center overflow-hidden h-[28px] w-[28px] m-2 rounded-full '
@@ -161,7 +160,7 @@ const SideBar = () => {
 
 
 
-            </motion.div>
+            </motion.div>}
         </>
     )
 }

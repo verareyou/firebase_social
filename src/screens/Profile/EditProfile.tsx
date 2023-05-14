@@ -31,14 +31,19 @@ const EditProfile = ({ toggle }: any) => {
         }, user)
         
         if (res) {
-            dispatch(SetUser(res))
             dispatch(setLoading(false))
-
+            
             setClose(true)
             setTimeout(() => {
                 toggle(false)
-                navigate(`/${user.username}`)
+                
+                console.log(res.username)
+                console.log(user.username)
+                dispatch(SetUser(res))
+                navigate(`/${res.username}`)
             }, 200);
+        } else {
+            dispatch(setLoading(false))
         }
     }
 
@@ -46,7 +51,7 @@ const EditProfile = ({ toggle }: any) => {
         <div
             // onClick={handleEdit}
             
-            className={` EditProfileForm fixed top-0 right-0 left-0 bottom-0 flex justify-center items-center bg-[#f8f8f800] backdrop-blur-[5px] z-[9]`}
+            className={` EditProfileForm fixed top-0 right-0 left-0 bottom-0 flex justify-center items-center bg-[#f8f8f800] backdrop-blur-[5px] z-[9999]`}
         >
             <style>
                 {`
@@ -68,7 +73,7 @@ const EditProfile = ({ toggle }: any) => {
                     backgroundColor: theme.secBackground,
                     color: theme.text
                 }}
-                className=' EditUsername flex flex-col gap-4 p-4 sm:max-w-fit rounded-md z-[999]'
+                className=' EditUsername flex flex-col gap-4 p-8 sm:max-w-fit rounded-3xl z-[9999]'
             >
                 <h1 className=' text-center text-[18px] font-semibold'>
                     Edit Profile
@@ -80,7 +85,7 @@ const EditProfile = ({ toggle }: any) => {
                     {/* image change */}
 
                     <div
-                        className=' flex flex-col md:flex-row items-center gap-2'
+                        className=' flex flex-col md:flex-row items-center gap-4'
                     >
                         <div
                             className=' w-[60px] h-[60px] flex  justify-center items-center rounded-full overflow-hidden'

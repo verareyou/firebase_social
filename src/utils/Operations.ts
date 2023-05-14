@@ -1,3 +1,4 @@
+import { FetchPostProps } from "../models/PostModel"
 import { getUserByUid, getUserByUsername } from "../services/User"
 
 
@@ -74,4 +75,23 @@ export const splitPosts =  (posts: any) => {
         }
     }
     return [ even, odd]
+}
+
+export const getFetchPostData = ( post: any, user: any ) => {
+    const fetchPostData: FetchPostProps = {
+        uid: post.uid,
+        username: user.username,
+        imageUrls: post.imageUrls,
+        caption: post.caption,
+        likes: post.likes ? post.likes : [],
+        comments: post.comments,
+        createdAt: post.createdAt,
+        user: {
+            user_uid: user.uid,
+            username: user.username,
+            profileImage: user.profileImage
+        }
+    }
+
+    return fetchPostData;
 }

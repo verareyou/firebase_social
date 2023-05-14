@@ -25,5 +25,19 @@ export interface UserProps {
     website: string;
     Followers: string[];
     Following: string[];
+    Posts: string[];
+}
+
+export interface FetchUserProps {
+    uid: string;
+    email: string;
+    name: string;
+    username: string;
+    profileImage?: string;
+    createdAt: number;
+    bio: string;
+    website: string;
+    Followers: any[],
+    Following: any[],
     Posts: PostModel[];
 }

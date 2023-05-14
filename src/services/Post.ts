@@ -1,9 +1,10 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { CreatePostProps, PostModel } from "../models/PostModel";
+import { CreatePostProps, FetchPostProps, PostModel } from "../models/PostModel";
 import { db, storage } from "../config/firebase";
-import { getDate } from "../utils/Operations";
+import { getDate, getFetchPostData } from "../utils/Operations";
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import imageCompression from "browser-image-compression";
+import { getUserByUid } from "./User";
 
 
 export const createPost = async ({image, caption, user}: CreatePostProps) => {
@@ -29,11 +30,7 @@ export const createPost = async ({image, caption, user}: CreatePostProps) => {
             caption,
             likes: [],
             comments: [],
-            username: user.username,
-            user: {
-                uid: user.uid,
-                profileImage: user.profileImage || ""
-            },
+            user_uid: user.uid,
             createdAt: getDate()
         }
         await setDoc(postRef, postData);
@@ -56,9 +53,9 @@ export const createPost = async ({image, caption, user}: CreatePostProps) => {
             if (userData) {
                 let Posts = userData.Posts;
                 if(Posts) {
-                Posts.push(postData);
+                Posts.push(postData.uid);
                 } else {
-                    Posts = [postData];
+                    Posts = [postData.uid];
                 }
                 await updateDoc(userRef, { Posts: Posts });
 
@@ -87,7 +84,31 @@ export const getAllPosts = async () => {
 
         if (!posts.empty) {
             const postsData = posts.docs.map(post => post.data());
-            return postsData;
+            const postsWithUser = await Promise.all(postsData.map(async postData => {
+                const userRef = doc(db, "users", postData.user_uid);
+                const userData = await getDoc(userRef).then(doc => doc.data());
+
+                if(!userData) return null;
+                
+                const fetchPostData: FetchPostProps = {
+                    uid: postData.uid,
+                    username: userData.username || "",
+                    imageUrls: postData.imageUrls,
+                    caption: postData.caption,
+                    likes: postData.likes,
+                    comments: postData.comments,
+                    createdAt: postData.createdAt,
+                    user: {
+                        user_uid: userData.uid,
+                        username: userData.username || "",
+                        profileImage: userData.profileImage || ""
+                    }
+                }
+
+                return fetchPostData;
+            }));
+
+            return postsWithUser;
         }
 
         return null;
@@ -97,19 +118,111 @@ export const getAllPosts = async () => {
     }
 }
 
-export const getUserPosts = async (username: string) => {
+export const getAllPostsIds = async () => {
     try {
-        const postsQuery = query(collection(db, "posts"), where("username", "==", username));
+        const postsQuery = query(collection(db, "posts"));
         const posts = await getDocs(postsQuery);
 
         if (!posts.empty) {
-            const postsData = posts.docs.map(post => post.data());
+            const postsData = posts.docs.map(post => {
+                return { id : post.id,
+                createdAt: post.data().createdAt }
+            });
             return postsData;
         }
 
         return null;
+
     } catch (error) {
         console.log(error);
         return null;
     }
 }
+
+export const getPostById = async (post_uid: string) => {
+    try {
+        const postRef = doc(db, "posts", post_uid);
+        const postDoc = await getDoc(postRef);
+
+        console.log('hey');
+
+        if (postDoc.exists()) {
+            const postData = postDoc.data();
+            if (postData) {
+                const userRef = doc(db, "users", postData.user_uid);
+                const userData = await getDoc(userRef).then(doc => doc.data());
+
+                if(!userData) return null;
+
+
+                return getFetchPostData(postData, userData);
+            }
+        }
+
+        return null;
+
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export const likePost = async (post_uid: string, user: any) => {
+    try {
+
+        const postRef = doc(db, "posts", post_uid);
+        const postDoc = await getDoc(postRef);
+
+        if (postDoc.exists()) {
+            const postData = postDoc.data();
+
+            const checkLike = postData?.likes.find((like: any) => like.user_id === user.uid);
+
+            if (checkLike) {
+                const likes = postData?.likes.filter((like: any) => like.user_id !== user.uid);
+                await updateDoc(postRef, { likes: likes });
+
+                const updatedPostDoc = await getDoc(postRef);
+
+                const updatedPostData = updatedPostDoc.data();
+                
+
+                if (updatedPostData) {
+                    return updatedPostData;
+                }
+            }
+
+            const like = {
+                user_id: user.uid,
+                username: user.username,
+                profileImage: user.profileImage,
+                createdAt: getDate()
+            }
+
+            if (postData) {
+                let likes = postData.likes;
+                if(likes) {
+                    likes.push(like);
+                } else {
+                    likes = [like];
+                }
+                await updateDoc(postRef, { likes: likes });
+
+                const updatedPostDoc = await getDoc(postRef);
+
+                const updatedPostData = updatedPostDoc.data();
+
+
+                if (updatedPostData) {
+                    return getFetchPostData(updatedPostData, user);
+                }
+            }
+        } 
+        return null;
+
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
