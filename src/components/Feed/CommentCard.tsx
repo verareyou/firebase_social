@@ -27,7 +27,7 @@ const CommentCard = ({ liked, onLike, onComment, post, showPost, fullCaption, se
     return (
         <div
             style={{
-                backgroundColor: theme.mode === 'dark' ? '#1f1f1f55' : '#33333333',
+                backgroundColor: theme.mode === 'dark' ? '#1f1f1faa' : '#111111aa',
             }}
             className='flex flex-row backdrop-blur-[2px] mb-2 rounded-3xl justify-center items-center gap-4 px-1'
         >

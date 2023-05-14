@@ -103,14 +103,14 @@ const FeedCard = ({ post_Id }: any) => {
             style={{
                 color: theme.text,
             }}
-            className='flex relative flex-col flex-grow gap-2 justify-between items-center overflow-hidden rounded-3xl aspect-[4/5] max-sm:w-full md:min-w-[400px] md:h-[500px]'
+            className='flex relative flex-col flex-grow gap-2 justify-between items-center overflow-clip rounded-3xl aspect-[4/5] max-sm:w-full md:min-w-[400px] md:h-[500px]'
         >
             <LoadingCard
                 loading={loading}
             />
             <div
                 style={{
-                    backgroundColor: theme.mode === 'dark' ? '#1f1f1f55' : '#33333333',
+                    backgroundColor: '#111111aa',
                 }}
                 className='flex backdrop-blur-[2px] z-[1] right-2 gap-4 flex-row items-center rounded-full justify-between h-[44px] px-1.5 mt-2 mx-2'
             >
@@ -135,12 +135,12 @@ const FeedCard = ({ post_Id }: any) => {
                     onClick={() => console.log('clicked')}
                 >
                     <img
-                        style={{
-                            filter: theme.mode === 'dark' ? 'invert(1)' : 'invert(0)'
-                        }}
+                        // style={{
+                        //     filter: theme.mode === 'dark' ? 'invert(1)' : 'invert(0)'
+                        // }}
                         src={dotmenu}
                         alt=""
-                        className='w-6 h-6 '
+                        className='w-6 h-6 invert'
                     />
                 </div>
             </div>
@@ -156,12 +156,13 @@ const FeedCard = ({ post_Id }: any) => {
 
             <div
                 style={{
-                    backgroundColor: openComment ? '#111111dd' : theme.blurBackground,
+                    backgroundColor: openComment ? '#222222aa'  : 'transparent',
                     // color: theme.background,
                     height: openComment ? '101%' : '62px',
                     transform: openComment ? 'translateY(-99.5%)' : 'translateY(-62px)',
+                    overflowY: openComment ? 'auto' : 'hidden',
                 }}
-                className='flex flex-col absolute duration-200 top-[100%] left-0 right-0 z-[99] backdrop-blur-[2px] overflow-y-auto rounded-3xl md:w-full gap-2 p-2 scrollbar scrollbar-thumb-[#b8c2d073] scrollbar-track-[transparent] scrollbar-h-2 scrollbar-w-1 scrollbar-thumb-rounded-lg scrollbar-track-rounded-lg'
+                className='flex flex-col absolute duration-200 top-[100%] left-0 right-0 z-[99] backdrop-blur-[2px] overflow-y-auto rounded-[30px] md:w-full gap-2 p-2 scrollbar scrollbar-thumb-[#b8c2d073] scrollbar-track-[transparent] scrollbar-h-2 scrollbar-w-1 scrollbar-thumb-rounded-lg scrollbar-track-rounded-lg'
             >
                 <CommentCard
                     liked={liked}
@@ -179,6 +180,9 @@ const FeedCard = ({ post_Id }: any) => {
                 >
                     <EditField
                         textArea
+                        style={{
+                            color: 'white'
+                        }}
                         placeholder='Add a comment...'
                         tailw=' h-14 flex-1'
                         value={comment}
@@ -187,13 +191,15 @@ const FeedCard = ({ post_Id }: any) => {
                     />
                     <Button
                         theme={theme}
-                        tailw=''
+                        style={{
+                            color: 'white',
+                        }}
                         onClick={() => handleComment()}
                         text='Post'
                         disabled={comment.length < 1}
                     />
                 </div>
-                {showPost && post.comments.length > 0 &&
+                {showPost && openComment && post.comments.length > 0 &&
                 <CommentList
                     post={post.comments}
                 />

@@ -21,7 +21,7 @@ const EditField = ({
             color: theme.text,
             ...style
         }}
-        className={` p-2 px-4 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 ${tailw} `}
+        className={` p-2 px-4 rounded-full bg-transparent outline-none duration-100 text-black placeholder-[#a7a7a7] ${tailw} `}
         type={type}
         placeholder={placeholder}
     /> :
@@ -34,7 +34,7 @@ const EditField = ({
             color: theme.text,
             ...style
         }}
-        className={` p-2 px-4 rounded-3xl min-h-fit bg-transparent outline-none duration-100 text-black placeholder-gray-500 ${tailw} `}
+        className={` p-2 px-4 rounded-3xl min-h-fit bg-transparent outline-none duration-100 text-black placeholder-[#a7a7a7] ${tailw} `}
         placeholder={placeholder}
     />
   )

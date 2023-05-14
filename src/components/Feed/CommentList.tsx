@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getUserByUid } from '../../services/User'
 import { sortPostsByTime } from '../../utils/Operations'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -24,9 +25,8 @@ const CommentList = ({ post }: any) => {
 }
 
 const Listed = ({ comment, theme }: any) => {
-
-
     const [user, setUser] = useState<any>(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -42,11 +42,13 @@ const Listed = ({ comment, theme }: any) => {
     return (
         <div
             style={{
-                backgroundColor: theme.background,
+                backgroundColor: '#111111dd',
+                color: 'white'
             }}
             className='flex flex-row items-center rounded-3xl gap-2 p-1'
         >
             <img
+                onClick={() => navigate(`/${user.username}`)}
                 src={user && user.profileImage}
                 alt=""
                 className='w-8 h-8 rounded-full object-cover'
@@ -59,6 +61,7 @@ const Listed = ({ comment, theme }: any) => {
                 >
 
                     <h1
+                onClick={() => navigate(`/${user.username}`)}
                         className='text-sm font-semibold'
                     >
                         {user && user.username}
