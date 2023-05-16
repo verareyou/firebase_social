@@ -7,7 +7,7 @@ import LoadingCard from '../../components/Feed/LoadingCard'
 import EditField from '../../components/EditField'
 import { Button, ProfileView } from '../../components'
 import CommentList from '../../components/Feed/CommentList'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 
 const FeedCard = ({
@@ -22,12 +22,22 @@ const FeedCard = ({
     handlePostLike,
     handleComment,
     comment,
-    setComment
+    setComment,
 
 }: any) => {
 
     const { theme, user } = useSelector((state: any) => state)
     const navigate = useNavigate()
+    const [isMobile, setIsMobile] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (window.innerWidth < 800) {
+            setIsMobile(true)
+        } else {
+            setIsMobile(false)
+        }
+    }, [])
+    
 
     // console.log(post)
 
@@ -42,18 +52,20 @@ const FeedCard = ({
     })
 
 
+
     return (
         <div
 
             style={{
                 color: theme.text,
             }}
-            className='flex relative flex-col gap-2 justify-between items-center overflow-clip rounded-3xl aspect-[4/5] max-sm:w-full max-md:min-w-[400px] md:min-w-[400px] md:h-[500px]'
+            className='flex relative flex-col gap-2 justify-between items-center overflow-clip rounded-3xl aspect-[4/5] max-sm:w-full max-sm:min-w-[300px] max-md:min-w-[400px] md:min-w-[400px] md:h-[500px]'
         >
-            {showPost &&
+            { !isMobile && showPost &&
                 <ProfileView
                     username={post.user.username}
                     // ref={ref}
+                    showPost={showPost}
                     visible={visible}
                     setVisible={setVisible}
                 />

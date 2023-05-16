@@ -15,7 +15,7 @@ const Feed = ({ Posts }: any) => {
 
             <div className=' flex flex-col items-center gap-4 w-full max-md:mb-16 '>
                 {Posts && Posts.map((post: any, index: any) => (
-                    <FeedMid key={index} Post={post}  
+                    <FeedMid key={index} Post={post}
                     />
                 ))}
             </div>

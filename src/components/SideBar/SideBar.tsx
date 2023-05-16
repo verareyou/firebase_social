@@ -20,6 +20,7 @@ const SideBar = () => {
     const [disabled, setDisabled] = useState<boolean>(true)
 
     useEffect(() => {
+        console.log('window.innerWidth', window.innerWidth)
         if (window.innerWidth < 768) {
             setIsMobile(true)
         }
