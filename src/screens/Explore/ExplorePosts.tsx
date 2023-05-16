@@ -48,7 +48,7 @@ const ExplorePosts = () => {
 
     return (
         <motion.div
-        {...animate}
+        // {...animate}
             style={{
                 color: theme.text,
                 backgroundColor: theme.background

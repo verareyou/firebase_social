@@ -38,7 +38,7 @@ const HomeScreen = () => {
 
   return (
     <div
-      className=' min-h-screen flex md:pl-[300px] p-4 gap-4 flex-row overflow-clip justify-center '
+      className=' min-h-screen flex md:pl-[100px] p-4 gap-4 flex-row overflow-clip justify-center '
 
       style={{
         backgroundColor: theme.background,

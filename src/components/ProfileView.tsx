@@ -1,55 +1,94 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Button from './Button'
 import { useNavigate } from 'react-router-dom'
 import { getUserByUsername } from '../services/User'
 import { UserProps } from '../models/UserModel'
+import { SetUser } from '../redux/Slice'
+import { FollowUser } from '../services/Mutations'
 
-const ProfileView = ({ username, visible, setVisible }: any) => {
+const ProfileView = ({ username, ref, setVisible,visible}: any) => {
     const { theme,user } = useSelector((state: any) => state)
     const [close, setClose] = useState<boolean>(false)
     const [displayUser, setDisplayUser] = useState<any>({}) as [UserProps, any]
     const [isCurrentUser, setIsCurrentUser] = useState<boolean>(false)
     const navigate = useNavigate()
     const [loading, setLoading] = useState<boolean>(true)
+    const [following, setFollowing] = useState<boolean>(false)
+    const dispatch = useDispatch()
+
 
     const fetchUser = async () => {
         setLoading(true)
         const res = await getUserByUsername(username)
+        if (!res) {
+            setLoading(false)
+            return
+        }
+        res!.uid === user.uid ? setIsCurrentUser(true) : setIsCurrentUser(false)
+        const isFollowing = res.Followers!.find((followingUser:any) => followingUser === user.uid)
+            const isFollowing2 = user.Following!.find((followingUser:any) => followingUser === res.uid)
+            if (isFollowing && isFollowing2) {
+                setFollowing(true)
+            } else {
+                setFollowing(false)
+            }
         setDisplayUser(res)
         setLoading(false)
     }
     useEffect(() => {
         fetchUser()
-    }, [])
+    }, [following])
 
+    useEffect(() => {
+        if( visible.visible) {
+            setTimeout(() => {
+            setClose(false)
+            }, 100)
+        }else {
+            setTimeout(() => {
+            setClose(true)
+            }, 100)
+        }
+    }, [visible])
+
+    const Follow = async() => {
+        setLoading(true)
+        const res = await FollowUser(user, displayUser)
+        console.log(res)
+        if (!res) {
+            setLoading(false)
+            return
+        }
+        dispatch(SetUser(res.updatedUser))
+        setLoading(false)
+        setFollowing(!following)
+    }
 
     return (
         loading ? <div></div> :
         <div
-            onMouseOver={() => { setVisible({ ...visible, visible: true }) }}
+            // ref={ref}
+            onMouseEnter={() => { setVisible({ ...visible, visible: true }) }}
             onMouseLeave={() => { 
-                setClose(true)
-                setTimeout(() => {
-
                 setVisible({...visible, visible: false})
-                setClose(false)
-                }, 100);
             }}
             style={{
-                backgroundColor: theme.insecBackground,
+                backgroundColor: '#111111dd',
                 color: theme.text,
-                top: visible.pos.y,
-                left: visible.pos.x,
-                display: visible.visible ? 'flex' : 'none'
+                // top: visible.pos.y,
+                // left: visible.pos.x,
+                opacity: visible.visible ? 1 : 0,
+                display: !close ? 'flex' : 'none',
 
             }}
-            className={` profileview flex-col p-4 h-[250px] gap-4 w-[350px] overflow-hidden md:flex hidden rounded-xl fixed `}
+            className={` profileview absolute top-10 duration-200 backdrop-blur-[2px] flex-col p-4 hidden md:flex h-[250px] gap-4 w-[350px] overflow-y-auto scrollbar-none rounded-xl z-[9999] `}
         >
             <style>
                 {`
                 .profileview {
-                    animation: ${visible.visible && !close ? 'fadeIn' : 'fadeOut'} 0.1s ease-in-out;
+                    // animation: ${visible.visible ? 'fadeIn' : 'fadeOut'} 0.1s ease-in-out;
+
                 }
                 `}
             </style>
@@ -70,10 +109,11 @@ const ProfileView = ({ username, visible, setVisible }: any) => {
                         onClick={() => {
                             navigate(`/${displayUser.username}`)
                         }}
-                        tailw='px-0 py-0'
+                        // tailw='px-0 py-0'
                         style={{
                             fontWeight: 'bold',
-                            border: 'none'
+                            border: 'none',
+                            padding: '0px',
                         }}
                     />
                     <h1 className=' text-[12px] font-normal'>
@@ -97,8 +137,9 @@ const ProfileView = ({ username, visible, setVisible }: any) => {
 
                     <Button
                         theme={theme}
-                        text='Follow'
-                        tailw=' w-full px-2 py-1'
+                        onClick={Follow}
+                        text={following ? 'Following' : 'Follow'}
+                        tailw={' w-full px-2 py-1' + (isCurrentUser ? ' hidden' : '')}
                         style={{
                             fontSize: '12px'
                         }}
@@ -136,6 +177,21 @@ const ProfileView = ({ username, visible, setVisible }: any) => {
                 >
                     {displayUser.Following.length} following
                 </h1>
+            </div>
+            <div
+                className=' flex flex-row flex-wrap gap-2 mt-2'
+
+            >
+                {
+                    displayUser.Posts.map((post: any, index: any) => (
+                        <img
+                            key={index}
+                            className='object-cover w-[100px] h-[100px] rounded-md'
+                            src={post.imageUrls[0]}
+                            alt="post"
+                        />
+                    ))
+                }
             </div>
         </div>
     )

@@ -25,7 +25,7 @@ const SuggestionCard = () => {
             // {...motionVariants}
             // transition={{duration: 0.5}}
             
-            className={' flex-col h-[400px] w-[400px] sticky top-4 hidden lg:flex rounded-3xl gap-2  '}
+            className={' flex-col h-[400px] w-[400px] mr-[-200px] sticky top-4 hidden lg:flex rounded-3xl gap-2  '}
             style={{
                 color: theme.text,
                 // border: `1px solid ${theme.lightBorder}`,

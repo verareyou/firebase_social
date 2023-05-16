@@ -17,7 +17,7 @@ const CommentCard = ({ liked, onLike, onComment, post, showPost, fullCaption, se
     return (
         <div
             style={{
-                backgroundColor: theme.mode === 'dark' ? '#1f1f1faa' : '#111111aa',
+                backgroundColor: openComment ? '#000000ff' : '#111111aa',
             }}
             className='flex flex-row backdrop-blur-[2px] mb-2 rounded-3xl justify-center items-center gap-4 px-1'
         >
@@ -73,9 +73,9 @@ const CommentCard = ({ liked, onLike, onComment, post, showPost, fullCaption, se
                 </h1>
             </div>
             {
-                true &&
+                !openComment &&
             <h1
-                className=' text-[#bebebe] absolute bottom-1 right-1 text-[10px] pr-2'
+                className=' text-[#bebebe] text-[10px] pr-2'
             >
                 {showPost && date}
             </h1>

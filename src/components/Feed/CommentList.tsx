@@ -11,7 +11,7 @@ const CommentList = ({ post }: any) => {
     const { theme } = useSelector((state: any) => state)
     return (
         <div
-            className='flex flex-col gap-2 md:gap-2 h-full'
+            className='flex flex-col pb-2 gap-2'
         >
             {sortPostsByTime(post).map((comment: any, index: any) => (
                 <Listed
@@ -42,8 +42,9 @@ const Listed = ({ comment, theme }: any) => {
     return (
         <div
             style={{
-                backgroundColor: '#111111dd',
-                color: 'white'
+                backgroundColor: 'transparent',
+                color: 'white',
+                border: '1px solid #333333'
             }}
             className='flex flex-row items-center rounded-3xl gap-2 p-1'
         >

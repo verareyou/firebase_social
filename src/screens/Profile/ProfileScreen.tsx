@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LoadingScreen, SideBar } from '../../components'
 import Details from './Details'
 import { getUserByUsername } from '../../services/User'
-import { setLoading } from '../../redux/Slice'
+import { SetUser, setLoading } from '../../redux/Slice'
+import { FollowUser } from '../../services/Mutations'
 
 
 const ProfileScreen = () => {
@@ -15,6 +16,7 @@ const ProfileScreen = () => {
     const params = useParams()
     const { user, theme, isAuth } = useSelector((state: any) => state)
     const [CurrentUser, setCurrentUser] = useState<any>(false)
+    const [following, setFollowing] = useState<boolean>(false)
     const [displayUser, setDisplayUser] = useState<any>({
         username: '',
         name: '',
@@ -25,7 +27,6 @@ const ProfileScreen = () => {
         Followers: [],
         Following: []
     })
-    // const state = location.state
 
     // useEffect(() => {
     //     if (!isAuth) {
@@ -33,24 +34,43 @@ const ProfileScreen = () => {
     //     }
     // }, [isAuth])
 
+    const Follow = async() => {
+        dispatch(setLoading(true))
+        const res = await FollowUser(user, displayUser)
+        console.log(res)
+        if (!res) {
+            dispatch(setLoading(false))
+            return
+        }
+        dispatch(SetUser(res.updatedUser))
+        dispatch(setLoading(false))
+        setFollowing(!following)
+    }
+
     const fetchUser = async () => {
 
         const username = params.id as string
 
         dispatch(setLoading(true))
         const newUser = await getUserByUsername(username)
-        
+
         if (!newUser) {
-            // dispatch(setLoading(false))
+            dispatch(setLoading(false))
             Navigate('/')
             return
         }
-        console.log(newUser.username, user.username)
+        
         if (newUser.username === user.username){
             setCurrentUser(true)
             setDisplayUser(newUser)
         } else {
-            
+            const isFollowing = newUser.Followers!.find((followingUser:any) => followingUser === user.uid)
+            const isFollowing2 = user.Following!.find((followingUser:any) => followingUser === newUser.uid)
+            if (isFollowing && isFollowing2) {
+                setFollowing(true)
+            } else {
+                setFollowing(false)
+            }
             setDisplayUser(newUser)
             setCurrentUser(false)
         }
@@ -77,6 +97,9 @@ const ProfileScreen = () => {
             <Details
                 user={displayUser}
                 isCurrent={CurrentUser}
+                Follow={Follow}
+                following={following}
+
             />
 
         </div>

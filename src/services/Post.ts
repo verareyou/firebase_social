@@ -90,20 +90,7 @@ export const getAllPosts = async () => {
 
                 if(!userData) return null;
                 
-                const fetchPostData: FetchPostProps = {
-                    uid: postData.uid,
-                    username: userData.username || "",
-                    imageUrls: postData.imageUrls,
-                    caption: postData.caption,
-                    likes: postData.likes,
-                    comments: postData.comments,
-                    createdAt: postData.createdAt,
-                    user: {
-                        user_uid: userData.uid,
-                        username: userData.username || "",
-                        profileImage: userData.profileImage || ""
-                    }
-                }
+                const fetchPostData = getFetchPostData(postData, userData);
 
                 return fetchPostData;
             }));
@@ -153,7 +140,8 @@ export const getPostById = async (post_uid: string) => {
                 if(!userData) return null;
 
 
-                return getFetchPostData(postData, userData);
+                const post = getFetchPostData(postData, userData);
+                return post;
             }
         }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../services/Auth'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getUserByUsername } from '../../services/User'
 import { getUserProfile } from '../../utils/Operations'
 import { Button, UsernameEdit } from '../../components'
@@ -14,41 +14,13 @@ import { FollowUser } from '../../services/Mutations'
 
 
 
-const Details = ({ user, isCurrent }: any) => {
+const Details = ({ user, isCurrent, Follow, following, }: any) => {
     const dispatch = useDispatch()
     const Navigate = useNavigate()
-    const { theme, isAuth, user:currentUser } = useSelector((state: any) => state)
+    const params = useParams()
+    const { theme, isAuth, user: currentUser } = useSelector((state: any) => state)
     const [editUsername, setEditUsername] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
-    const [following, setFollowing] = useState(false)
-
-    const Follow = async() => {
-        dispatch(setLoading(true))
-        const res = await FollowUser(currentUser, user)
-        console.log(res)
-        if (!res) {
-            dispatch(setLoading(false))
-            return
-        }
-        dispatch(SetUser(res.updatedUser))
-        dispatch(setLoading(false))
-        setFollowing(!following)
-    }
-
-    useEffect(() => {
-        const isFollowing = currentUser.Following.find((followingUser:any) => followingUser.user_id === user.uid)
-        if (isFollowing) {
-            setFollowing(true)
-        } else {
-            setFollowing(false)
-        }
-    }, [])
-
-    useEffect(() => {
-        if (!isAuth) {
-            Navigate('/accounts/login')
-        }
-    }, [isAuth])
 
     const isEdit = window.location.pathname.split('/')[2] === 'edit'
     useEffect(() => {
@@ -111,7 +83,7 @@ const Details = ({ user, isCurrent }: any) => {
                                         text={following ? 'Following' : 'Follow'}
                                         theme={theme}
                                         onClick={Follow}
-                                    /> }
+                                    />}
                                 </div>
                             </div>
 

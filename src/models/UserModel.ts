@@ -25,7 +25,7 @@ export interface UserProps {
     website: string;
     Followers: string[];
     Following: string[];
-    Posts: string[];
+    Posts: any[];
 }
 
 export interface FetchUserProps {
@@ -39,5 +39,5 @@ export interface FetchUserProps {
     website: string;
     Followers: any[],
     Following: any[],
-    Posts: PostModel[];
+    Posts: any[];
 }

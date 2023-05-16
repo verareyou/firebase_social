@@ -8,9 +8,9 @@ export const updateUserByField = async (
     field: string,
     value: string
 ) => {
-    
+
     console.log(user, field, value)
-    try{
+    try {
         const docref = doc(db, 'users', user.uid)
 
         await updateDoc(docref, {
@@ -29,47 +29,43 @@ export const FollowUser = async (
     userToFollow: any
 ) => {
 
-    try{
+    try {
         const docref = doc(db, 'users', user.uid)
         const docref2 = doc(db, 'users', userToFollow.uid)
 
         const userDoc = (await getDoc(docref)).data()
+        const userToFollowDoc = (await getDoc(docref2)).data()
 
-        if(userDoc!.Following.includes(userToFollow.uid)) {
+        if (userDoc!.Following.includes(userToFollow.uid)) {
 
             await updateDoc(docref, {
                 Following: userDoc!.Following.filter((uid: string) => uid !== userToFollow.uid)
             })
 
             await updateDoc(docref2, {
-                Followers: userToFollow.Followers.filter((uid: string) => uid !== user.uid)
+                Followers: userToFollowDoc!.Followers.filter((uid: string) => uid !== user.uid)
             })
-
-            const updatedUser = (await getDoc(docref)).data()
-            const updatedUserToFollow = (await getDoc(docref2)).data()
-
-            return { updatedUser, updatedUserToFollow }
 
         } else {
 
-        await updateDoc(docref, {
-            Following: [...user.Following, userToFollow.uid]
-        })
+            await updateDoc(docref, {
+                Following: [...userDoc!.Following, userToFollow.uid]
+            })
 
 
-        await updateDoc(docref2, {
-            Followers: [...userToFollow.Followers, user.uid]
-        })
+            await updateDoc(docref2, {
+                Followers: [...userToFollowDoc!.Followers, user.uid]
+            })
+        }
 
         const updatedUser = (await getDoc(docref)).data()
         const updatedUserToFollow = (await getDoc(docref2)).data()
 
         return { updatedUser, updatedUserToFollow }
 
-        }
     } catch (e) {
         console.log(e)
-        return false
+        return null
     }
 }
 
@@ -87,18 +83,18 @@ export const addComment = async (
         const docref = doc(db, 'posts', post_Id)
         const docdata = (await getDoc(docref)).data()
 
-            await updateDoc(docref, {
-                comments: [...docdata!.comments, {
-                    uid: user.uid,
-                    comment: comment,
-                    createdAt: getDate()
-                }]
-            })
+        await updateDoc(docref, {
+            comments: [...docdata!.comments, {
+                uid: user.uid,
+                comment: comment,
+                createdAt: getDate()
+            }]
+        })
 
         const updatedPost = (await getDoc(docref)).data()
 
         return updatedPost
-        
+
     } catch (error) {
         console.log(error)
         return null
