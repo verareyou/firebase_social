@@ -2,8 +2,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 
-// is same username
-
+// is username exists
 
 export const isSameUsername = async (username: string) => {
     const users = await getDocs(collection(db, "users"));

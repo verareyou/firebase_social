@@ -1,4 +1,5 @@
 import { FetchPostProps } from "../models/PostModel"
+import { FetchUserProps } from "../models/UserModel"
 import { getUserByUid, getUserByUsername } from "../services/User"
 
 
@@ -94,4 +95,22 @@ export const getFetchPostData = ( post: any, user: any ) => {
     }
 
     return fetchPostData;
+}
+
+export const getFetchUserData = (user: any, posts: any) => {
+    const fetchUserData: FetchUserProps = {
+        uid: user.uid,
+        email: user.email,
+        name: user.name,
+        username: user.username,
+        profileImage: user.profileImage,
+        createdAt: user.createdAt,
+        bio: user.bio,
+        website: user.website,
+        Followers: user.Followers,
+        Following: user.Following,
+        Posts: posts,
+    }
+
+    return fetchUserData;
 }

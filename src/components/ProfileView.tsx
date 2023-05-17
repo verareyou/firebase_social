@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { getUserByUsername } from '../services/User'
 import { UserProps } from '../models/UserModel'
 import { SetUser } from '../redux/Slice'
-import { FollowUser } from '../services/Mutations'
+import { FollowUser } from '../services/UserMutations'
 
 const ProfileView = ({ username, ref, setVisible, visible, showPost }: any) => {
     const { theme, user } = useSelector((state: any) => state)

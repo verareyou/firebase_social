@@ -3,7 +3,8 @@ import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase
 import { auth, db, storage } from "../config/firebase";
 import { ResizeFile } from "../utils/ResizeImage";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { FetchUserProps, UserProps } from "../models/UserModel";
+import { FetchUserProps, UpdateProfileProps, UserProps } from "../models/UserModel";
+import { getFetchUserData } from "../utils/Operations";
 
 // get user by uid
 
@@ -15,7 +16,6 @@ export const getUserByUid = async (uid: string) => {
         const docSnap = await getDoc(userRef);
 
         const userData = docSnap.data() as UserProps;
-
 
         return userData;
     } catch (error) {
@@ -34,26 +34,20 @@ export const getUserByUsername = async (username: string) => {
         const querySnapshot = query(collection(db, "users"), where("username", "==", username));
         const querySnapshotData = await getDocs(querySnapshot);
 
-        const userData = querySnapshotData.docs[0].data() as UserProps;
+        if (querySnapshotData.empty) return null;
+
+        const userData = querySnapshotData.docs[0].data();
 
         const postsQuerySnapshot = query(collection(db, "posts"), where("user_uid", "==", userData.uid));
         const postsQuerySnapshotData = await getDocs(postsQuerySnapshot);
 
         const postsData = postsQuerySnapshotData.docs.map(doc => doc.data());
 
-        const fetchUserData: FetchUserProps = {
-            uid: userData.uid,
-            email: userData.email,
-            name: userData.name,
-            username: userData.username,
-            profileImage: userData.profileImage,
-            createdAt: userData.createdAt,
-            bio: userData.bio,
-            website: userData.website,
-            Followers: userData.Followers,
-            Following: userData.Following,
-            Posts: postsData,
-        }
+        !postsData && console.log("No posts found!");
+
+        // get user data with posts
+
+        const fetchUserData = getFetchUserData(userData, postsData);
 
         return fetchUserData;
     } catch (error) {
@@ -66,15 +60,9 @@ export const getUserByUsername = async (username: string) => {
 // get all users
 
 export const getAllUsers = async () => {
-    // console.log("Getting all users...");
-
     try {
-        const usersRef = doc(db, "users");
-        const docSnap = await getDoc(usersRef);
-
-        const usersData = docSnap.data() as UserProps[];
-        
-        // console.log("Users found successfully!");
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const usersData = querySnapshot.docs.map(doc => doc.data());
 
         return usersData;
 
@@ -86,17 +74,6 @@ export const getAllUsers = async () => {
 
 // update user profile
 
-interface UpdateProfileProps {
-    name: string;
-    username: string;
-    bio: string;
-    website: string;
-    image: File;
-}
-
-
-
-
 export const updateProfile = async (
     { name, username, bio, website, image }: UpdateProfileProps,
     user: UserProps
@@ -104,10 +81,7 @@ export const updateProfile = async (
     
     console.log("Updating user profile...");
     try {
-        // const user = auth.currentUser;
         if (user) {
-
-            // check if username is already taken
 
             const querySnapshot = query(collection(db, "users"), where("username", "==", username));
             const querySnapshotData = await getDocs(querySnapshot);

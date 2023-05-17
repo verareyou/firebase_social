@@ -35,20 +35,13 @@ export const createPost = async ({image, caption, user}: CreatePostProps) => {
         }
         await setDoc(postRef, postData);
 
-        const postDoc = await getDoc(postRef);
-
-        // if (postDoc.exists()) {
-        //     const post = postDoc.data();
-        //     console.log(post);
-        //     if (post) {
-        //         return user;
-        //     }
-        // }
-        
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
 
+        // update user posts
+
         if (userDoc.exists()) {
+
             const userData = userDoc.data();
             if (userData) {
                 let Posts = userData.Posts;
@@ -77,6 +70,8 @@ export const createPost = async ({image, caption, user}: CreatePostProps) => {
     }
 
 }
+
+
 export const getAllPosts = async () => {
     try {
         const postsQuery = query(collection(db, "posts"));

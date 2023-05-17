@@ -2,19 +2,19 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from '../Button'
 import EditField from '../EditField'
-import { updateUserByField } from '../../services/Mutations'
+import { updateUserByField } from '../../services/UserMutations'
 import { isSameUsername } from '../../services/Validations'
 import { setProfileListener } from '../../redux/Slice'
 import { useNavigate } from 'react-router-dom'
 
-const UsernameEdit = ({toggle}: any) => {
+const UsernameEdit = ({ toggle }: any) => {
     const { user, theme } = useSelector((state: any) => state)
     const [username, setUsername] = useState<string>(user.username)
     const [usernameTaken, setUsernameTaken] = useState<boolean>(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const handleUsernameChange = async() =>{
+    const handleUsernameChange = async () => {
         try {
             const res = await updateUserByField(user, 'username', username)
             console.log(res)
@@ -25,7 +25,7 @@ const UsernameEdit = ({toggle}: any) => {
         catch (err) {
             console.log(err)
         }
-    } 
+    }
 
 
 
@@ -69,7 +69,7 @@ const UsernameEdit = ({toggle}: any) => {
                     style={{
                         backgroundColor: theme.background,
                     }}
-                    onChange={ async(e: any) => {
+                    onChange={async (e: any) => {
                         setUsername(e.target.value)
                         const res = await isSameUsername(e.target.value)
                         setUsernameTaken(res)
@@ -77,11 +77,11 @@ const UsernameEdit = ({toggle}: any) => {
                     type="text"
                     placeholder='Username'
                 />
-                    <p
-                        className={' text-red-500 text-[12px] -mt-3 ml-4 duration-400 ' + (username === user.username ? 'text-[#47ff44]' : '') + (usernameTaken ? 'text-red-500' : 'text-[#47ff44] ')}
-                    >
-                        {username === user.username ? 'you are using it' : usernameTaken ? 'already taken' : 'available'}
-                    </p>
+                <p
+                    className={' text-red-500 text-[12px] -mt-3 ml-4 duration-400 ' + (username === user.username ? 'text-[#47ff44]' : '') + (usernameTaken ? 'text-red-500' : 'text-[#47ff44] ')}
+                >
+                    {username === user.username ? 'you are using it' : usernameTaken ? 'already taken' : 'available'}
+                </p>
                 <div className=' flex gap-4'>
                     <Button
                         text='Cancel'

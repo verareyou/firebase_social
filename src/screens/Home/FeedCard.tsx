@@ -51,8 +51,6 @@ const FeedCard = ({
         }
     })
 
-
-
     return (
         <div
 
@@ -81,6 +79,15 @@ const FeedCard = ({
                 className='flex backdrop-blur-[2px] z-[1] right-2 gap-4 flex-row items-center rounded-full justify-between h-[44px] px-1.5 mt-2 mx-2'
             >
                 <div
+                className='flex flex-row items-center gap-1 TouchableBlur'
+                >
+                <img
+                    src={showPost && post.user.profileImage}
+                    alt="profile"
+                    className={'w-8 h-8 rounded-full duration-500 object-cover' + (showPost ? '' : ' blur-[50px]')}
+                    />
+
+                <h1
                     onMouseEnter={(e) => {
                         setVisible({
                             visible: true,
@@ -98,15 +105,6 @@ const FeedCard = ({
                     }}
                 // ref={ref}
                 onClick={() => navigate(`/${post.user.username}`)}
-                className='flex flex-row items-center gap-1 TouchableBlur'
-                >
-                <img
-                    src={showPost && post.user.profileImage}
-                    alt="profile"
-                    className={'w-8 h-8 rounded-full duration-500 object-cover' + (showPost ? '' : ' blur-[50px]')}
-                />
-
-                <h1
                     className='ml-2 font-semibold text-white'
                 >
                     {showPost && post.user.username}
@@ -143,7 +141,7 @@ const FeedCard = ({
                     transform: openComment ? 'translateY(-99%)' : 'translateY(-62px)',
                     overflowY: openComment ? 'auto' : 'hidden',
                 }}
-                className='flex flex-col absolute duration-200 top-[100%] left-0 right-0 z-[99] backdrop-blur-[2px] overflow-y-auto overflow-x-hidden rounded-[28px] w-full gap-2 p-2 scrollbar scrollbar-thumb-[#b8c2d073] scrollbar-track-[transparent] scrollbar-h-2 scrollbar-w-1 scrollbar-thumb-rounded-lg scrollbar-track-rounded-lg'
+                className='flex flex-col absolute duration-200 ease-in-out top-[100%] left-0 right-0 z-[99] backdrop-blur-[2px] overflow-y-auto overflow-x-hidden rounded-[28px] w-full gap-2 p-2 scrollbar scrollbar-thumb-[#b8c2d073] scrollbar-track-[transparent] scrollbar-h-2 scrollbar-w-1 scrollbar-thumb-rounded-lg scrollbar-track-rounded-lg'
             >
                 <CommentCard
                     liked={liked}

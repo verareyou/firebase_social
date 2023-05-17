@@ -10,7 +10,8 @@ import EditProfile from './EditProfile'
 import userpng from '../../assets/Icons/user.png';
 import ProfilePosts from './ProfilePosts'
 import { SetUser, setLoading } from '../../redux/Slice'
-import { FollowUser } from '../../services/Mutations'
+import { FollowUser } from '../../services/UserMutations'
+import FollowingModel from '../../components/Following/FollowingModel'
 
 
 
@@ -21,17 +22,25 @@ const Details = ({ user, isCurrent, Follow, following, }: any) => {
     const { theme, isAuth, user: currentUser } = useSelector((state: any) => state)
     const [editUsername, setEditUsername] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
+    const [followersModel, setFollowersModel] = useState(false)
+    const [followingModel, setFollowingModel] = useState(false)
 
-    const isEdit = window.location.pathname.split('/')[2] === 'edit'
     useEffect(() => {
+        const isEdit = window.location.pathname.split('/')[2] === 'edit'
+        const isFollowing = window.location.pathname.split('/')[2] === 'following'
+        const isFollowers = window.location.pathname.split('/')[2] === 'followers'
         setEditProfile(isEdit)
-    }, [isEdit])
+        setFollowingModel(isFollowing)
+        setFollowersModel(isFollowers)
+    }, [window.location.pathname])
     return (
         <div
             className=' w-[100vw] flex flex-1 flex-col items-center md:pl-[100px] '
         >
             {editUsername && <UsernameEdit toggle={setEditUsername} />}
             {editProfile && <EditProfile toggle={setEditProfile} />}
+            {followersModel && <FollowingModel toggle={setFollowersModel} ids={user.Followers} type='followers' />}
+            {followingModel && <FollowingModel toggle={setFollowingModel} ids={user.Following} type='following' />}
             <div className=' flex-grow items-center flex-col flex w-full max-w-[1000px]'>
 
                 {/* upper profile details */}
@@ -156,6 +165,10 @@ const Details = ({ user, isCurrent, Follow, following, }: any) => {
                                 {user.Posts.length} posts
                             </h1> */}
                             <h1
+                                onClick={() => {
+                                    Navigate(`/${user.username}/followers`)
+                                }}
+
                                 style={{
                                     backgroundColor: theme.secBackground,
                                 }}
@@ -164,6 +177,9 @@ const Details = ({ user, isCurrent, Follow, following, }: any) => {
                                 {user.Followers.length} followers
                             </h1>
                             <h1
+                                onClick={() => {
+                                    Navigate(`/${user.username}/following`)
+                                }}
                                 style={{
                                     backgroundColor: theme.secBackground,
                                 }}

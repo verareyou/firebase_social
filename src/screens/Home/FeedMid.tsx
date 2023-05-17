@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import React, { useEffect, useState } from 'react'
 import { getPostById, likePost } from '../../services/Post'
-import { addComment } from '../../services/Mutations'
+import { addComment } from '../../services/UserMutations'
 
-const FeedMid = ({Post, post_id}: any) => {
+const FeedMid = ({ Post, post_id }: any) => {
     const { theme, user } = useSelector((state: any) => state)
     const [liked, setLiked] = useState<boolean>(false)
     const [post, setPost] = useState(null as any)
@@ -100,23 +100,23 @@ const FeedMid = ({Post, post_id}: any) => {
     }
 
 
-  return (
-    <FeedCard
-        post={post}
-        liked={liked}
-        showPost={showPost}
-        openComment={openComment}
-        setOpenComment={setOpenComment}
-        fullCaption={fullCaption}
-        setFullCaption={setFullCaption}
-        loading={loading}
-        handlePostLike={handlePostLike}
-        handleComment={handleComment}
-        comment={comment}
-        setComment={setComment}
+    return (
+        <FeedCard
+            post={post}
+            liked={liked}
+            showPost={showPost}
+            openComment={openComment}
+            setOpenComment={setOpenComment}
+            fullCaption={fullCaption}
+            setFullCaption={setFullCaption}
+            loading={loading}
+            handlePostLike={handlePostLike}
+            handleComment={handleComment}
+            comment={comment}
+            setComment={setComment}
 
-    />
-  )
+        />
+    )
 }
 
 export default FeedMid

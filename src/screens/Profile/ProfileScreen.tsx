@@ -6,7 +6,7 @@ import { LoadingScreen, SideBar } from '../../components'
 import Details from './Details'
 import { getUserByUsername } from '../../services/User'
 import { SetUser, setLoading } from '../../redux/Slice'
-import { FollowUser } from '../../services/Mutations'
+import { FollowUser } from '../../services/UserMutations'
 
 
 const ProfileScreen = () => {
@@ -34,7 +34,7 @@ const ProfileScreen = () => {
     //     }
     // }, [isAuth])
 
-    const Follow = async() => {
+    const Follow = async () => {
         dispatch(setLoading(true))
         const res = await FollowUser(user, displayUser)
         console.log(res)
@@ -59,13 +59,13 @@ const ProfileScreen = () => {
             Navigate('/')
             return
         }
-        
-        if (newUser.username === user.username){
+
+        if (newUser.username === user.username) {
             setCurrentUser(true)
             setDisplayUser(newUser)
         } else {
-            const isFollowing = newUser.Followers!.find((followingUser:any) => followingUser === user.uid)
-            const isFollowing2 = user.Following!.find((followingUser:any) => followingUser === newUser.uid)
+            const isFollowing = newUser.Followers!.find((followingUser: any) => followingUser === user.uid)
+            const isFollowing2 = user.Following!.find((followingUser: any) => followingUser === newUser.uid)
             if (isFollowing && isFollowing2) {
                 setFollowing(true)
             } else {
@@ -84,7 +84,7 @@ const ProfileScreen = () => {
     useEffect(() => {
         fetchUser()
     }, [params.id, user])
-    
+
     return (
         <div
             style={{

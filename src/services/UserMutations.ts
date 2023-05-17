@@ -3,6 +3,8 @@ import { db } from "../config/firebase"
 import { getDate } from "../utils/Operations"
 
 
+// update user by field
+
 export const updateUserByField = async (
     user: any,
     field: string,
@@ -23,6 +25,9 @@ export const updateUserByField = async (
         return false
     }
 }
+
+
+// follow and unfollow user
 
 export const FollowUser = async (
     user: any,
@@ -52,7 +57,6 @@ export const FollowUser = async (
                 Following: [...userDoc!.Following, userToFollow.uid]
             })
 
-
             await updateDoc(docref2, {
                 Followers: [...userToFollowDoc!.Followers, user.uid]
             })
@@ -77,7 +81,6 @@ export const addComment = async (
     post_Id: string,
     comment: string
 ) => {
-
     try {
 
         const docref = doc(db, 'posts', post_Id)

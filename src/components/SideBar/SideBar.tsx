@@ -8,6 +8,7 @@ import HomeIcon from '../Icons/HomeIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import CreateIcon from '../Icons/CreateIcon'
 import CreatePost from '../Post/CreatePost'
+import Search from './Search'
 
 const SideBar = () => {
 
@@ -16,11 +17,12 @@ const SideBar = () => {
     const navigate = useNavigate()
     const [isMobile, setIsMobile] = useState<boolean>(false)
     const [route, setRoute] = useState<string>('home')
+    const [prevRoute, setPrevRoute] = useState<string>('')
     const [createPost, setCreatePost] = useState<boolean>(false)
     const [disabled, setDisabled] = useState<boolean>(true)
+    const [showSearch, setShowSearch] = useState<boolean>(false)
 
     useEffect(() => {
-        console.log('window.innerWidth', window.innerWidth)
         if (window.innerWidth < 768) {
             setIsMobile(true)
         }
@@ -31,7 +33,7 @@ const SideBar = () => {
     }, [])
 
     useEffect(() => {
-        if(isAuth) {
+        if (isAuth) {
             setDisabled(false)
         } else {
             setDisabled(true)
@@ -58,85 +60,88 @@ const SideBar = () => {
     }
 
     return (<>
-            {createPost && <CreatePost setRoute={setRoute} toggle={setCreatePost} />}
-            {!disabled && <motion.div
-                variants={animate}
-                initial='initial'
-                animate='animate'
-                exit='initial'
-                
-                style={{
-                    background: isMobile ? theme.blurBackground
-                        : theme.background,
-                    backdropFilter: isMobile ? 'blur(3px)' : 'blur(0px)',
-                    borderRight: isMobile ? 'none' : `1px solid ${theme.lightBorder}`,
-                    color: theme.text
-                }}
-                className={`fixed md:top-0 md:bottom-0 md:flex-col md:left-0 md:justify-center items-center box-border md:p-4 md:w-[100px] justify-evenly md:gap-8 md:h-screen md:m-0 flex bottom-0 left-0 right-0 p-2 rounded-full md:rounded-none mx-8 mb-2 z-[999]  `}
+        {createPost && <CreatePost setRoute={setRoute} toggle={setCreatePost} />}
+        {!disabled && <Search
+        setRoute={() => setRoute(prevRoute)} 
+        isMobile={isMobile}
+        ShowSearch={
+            route === 'search' ? true : false
+        } />}
+        {!disabled && <motion.div
+            variants={animate}
+            initial='initial'
+            animate='animate'
+            exit='initial'
+
+            style={{
+                background: isMobile ? theme.blurBackground
+                    : theme.background,
+                backdropFilter: isMobile ? 'blur(3px)' : 'blur(0px)',
+                borderRight: isMobile ? 'none' : `1px solid ${theme.lightBorder}`,
+                color: theme.text
+            }}
+            className={`fixed md:top-0 md:bottom-0 md:flex-col md:left-0 md:justify-center items-center box-border md:p-4 md:w-[100px] justify-evenly md:gap-8 md:h-screen md:m-0 flex bottom-0 left-0 right-0 p-2 rounded-full md:rounded-none mx-8 mb-2 z-[10000]  `}
+        >
+            {/* minimal home logo */}
+
+            <div
+                onClick={() => { navigate('/'); setRoute('home') }}
+                className='flex TouchableBlur justify-center items-center overflow-hidden w-[48px] h-[48px] rounded-full '
             >
-                {visible.visible && <ProfileView username={user.username} visible={visible} setVisible={setVisible}
-                />}
+                <HomeIcon
+                    color={theme.text}
+                    route={route}
+                />
 
-                {/* minimal home logo */}
+            </div>
 
-                <div
-                    onClick={() => { navigate('/'); setRoute('home') }}
-                    className='flex TouchableBlur justify-center items-center overflow-hidden w-[48px] h-[48px] rounded-full '
-                >
-                    <HomeIcon
-                        color={theme.text}
-                        route={route}
-                    />
+            <div
+                onClick={() => { setPrevRoute(route); setRoute(route === 'search' ? prevRoute : 'search'); setShowSearch(true) }}
+                className='flex TouchableBlur justify-center items-center md:mt-1 md:-mb-1  overflow-hidden w-[48px] h-[48px] rounded-full '
+            >
+                <SearchIcon
+                    color={theme.text}
+                    route={route}
+                />
 
-                </div>
+            </div>
 
-                <div
-                    onClick={() => { setRoute('search') }}
-                    className='flex TouchableBlur justify-center items-center md:mt-1 md:-mb-1  overflow-hidden w-[48px] h-[48px] rounded-full '
-                >
-                    <SearchIcon
-                        color={theme.text}
-                        route={route}
-                    />
+            <div
+                onClick={() => { setRoute('explore'); navigate('/explore') }}
+                className='flex TouchableBlur justify-center items-center overflow-hidden w-[48px] h-[48px] rounded-full '
+            >
+                <ExporeIcon
+                    color={theme.text}
+                    route={route}
+                />
 
-                </div>
+            </div>
+            <div
+                onClick={() => { setRoute('create'); setCreatePost(true) }}
+                className='flex TouchableBlur justify-center items-center overflow-hidden w-[48px] h-[48px] rounded-full '
+            >
+                <CreateIcon
+                    color={theme.text}
+                    route={route}
+                />
 
-                <div
-                    onClick={() => { setRoute('explore'); navigate('/explore') }}
-                    className='flex TouchableBlur justify-center items-center overflow-hidden w-[48px] h-[48px] rounded-full '
-                >
-                    <ExporeIcon
-                        color={theme.text}
-                        route={route}
-                    />
+            </div>
 
-                </div>
-                <div
-                    onClick={() => { setRoute('create'); setCreatePost(true) }}
-                    className='flex TouchableBlur justify-center items-center overflow-hidden w-[48px] h-[48px] rounded-full '
-                >
-                    <CreateIcon
-                        color={theme.text}
-                        route={route}
-                    />
+            <div
+                onClick={() => {
+                    setRoute('profile')
+                    navigate(`/${user.username}`, { state: { user: user } })
+                }}
+                className='flex TouchableBlur justify-center items-center overflow-hidden h-[28px] w-[28px] m-2 rounded-full '
+            >
+                <img
+                    className='object-cover overflow-hidden '
+                    src={user.profileImage}
+                    alt="profile" />
+            </div>
 
-                </div>
-
-                <div
-                    onClick={() => {
-                        setRoute('profile')
-                        navigate(`/${user.username}`, { state: { user: user } })
-                    }}
-                    className='flex TouchableBlur justify-center items-center overflow-hidden h-[28px] w-[28px] m-2 rounded-full '
-                >
-                    <img
-                        className='object-cover overflow-hidden '
-                        src={user.profileImage}
-                        alt="profile" />
-                </div>
-
-            </motion.div>}
-        </>
+        </motion.div>}
+    </>
     )
 }
 

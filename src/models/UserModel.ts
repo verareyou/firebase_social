@@ -6,6 +6,14 @@ export interface FollowModel {
     createdAt: number;
 }
 
+export interface UpdateProfileProps {
+    name: string;
+    username: string;
+    bio: string;
+    website: string;
+    image: File;
+}
+
 export interface RegisterProps {
     name: string;
     username: string;
