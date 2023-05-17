@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { ResizeFile } from '../../utils/ResizeImage'
 import RegisterForm from './RegisterForm'
 import { redirect, useNavigate } from 'react-router-dom'
 import { auth } from '../../config/firebase'

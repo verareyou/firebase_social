@@ -1,7 +1,6 @@
 
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { auth, db, storage } from "../config/firebase";
-import { ResizeFile } from "../utils/ResizeImage";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { FetchUserProps, UpdateProfileProps, UserProps } from "../models/UserModel";
 import { getFetchUserData } from "../utils/Operations";
