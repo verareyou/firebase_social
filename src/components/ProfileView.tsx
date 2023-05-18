@@ -7,7 +7,7 @@ import { UserProps } from '../models/UserModel'
 import { SetUser } from '../redux/Slice'
 import { FollowUser } from '../services/UserMutations'
 
-const ProfileView = ({ username, ref, setVisible, visible, showPost }: any) => {
+const ProfileView = ({ username, setVisible, visible, showPost }: any) => {
     const { theme, user } = useSelector((state: any) => state)
     const [close, setClose] = useState<boolean>(false)
     const [displayUser, setDisplayUser] = useState<any>({}) as [UserProps, any]

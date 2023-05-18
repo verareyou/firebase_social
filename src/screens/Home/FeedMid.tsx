@@ -3,8 +3,10 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import React, { useEffect, useState } from 'react'
-import { getPostById, likePost } from '../../services/Post'
-import { addComment } from '../../services/UserMutations'
+import { editCaption, getPostById, likePost } from '../../services/Post'
+import { FollowUser, addComment } from '../../services/UserMutations'
+import { SetUser } from '../../redux/Slice'
+import { getUserByUid } from '../../services/User'
 
 const FeedMid = ({ Post, post_id }: any) => {
     const { theme, user } = useSelector((state: any) => state)
@@ -15,6 +17,8 @@ const FeedMid = ({ Post, post_id }: any) => {
     const [comment, setComment] = useState<string>('')
     const [openComment, setOpenComment] = useState<boolean>(false)
     const [fullCaption, setFullCaption] = useState(false)
+    const [ isCurrentUser, setIsCurrentUser ] = useState(false)
+    const [ following, setFollowing ] = useState(false)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -37,11 +41,24 @@ const FeedMid = ({ Post, post_id }: any) => {
 
         if (res) {
 
+            if (res.user.user_uid === user.uid) {
+                setIsCurrentUser(true)
+            } else {
+                setIsCurrentUser(false)
+            }
+
             const isLiked = res.likes.find((like: any) => like.user_id === user.uid)
             if (isLiked) {
                 setLiked(true)
             } else {
                 setLiked(false)
+            }
+
+            const isFollowing = user.Following.find((follower: any) => follower === res.user.user_uid)
+            if (isFollowing) {
+                setFollowing(true)
+            } else {
+                setFollowing(false)
             }
             setPost(res)
             setShowPost(true)
@@ -99,9 +116,45 @@ const FeedMid = ({ Post, post_id }: any) => {
         }
     }
 
+    const Follow = async () => {
+        setLoading({
+            type: 'follow',
+            state: true
+        })
+        const userToFollow = await getUserByUid(post.user.user_uid)
+        const res = await FollowUser(user, userToFollow)
+        if (!res) {
+            setLoading({
+                type: '',
+                state: false
+            })
+            return
+        }
+        dispatch(SetUser(res.updatedUser))
+        setFollowing(!following)
+        setLoading({
+            type: '',
+            state: false
+        })
+    }
+
+    const setEdit = async (caption: any) => {
+        setLoad('edit')
+
+        const res = await editCaption(post.uid, caption)
+
+        if (res) {
+            setPost(res)
+            setLoad('')
+        } else {
+            setLoad('')
+        }
+    }
+
 
     return (
         <FeedCard
+            isCurrentUser={isCurrentUser}
             post={post}
             liked={liked}
             showPost={showPost}
@@ -114,7 +167,9 @@ const FeedMid = ({ Post, post_id }: any) => {
             handleComment={handleComment}
             comment={comment}
             setComment={setComment}
-
+            Follow={Follow}
+            following={following}
+            setEditCaption={setEdit}
         />
     )
 }

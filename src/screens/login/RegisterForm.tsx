@@ -20,6 +20,7 @@ const RegisterForm = () => {
     const [isLogin, setIsLogin] = useState(true)
     const [invalidUsername, SetInvalidUsername] = useState(false)
     const [invalidEmail, SetInvalidEmail] = useState(false)
+    const [seePassword, setSeePassword] = useState(false)
 
     const SignInitialValues = {
         name: '',
@@ -32,11 +33,11 @@ const RegisterForm = () => {
 
     const SignupValidationSchema = Yup.object({
         name: isLogin ? Yup.string().notRequired() : Yup.string().required('Required'),
-        username:isLogin ? Yup.string().notRequired() : Yup.string().required('Required'),
+        username: isLogin ? Yup.string().notRequired() : Yup.string().required('Required'),
         email: Yup.string().email('Invalid email format').required('Required'),
         password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
         confirmPassword: isLogin ? Yup.string().notRequired() : Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match').required('Required'),
-        profileImage: isLogin ? Yup.mixed().notRequired():Yup.mixed().required('Required'),
+        profileImage: isLogin ? Yup.mixed().notRequired() : Yup.mixed().required('Required'),
     })
 
 
@@ -128,7 +129,7 @@ const RegisterForm = () => {
                     <Form className="max-w-md mx-auto flex w-[300px] duration-300 flex-col gap-4">
                         <h1 className="text-3xl font-bold ">{isLogin ? "Login" : "Register"} </h1>
 
-                        { isAuth && <h1 className="text-3xl font-bold ">Already Logged In</h1>}
+                        {isAuth && <h1 className="text-3xl font-bold ">Already Logged In</h1>}
 
                         <motion.div
                             {...motionProps}
@@ -164,9 +165,9 @@ const RegisterForm = () => {
                             />
                         </motion.div>
 
-                        <motion.div 
-                        {...motionProps}
-                        className={` `}>
+                        <motion.div
+                            {...motionProps}
+                            className={` `}>
                             <Field
                                 type="text"
                                 placeholder='Full Name'
@@ -182,8 +183,8 @@ const RegisterForm = () => {
                         </motion.div>
 
                         <motion.div
-                        {...motionProps}
-                        className={``}>
+                            {...motionProps}
+                            className={``}>
                             <Field
                                 type="text"
                                 placeholder='Username'
@@ -203,9 +204,9 @@ const RegisterForm = () => {
                             />
 
                             <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: invalidUsername ? 1 : 0 }}
-                            className={` 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: invalidUsername ? 1 : 0 }}
+                                className={` 
                             duration-500 ease-in-out transition-all mt-1 -mb-2
                             ${invalidUsername ? 'h-fit' : 'h-0'}
                             `}
@@ -231,8 +232,8 @@ const RegisterForm = () => {
                                 className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.email && errors.email ? "border-red-500" : ""}`}
                             />
                             <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: invalidUsername ? 1 : 0 }}className={` 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: invalidUsername ? 1 : 0 }} className={` 
                             duration-300 ease-in-out transition-all mt-1 -mb-2
                             ${invalidEmail && !isLogin ? 'block' : 'hidden'}
                             `}>
@@ -241,27 +242,39 @@ const RegisterForm = () => {
                             <ErrorMessage component="div" name="email" className="text-red-500 text-[12px] font-light mt-1 -mb-2 " />
                         </div>
                         <div className={``}>
-                            <Field
-                                type="password"
-                                placeholder='Password'
-                                id="password"
-                                name="password"
+                            <div
+                                className={`flex justify-between relative items-center`}
+                            >
+                                <Field
+                                    type={seePassword ? "text" : "password"}
+                                    placeholder='Password'
+                                    id="password"
+                                    name="password"
 
-                                className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.password && errors.password ? "border-red-500" : ""}`} />
+                                    className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.password && errors.password ? "border-red-500" : ""}`} />
+                                <span
+                                    onClick={() => setSeePassword(!seePassword)}
+                                    className="text-blue-500 text-sm cursor-pointer w-4 absolute right-4 hover:text-blue-700">
+                                    {!seePassword ? <img srcSet="https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 2x, https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 1x" src={"https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 2x"} alt="Eye icon" width="256" height="256" style={{ filter: theme.mode === 'dark' ? 'invert(1)' : "invert(0)" }} /> 
+                                    :
+                                     <img srcSet="https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 2x, https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 1x" src="https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 2x" alt="Invisible icon" width="256" height="256" style={{ filter: theme.mode === 'dark' ? 'invert(1)' : "invert(0)" }} />}
+                                    </span>
+                            </div>
                             <ErrorMessage component="div" name="password" className="text-red-500 text-[12px] font-light mt-1 -mb-2 " />
 
 
                         </div>
-                        <motion.div 
-                        {...motionProps}
-                         className={``}>
+                        <motion.div
+                            {...motionProps}
+                            className={``}>
                             <Field
-                                type="password"
+                                type={seePassword ? "text" : "password"}
                                 placeholder='Confirm Password'
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 className={` fields py-2 px-6 rounded-full bg-transparent outline-none duration-100 text-black placeholder-gray-500 w-full ${touched.confirmPassword && errors.confirmPassword ? "border-red-500" : ""}`}
-                            />
+                            >
+                            </Field>
                             <ErrorMessage
                                 component="div"
                                 name="confirmPassword"

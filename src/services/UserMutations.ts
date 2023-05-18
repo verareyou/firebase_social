@@ -31,7 +31,7 @@ export const updateUserByField = async (
 
 export const FollowUser = async (
     user: any,
-    userToFollow: any
+    userToFollow: any,
 ) => {
 
     try {

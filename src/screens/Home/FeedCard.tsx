@@ -9,8 +9,10 @@ import { Button, ProfileView } from '../../components'
 import CommentList from '../../components/Feed/CommentList'
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import FeedMenu from '../../components/Feed/FeedMenu'
 
 const FeedCard = ({
+    isCurrentUser,
     post,
     liked,
     showPost,
@@ -23,12 +25,16 @@ const FeedCard = ({
     handleComment,
     comment,
     setComment,
-
+    Follow,
+    following,
+    setEditCaption,
+    deletePost,
 }: any) => {
 
     const { theme, user } = useSelector((state: any) => state)
     const navigate = useNavigate()
     const [isMobile, setIsMobile] = useState<boolean>(false)
+    const [openMenu, setOpenMenu] = useState<boolean>(false)
 
     useEffect(() => {
         if (window.innerWidth < 800) {
@@ -37,9 +43,6 @@ const FeedCard = ({
             setIsMobile(false)
         }
     }, [])
-    
-
-    // console.log(post)
 
     const ref = useRef(null as any)
 
@@ -53,16 +56,30 @@ const FeedCard = ({
 
     return (
         <div
-
             style={{
                 color: theme.text,
             }}
             className='flex relative flex-col gap-2 justify-between items-center overflow-clip rounded-3xl aspect-[4/5] max-sm:w-full max-sm:min-w-[300px] max-md:min-w-[400px] md:min-w-[400px] md:h-[500px]'
         >
+            {/* menu */}
+
+            {openMenu && <FeedMenu
+                user={post.user}
+                Follow={Follow}
+                isCurrentUser={isCurrentUser}
+                visible={openMenu}
+                setVisible={setOpenMenu}
+                deletePost={deletePost}
+                post={post}
+                setEditCaption={setEditCaption}
+                following={following}
+            />}
+
+            {/* profile view */}
+
             { !isMobile && showPost &&
                 <ProfileView
                     username={post.user.username}
-                    // ref={ref}
                     showPost={showPost}
                     visible={visible}
                     setVisible={setVisible}
@@ -112,12 +129,11 @@ const FeedCard = ({
             </div>
             <div
                 className=' TouchableBlur pr-2'
-                onClick={() => console.log('clicked')}
+                onClick={() => {
+                    setOpenMenu(!openMenu)
+                }}
             >
                 <img
-                    // style={{
-                    //     filter: theme.mode === 'dark' ? 'invert(1)' : 'invert(0)'
-                    // }}
                     src={dotmenu}
                     alt=""
                     className='w-6 h-6 invert'

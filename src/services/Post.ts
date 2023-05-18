@@ -4,7 +4,7 @@ import { db, storage } from "../config/firebase";
 import { getDate, getFetchPostData } from "../utils/Operations";
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import imageCompression from "browser-image-compression";
-import { getUserByUid } from "./User";
+import { getUserByUid, getUserByUsername } from "./User";
 
 
 export const createPost = async ({image, caption, user}: CreatePostProps) => {
@@ -199,6 +199,36 @@ export const likePost = async (post_uid: string, user: any) => {
                 }
             }
         } 
+        return null;
+
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export const editCaption = async (post_uid: string, caption: string) => {
+    try {
+        
+        const postRef = doc(db, "posts", post_uid);
+        await updateDoc(postRef, { caption: caption });
+
+        const updatedPostDoc = await getDoc(postRef);
+
+        const updatedPostData = updatedPostDoc.data();
+
+        console.log(updatedPostData);
+
+        const getUser = await getUserByUid(updatedPostData!.user_uid);
+
+        console.log(getUser);
+
+        const fetchPostData = getFetchPostData(updatedPostDoc.data(), getUser);
+
+        if (fetchPostData) {
+            return fetchPostData;
+        }
+
         return null;
 
     } catch (error) {

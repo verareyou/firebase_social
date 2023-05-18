@@ -40,9 +40,9 @@ const Search = ({
   }
 
   useEffect(() => {
-    if (ShowSearch) {
+    // if (ShowSearch) {
       fetchUsers()
-    }
+    // }
   }, [ShowSearch])
 
   useEffect(() => {
@@ -74,8 +74,8 @@ const Search = ({
                     backdropFilter: isMobile ? 'blur(3px)' : 'blur(0px)',
         color: theme.text,
         borderRight: `1px solid ${theme.lightBorder}`,
-        transform: open ?(isMobile ? 'translateY(0%)' : 'translateX(0%)') :( isMobile ? 'translateY(100%)' : 'translateX(-100%)'),
-        filter: !open ? 'blur(3px)' : 'blur(0px)',
+        transform: open ?(isMobile ? 'translateY(0%)' : 'translateX(0%)') :( isMobile ? 'translateY(120%)' : 'translateX(-130%)'),
+        filter: !open ? 'blur(30px)' : 'blur(0px)',
       }}
       className={`flex fixed flex-col justify-center z-[9999] md:w-[300px] w-full h-full duration-200 md:left-[100px] ${isMobile ? '' : ''}`}
     >
