@@ -143,7 +143,7 @@ const FeedCard = ({
 
             {/* post image */ }
             <img
-                loading={'lazy'}
+                // loading={'lazy'}
                 src={showPost&& post.imageUrls[0]}
                 alt="image"
                 className={' object-cover duration-500 absolute h-full w-full z-0 ' + (!showPost && 'invert blur-[5px] opacity-10')}
@@ -157,7 +157,7 @@ const FeedCard = ({
                     transform: openComment ? 'translateY(-99%)' : 'translateY(-62px)',
                     overflowY: openComment ? 'auto' : 'hidden',
                 }}
-                className='flex flex-col absolute duration-200 ease-in-out top-[100%] left-0 right-0 z-[99] backdrop-blur-[2px] overflow-y-auto overflow-x-hidden rounded-[28px] w-full gap-2 p-2 scrollbar scrollbar-thumb-[#b8c2d073] scrollbar-track-[transparent] scrollbar-h-2 scrollbar-w-1 scrollbar-thumb-rounded-lg scrollbar-track-rounded-lg'
+                className='flex flex-col absolute duration-200 ease-in-out top-[100%] left-0 right-0 z-[99] rounded-[28px] w-full gap-2 p-2 scrollbar scrollbar-thumb-[#b8c2d073] scrollbar-track-[transparent] scrollbar-h-2 scrollbar-w-1 scrollbar-thumb-rounded-lg scrollbar-track-rounded-lg'
             >
                 <CommentCard
                     liked={liked}

@@ -41,7 +41,7 @@ const Search = ({
 
   useEffect(() => {
     // if (ShowSearch) {
-      fetchUsers()
+    fetchUsers()
     // }
   }, [ShowSearch])
 
@@ -69,16 +69,25 @@ const Search = ({
   return (
     <div
       style={{
-        background: isMobile ? theme.mode === 'dark' ? '#111111ee' : '#ffffff99'
-                    : theme.background,
-                    backdropFilter: isMobile ? 'blur(3px)' : 'blur(0px)',
+        background: isMobile ? theme.mode === 'dark' ? '#111111' : '#ffffff'
+          : theme.background,
         color: theme.text,
         borderRight: `1px solid ${theme.lightBorder}`,
-        transform: open ?(isMobile ? 'translateY(0%)' : 'translateX(0%)') :( isMobile ? 'translateY(120%)' : 'translateX(-130%)'),
-        filter: !open ? 'blur(30px)' : 'blur(0px)',
+        transform: open ? (isMobile ? 'translateY(0%)' : 'translateX(0%)') : (isMobile ? 'translateY(120%)' : 'translateX(-130%)'),
       }}
-      className={`flex fixed flex-col justify-center z-[9999] md:w-[300px] w-full h-full duration-200 md:left-[100px] ${isMobile ? '' : ''}`}
+      className={`flex search fixed flex-col justify-center z-[9999] p-2 md:w-[300px] w-full h-full duration-200 md:left-[100px] ${open ? '' : 'pointer-events-none'}`}
     >
+
+      <style>
+        {`
+          .search {
+            transform: translate3d(0, 0, 0);
+            // backdrop-filter: blur(3px);
+            will-change: transform;
+          }
+        `
+          }
+      </style>
       <div
         style={{
           borderBottom: `1px solid ${theme.lightBorder}`,
@@ -104,7 +113,7 @@ const Search = ({
       </div>
 
       <div
-        className={`flex flex-col h-full w-full gap-2 p-2 overflow-y-auto`}
+        className={`flex flex-col h-full w-full gap-2 p-2 scrollbar-none overflow-y-auto`}
       >
         <h1
           className={`text-sm font-semibold ml-2 my-1`}

@@ -21,7 +21,7 @@ const SearchResults = ({
             border: `1px solid ${theme.lightBorder}`,
             color: theme.text,
         }}
-        className="flex items-center rounded-3xl justify-between w-full h-[50px] px-2"
+        className="flex items-center rounded-3xl justify-between w-full min-h-[50px] px-2"
     >
         <div
             onClick={onClick}

@@ -23,10 +23,20 @@ const SideBar = () => {
     const [showSearch, setShowSearch] = useState<boolean>(false)
 
     useEffect(() => {
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 1000) {
             setIsMobile(true)
+        } else {
+            setIsMobile(false)
         }
-    }, [window.innerWidth])
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 1000) {
+                setIsMobile(true)
+            } else {
+                setIsMobile(false)
+            }
+        }
+        )
+    }, [])
 
     useEffect(() => {
         setRoute(window.location.pathname.split('/')[1] === '' ? 'home' : window.location.pathname.split('/')[1])
@@ -61,7 +71,7 @@ const SideBar = () => {
 
     return (<>
         {createPost && <CreatePost setRoute={setRoute} toggle={setCreatePost} />}
-        {!disabled && <Search
+        {<Search
         setRoute={() => setRoute(prevRoute)} 
         isMobile={isMobile}
         ShowSearch={
