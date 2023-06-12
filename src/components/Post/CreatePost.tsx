@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import EditField from '../EditField'
 import { Button } from '..'
-import { SetUser, setLoading } from '../../redux/Slice'
+import { SetUser, setLoading } from '../../redux/userSlice'
 import { createPost } from '../../services/Post'
 import { randomEmoji } from '../../utils/Operations'
 
@@ -23,7 +23,7 @@ const CreatePost = ({ toggle, setRoute }: any) => {
             setClose(false)
             setError('Please select an image')
             setTimeout(() => {
-            toggle(false)
+                toggle(false)
             }, 1000);
             return
         }
@@ -63,7 +63,7 @@ const CreatePost = ({ toggle, setRoute }: any) => {
                     className=' text-4xl font-bold flex flex-col items-center '
                 >
                     <h1>
-                    {randomEmoji()}
+                        {randomEmoji()}
                     </h1>
                     {error}
                 </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetTheme } from '../redux/Slice'
+import { SetTheme } from '../redux/userSlice'
+import { lightMode, darkMode } from '../assets/Icons'
 
 const ToggleTheme = () => {
 
@@ -13,23 +14,17 @@ const ToggleTheme = () => {
 
     return (
         <div
-            className='fixed bottom-4 right-4'
+            className='cursor-pointer'
             onClick={toggleTheme}
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 cursor-pointer "
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke={theme.text}
-            >
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={5}
-                    d={theme.dark ? "M12 6a9 9 0 100 18 9 9 0 000-18z" : "M12 6a9 9 0 019 9 9 9 0 11-18 0 9 9 0 019-9z"}
-                />
-            </svg>
+            <img
+                src={theme.mode === 'dark' ? lightMode : darkMode}
+                alt="theme"
+                className={`${theme.mode === 'dark' ? 'h-6' : 'h-5'}`}
+                style={{
+                    filter: `invert(${theme.mode === 'dark' ? 1 : 0})`
+                }}
+            />
 
         </div>
     )

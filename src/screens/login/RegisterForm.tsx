@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import userpng from '../../assets/Icons/user.png';
-import { setLoading } from '../../redux/Slice';
+import { setLoading } from '../../redux/userSlice';
 
 const RegisterForm = () => {
 
@@ -255,10 +255,10 @@ const RegisterForm = () => {
                                 <span
                                     onClick={() => setSeePassword(!seePassword)}
                                     className="text-blue-500 text-sm cursor-pointer w-4 absolute right-4 hover:text-blue-700">
-                                    {!seePassword ? <img srcSet="https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 2x, https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 1x" src={"https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 2x"} alt="Eye icon" width="256" height="256" style={{ filter: theme.mode === 'dark' ? 'invert(1)' : "invert(0)" }} /> 
-                                    :
-                                     <img srcSet="https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 2x, https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 1x" src="https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 2x" alt="Invisible icon" width="256" height="256" style={{ filter: theme.mode === 'dark' ? 'invert(1)' : "invert(0)" }} />}
-                                    </span>
+                                    {!seePassword ? <img srcSet="https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 2x, https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 1x" src={"https://img.icons8.com/?size=512&amp;id=30M9wv1iFkcH&amp;format=png 2x"} alt="Eye icon" width="256" height="256" style={{ filter: theme.mode === 'dark' ? 'invert(1)' : "invert(0)" }} />
+                                        :
+                                        <img srcSet="https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 2x, https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 1x" src="https://img.icons8.com/?size=512&amp;id=MXjc4q4Ix0cD&amp;format=png 2x" alt="Invisible icon" width="256" height="256" style={{ filter: theme.mode === 'dark' ? 'invert(1)' : "invert(0)" }} />}
+                                </span>
                             </div>
                             <ErrorMessage component="div" name="password" className="text-red-500 text-[12px] font-light mt-1 -mb-2 " />
 

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LoadingScreen, SideBar } from '../../components'
 import Details from './Details'
 import { getUserByUsername } from '../../services/User'
-import { SetUser, setLoading } from '../../redux/Slice'
+import { SetUser, setLoading } from '../../redux/userSlice'
 import { FollowUser } from '../../services/UserMutations'
 
 

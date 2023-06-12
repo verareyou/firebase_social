@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useDispatch, useSelector } from 'react-redux'
 import { AuthStateListener } from '../redux/AuthStateListener'
 import { useEffect } from 'react'
-import { setLoading } from '../redux/Slice'
+import { setLoading } from '../redux/userSlice'
 
 // Screens imports
 import { LoadingScreen, SideBar, ToggleTheme } from '../components'
@@ -25,7 +25,7 @@ const AppRouter = () => {
 
     return (
         <Router>
-            <ToggleTheme />
+            {/* <ToggleTheme /> */}
             <SideBar />
             <LoadingScreen />
             <Routes>

@@ -1,8 +1,8 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { CreatePostProps, FetchPostProps, PostModel } from "../models/PostModel";
 import { db, storage } from "../config/firebase";
 import { getDate, getFetchPostData } from "../utils/Operations";
-import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import imageCompression from "browser-image-compression";
 import { getUserByUid, getUserByUsername } from "./User";
 
@@ -14,13 +14,13 @@ export const createPost = async ({image, caption, user}: CreatePostProps) => {
 
         const compressImage = await imageCompression(image as File, {maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true, maxIteration: 10, fileType: "image/jpeg"});
         
-        const uploadRef = ref(storage, `images/posts/${user.username}/${user.username}-${getDate()}`);
+        const postRef = doc(collection(db, "posts"));
+        const uploadRef = ref(storage, `images/posts/${user.uid}${postRef.id}`);
         const uploaded = await uploadBytes(uploadRef, compressImage as File);
 
         const postImageUrl = await getDownloadURL(uploaded.ref);
 
         
-        const postRef = doc(collection(db, "posts"));
 
         console.log(postRef.id);
 
@@ -237,3 +237,51 @@ export const editCaption = async (post_uid: string, caption: string) => {
     }
 }
 
+
+export const DeletePost = async (post_uid: string, user: any) => {
+    try {
+        
+        const postRef = doc(db, "posts", post_uid);
+        const postDoc = await getDoc(postRef);
+
+        if (postDoc.exists()) {
+            const postData = postDoc.data();
+
+
+            if (postData?.user_uid === user.uid) {
+                await deleteDoc(postRef);
+
+                const imageRef = ref(storage, `images/posts/${user.uid}${postData.uid}`);
+                await deleteObject(imageRef);
+
+                const userRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userRef);
+
+                if (userDoc.exists()) {
+
+                    const userData = userDoc.data();
+                    
+                    if (userData) {
+                        let Posts = userData.Posts;
+                        if(Posts) {
+                            Posts = Posts.filter((post: any) => post !== post_uid);
+                        }
+                        await updateDoc(userRef, { Posts: Posts });
+
+                        const getUser = await getUserByUid(user.uid);
+
+                        if (getUser) {
+                            return getUser;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

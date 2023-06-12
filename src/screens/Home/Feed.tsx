@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import FeedMid from './FeedMid'
 
-const Feed = ({ Posts }: any) => {
+const Feed = ({ Posts, setPosts }: any) => {
     const { theme } = useSelector((state: any) => state)
 
     return (
@@ -15,7 +15,7 @@ const Feed = ({ Posts }: any) => {
 
             <div className=' flex flex-col items-center gap-4 w-full max-md:mb-16 '>
                 {Posts && Posts.map((post: any, index: any) => (
-                    <FeedMid key={index} Post={post}
+                    <FeedMid key={index} Post={post} setPosts={setPosts}
                     />
                 ))}
             </div>

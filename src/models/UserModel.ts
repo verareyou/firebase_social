@@ -20,6 +20,7 @@ export interface RegisterProps {
     email: string;
     password: string;
     image: File;
+
 }
 
 export interface UserProps {
@@ -34,6 +35,7 @@ export interface UserProps {
     Followers: string[];
     Following: string[];
     Posts: any[];
+    SavedPosts: any[];
 }
 
 export interface FetchUserProps {
@@ -48,4 +50,5 @@ export interface FetchUserProps {
     Followers: any[],
     Following: any[],
     Posts: any[];
+    SavedPosts: any[];
 }

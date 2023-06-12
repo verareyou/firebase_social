@@ -110,6 +110,7 @@ export const getFetchUserData = (user: any, posts: any) => {
         Followers: user.Followers,
         Following: user.Following,
         Posts: posts,
+        SavedPosts: user.SavedPosts!
     }
 
     return fetchUserData;

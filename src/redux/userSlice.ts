@@ -24,7 +24,7 @@ const initialState = {
     Loading: false
 };
 
-const slice = createSlice({
+const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
@@ -54,6 +54,6 @@ const slice = createSlice({
     }
 });
 
-export const { SetUser, SetAuth, SetTheme, setPostListener, setProfileListener, setPosts,setLoading } = slice.actions;
+export const { SetUser, SetAuth, SetTheme, setPostListener, setProfileListener, setPosts,setLoading } = userSlice.actions;
 
-export default slice.reducer;
+export default userSlice.reducer;

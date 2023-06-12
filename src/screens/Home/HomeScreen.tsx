@@ -5,15 +5,17 @@ import { SideBar } from '../../components'
 import { sortPostsByTime } from '../../utils/Operations'
 import { getAllPosts, getAllPostsIds } from '../../services/Post'
 import Feed from './Feed'
-import { setLoading } from '../../redux/Slice'
+import { setLoading } from '../../redux/userSlice'
 import SuggestionCard from './SuggestionCard'
+import { collection, doc, onSnapshot, query } from 'firebase/firestore'
+import { db } from '../../config/firebase'
 
 const HomeScreen = () => {
   const { user, theme, isAuth } = useSelector((state: any) => state)
   const navigate = useNavigate()
   const [FeedPosts, setFeedPosts] = useState<any>([])
   const dispatch = useDispatch()
- 
+
 
   useEffect(() => {
     if (!isAuth) {
@@ -23,11 +25,12 @@ const HomeScreen = () => {
   }, [isAuth])
 
   const fetchFeedPosts = async () => {
-    dispatch(setLoading(true))  
+    dispatch(setLoading(true))
     const res = await getAllPosts()
 
+
     if (res) {
-      const sortedPosts =  sortPostsByTime(res)
+      const sortedPosts = sortPostsByTime(res)
       setFeedPosts(sortedPosts)
     }
     dispatch(setLoading(false))
@@ -35,7 +38,6 @@ const HomeScreen = () => {
   useEffect(() => {
     fetchFeedPosts()
   }, [user])
-
 
   return (
     <div
@@ -50,6 +52,7 @@ const HomeScreen = () => {
       <Feed
         Posts={FeedPosts}
         user={user}
+        setPosts={setFeedPosts}
       />
 
       <SuggestionCard />

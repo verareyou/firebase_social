@@ -61,10 +61,9 @@ const PostScreenCard = ({ post }: any) => {
                 className='flex w-full items-center flex-1 flex-col md:hidden gap-2'
             >
                 <FeedMid
-                    post_Id={{ id: post.uid, ...post }}
+                    post_id={{ id: post.uid, ...post }}
                     Post={post}
                 />
-
             </div>
         </div>
     )

@@ -9,7 +9,7 @@ import EditProfile from './EditProfile'
 
 import userpng from '../../assets/Icons/user.png';
 import ProfilePosts from './ProfilePosts'
-import { SetUser, setLoading } from '../../redux/Slice'
+import { SetUser, setLoading } from '../../redux/userSlice'
 import { FollowUser } from '../../services/UserMutations'
 import FollowingModel from '../../components/Following/FollowingModel'
 

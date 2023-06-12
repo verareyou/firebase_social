@@ -41,6 +41,7 @@ export const register = async ({ name, username, email, password, image }: Regis
                 Followers: [],
                 Following: [],
                 Posts: [],
+                SavedPosts: [],
                 createdAt: Date.now(),
             };
             const createUserRef = doc(collection(db, "users"), user.uid);

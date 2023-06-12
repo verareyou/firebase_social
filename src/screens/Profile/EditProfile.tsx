@@ -5,7 +5,7 @@ import EditField from '../../components/EditField'
 import { isSameUsername } from '../../services/Validations'
 import { Button, LoadingScreen } from '../../components'
 import { updateProfile } from '../../services/User'
-import { SetUser, setLoading } from '../../redux/Slice'
+import { SetUser, setLoading } from '../../redux/userSlice'
 
 const EditProfile = ({ toggle }: any) => {
     const navigate = useNavigate()
@@ -29,14 +29,14 @@ const EditProfile = ({ toggle }: any) => {
             website,
             image,
         }, user)
-        
+
         if (res) {
             dispatch(setLoading(false))
-            
+
             setClose(true)
             setTimeout(() => {
                 toggle(false)
-                
+
                 // console.log(res.username)
                 // console.log(user.username)
                 dispatch(SetUser(res))
@@ -50,7 +50,7 @@ const EditProfile = ({ toggle }: any) => {
     return (
         <div
             // onClick={handleEdit}
-            
+
             className={` EditProfileForm fixed top-0 right-0 left-0 bottom-0 flex justify-center items-center bg-[#f8f8f800] backdrop-blur-[5px] z-[9999]`}
         >
             <style>

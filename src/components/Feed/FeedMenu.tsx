@@ -22,6 +22,7 @@ const FeedMenu = ({
     // const [visible2, setVisible2] = useState<boolean>(false)
     const [editt, setEditt] = useState<boolean>(false)
     const [editCaption, setEditCaption] = useState(post.caption)
+    const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false)
 
     // useEffect(() => {
     //     visible ? setVisible2(true) : setVisible2(false)
@@ -36,7 +37,7 @@ const FeedMenu = ({
             style={{
                 color: theme.text,
                 backgroundColor: '#181818aa',
-                height: editt ? '108px' : !isCurrentUser ? '56px' : '150px',
+                height: editt ? '128px' : !isCurrentUser ? '56px' : '150px',
                 transition: 'height 0.2s ease-in-out'
             }}
             className=" PostMenu flex flex-row duration-200 w-fit justify-center p-2 rounded-3xl backdrop-blur-[2px] gap-2 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-[99] "
@@ -72,25 +73,40 @@ const FeedMenu = ({
                                 }}
                                 tailw='px-0 py-0 font-bold '
                             />
+                            {deleteConfirm ?
+                            <Button
+                                stayDark
+                                theme={theme}
+                                text='Confirm'
+                                style={{
+                                    backgroundColor: '#ffffff'
+                                }}
+                                onClick={deletePost}
+                                tailw='px-0 py-0 font-bold '
+                            />
+                            :
                             <Button
                                 stayLight
                                 theme={theme}
                                 text='Delete'
-                                onClick={deletePost}
+                                onClick={() => {
+                                    setDeleteConfirm(true)
+                                }}
                                 tailw='px-0 py-0 font-bold '
                             />
+                            }
                         </>}
-                        
-                        <div
+
+                    <div
                         className='flex gap-2 items-center'
                     >
                         <Button
-                        stayLight
-                        theme={theme}
-                        text={isCurrentUser ? `${post.user.username}` : (following ? 'Unfollow' : 'Follow')}
-                        onClick={ isCurrentUser ? () => {navigate(`${post.user.username}`)} : Follow}
-                        tailw='px-0 py-0 font-bold  w-full'
-                    />
+                            stayLight
+                            theme={theme}
+                            text={isCurrentUser ? `${post.user.username}` : (following ? 'Unfollow' : 'Follow')}
+                            onClick={isCurrentUser ? () => { navigate(`${post.user.username}`) } : Follow}
+                            tailw='px-0 py-0 font-bold  w-full'
+                        />
                         <Button
                             stayLight
                             theme={theme}
@@ -115,6 +131,7 @@ const FeedMenu = ({
                     className='flex flex-col h-full w-full justify-center gap-2'
                 >
                     <EditField
+                        textArea
                         placeholder='Caption'
                         type='text'
                         value={editCaption}
@@ -125,6 +142,7 @@ const FeedMenu = ({
                             backgroundColor: '#181818',
                             color: theme.text,
                         }}
+                        tailw='w-[250px]'
                     />
 
                     <div
@@ -144,7 +162,7 @@ const FeedMenu = ({
                         <Button
                             stayLight
                             theme={theme}
-                            text='Edit'
+                            text='Save'
                             onClick={() => {
                                 setVisible(false)
                                 setEditt(false)

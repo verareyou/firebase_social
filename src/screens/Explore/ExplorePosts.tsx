@@ -5,7 +5,7 @@ import { sortPostsByTime, splitPosts } from '../../utils/Operations'
 import { getAllPosts } from '../../services/Post'
 import { motion } from 'framer-motion'
 import { useDispatch } from 'react-redux'
-import { setLoading } from '../../redux/Slice'
+import { setLoading } from '../../redux/userSlice'
 
 const ExplorePosts = () => {
     const { theme, user } = useSelector((state: any) => state)
@@ -20,8 +20,8 @@ const ExplorePosts = () => {
         if (res) {
             const sortedPosts = sortPostsByTime(res)
             setPosts(sortedPosts)
-    }
-    dispatch(setLoading(false))
+        }
+        dispatch(setLoading(false))
     }
     useEffect(() => {
         fetchPosts()
@@ -48,14 +48,14 @@ const ExplorePosts = () => {
 
     return (
         <motion.div
-        // {...animate}
+            // {...animate}
             style={{
                 color: theme.text,
                 backgroundColor: theme.background
             }}
             className=' flex md:flex-col flex-row flex-grow gap-2 md:p-4 p-2 '
 
-        > 
+        >
             <div
                 className='h-full md:hidden w-[50%] gap-2 flex flex-col'
             >

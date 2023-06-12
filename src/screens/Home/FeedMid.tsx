@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import React, { useEffect, useState } from 'react'
-import { editCaption, getPostById, likePost } from '../../services/Post'
+import { DeletePost, editCaption, getPostById, likePost } from '../../services/Post'
 import { FollowUser, addComment } from '../../services/UserMutations'
-import { SetUser } from '../../redux/Slice'
+import { SetUser } from '../../redux/userSlice'
 import { getUserByUid } from '../../services/User'
 
-const FeedMid = ({ Post, post_id }: any) => {
+const FeedMid = ({ Post, post_id, setPosts }: any) => {
     const { theme, user } = useSelector((state: any) => state)
     const [liked, setLiked] = useState<boolean>(false)
     const [post, setPost] = useState(null as any)
@@ -17,8 +17,8 @@ const FeedMid = ({ Post, post_id }: any) => {
     const [comment, setComment] = useState<string>('')
     const [openComment, setOpenComment] = useState<boolean>(false)
     const [fullCaption, setFullCaption] = useState(false)
-    const [ isCurrentUser, setIsCurrentUser ] = useState(false)
-    const [ following, setFollowing ] = useState(false)
+    const [isCurrentUser, setIsCurrentUser] = useState(false)
+    const [following, setFollowing] = useState(false)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -37,6 +37,7 @@ const FeedMid = ({ Post, post_id }: any) => {
     }
 
     const fetchPost = async () => {
+        setLoad('random')
         const res = await getPostById(Post.uid)
 
         if (res) {
@@ -116,6 +117,24 @@ const FeedMid = ({ Post, post_id }: any) => {
         }
     }
 
+    const deletePost = async () => {
+        setLoad('random')
+        const res = await DeletePost(post.uid, user)
+        if (res) {
+            if (post_id) {
+                setLoad('')
+                navigate(-1)
+                return
+            }
+            setPosts((prevState: any) => {
+                const newPosts = prevState.filter((p: any) => p.uid === post.uid)
+                return newPosts
+            })
+            dispatch(SetUser(res))
+            setLoad('')
+        }
+    }
+
     const Follow = async () => {
         setLoading({
             type: 'follow',
@@ -170,6 +189,7 @@ const FeedMid = ({ Post, post_id }: any) => {
             Follow={Follow}
             following={following}
             setEditCaption={setEdit}
+            deletePost={deletePost}
         />
     )
 }

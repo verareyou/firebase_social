@@ -4,7 +4,7 @@ import Button from './Button'
 import { useNavigate } from 'react-router-dom'
 import { getUserByUsername } from '../services/User'
 import { UserProps } from '../models/UserModel'
-import { SetUser } from '../redux/Slice'
+import { SetUser } from '../redux/userSlice'
 import { FollowUser } from '../services/UserMutations'
 
 const ProfileView = ({ username, setVisible, visible, showPost }: any) => {
@@ -75,7 +75,7 @@ const ProfileView = ({ username, setVisible, visible, showPost }: any) => {
                 }}
                 style={{
                     backgroundColor: '#111111dd',
-                    color: theme.text,
+                    color: 'white',
                     // top: visible.pos.y,
                     // left: visible.pos.x,
                     opacity: visible.visible ? 1 : 0,
@@ -114,6 +114,7 @@ const ProfileView = ({ username, setVisible, visible, showPost }: any) => {
                                 fontWeight: 'bold',
                                 border: 'none',
                                 padding: '0px',
+                                color: 'white',
                             }}
                         />
                         <h1 className=' text-[12px] font-normal'>

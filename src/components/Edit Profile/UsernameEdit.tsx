@@ -4,7 +4,7 @@ import Button from '../Button'
 import EditField from '../EditField'
 import { updateUserByField } from '../../services/UserMutations'
 import { isSameUsername } from '../../services/Validations'
-import { setProfileListener } from '../../redux/Slice'
+import { setProfileListener } from '../../redux/userSlice'
 import { useNavigate } from 'react-router-dom'
 
 const UsernameEdit = ({ toggle }: any) => {

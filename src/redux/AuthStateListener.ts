@@ -3,23 +3,20 @@ import { useEffect } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "../config/firebase"
 import { getUserByUid } from "../services/User"
-import { SetUser } from "../redux/Slice"
+import { SetUser } from "./userSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 export const AuthStateListener = (listener: any) => {
-    // console.log(listener)
     const dispatch = useDispatch()
-    const {isAuth, user} = useSelector((state: any) => state)
-    // console.log(isAuth, user)
+    const { isAuth, user } = useSelector((state: any) => state)
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 getUserByUid(user.uid).then((res) => {
-                    // console.log(res)
                     dispatch(SetUser(res))
                 })
-                // dispatch(SetAuth(true))
             } else {
                 dispatch(SetUser(null))
             }
@@ -27,5 +24,5 @@ export const AuthStateListener = (listener: any) => {
 
         return unsubscribe
     }, [])
-    
+
 }

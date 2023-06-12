@@ -93,19 +93,20 @@ const FeedCard = ({
                 style={{
                     backgroundColor: '#111111aa',
                 }}
-                className='flex backdrop-blur-[2px] z-[1] right-2 gap-4 flex-row items-center rounded-full justify-between h-[44px] px-1.5 mt-2 mx-2'
+                className='flex backdrop-blur-[2px] z-[1] absolute gap-4 flex-row items-center rounded-full justify-between h-[44px] px-1.5 mt-2 mx-2'
             >
                 <div
                 className='flex flex-row items-center gap-1 TouchableBlur'
                 >
                 <img
-                    src={showPost && post.user.profileImage}
+                    src={showPost ? post.user.profileImage : ''}
                     alt="profile"
-                    className={'w-8 h-8 rounded-full duration-500 object-cover' + (showPost ? '' : ' blur-[50px]')}
+                    className={'w-8 h-8 rounded-full duration-500 object-cover'}
                     />
 
                 <h1
                     onMouseEnter={(e) => {
+                        setTimeout(() => {
                         setVisible({
                             visible: true,
                             pos: {
@@ -113,6 +114,7 @@ const FeedCard = ({
                                 y: e.clientY
                             }
                         })
+                        }, 100);
                     }}
                     onMouseLeave={() => {
                         setVisible({
@@ -143,8 +145,8 @@ const FeedCard = ({
 
             {/* post image */ }
             <img
-                // loading={'lazy'}
-                src={showPost&& post.imageUrls[0]}
+                loading={'lazy'}
+                src={showPost ? post.imageUrls[0] : ''}
                 alt="image"
                 className={' object-cover duration-500 absolute h-full w-full z-0 ' + (!showPost && 'invert blur-[5px] opacity-10')}
             />
