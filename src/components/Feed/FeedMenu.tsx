@@ -35,7 +35,7 @@ const FeedMenu = ({
     return (
         <div
             style={{
-                color: theme.text,
+                // color: theme.text,
                 backgroundColor: '#181818aa',
                 height: editt ? '128px' : !isCurrentUser ? '56px' : '150px',
                 transition: 'height 0.2s ease-in-out'
@@ -139,10 +139,11 @@ const FeedMenu = ({
                             setEditCaption(e.target.value)
                         }}
                         style={{
-                            backgroundColor: '#181818',
-                            color: theme.text,
+                            backgroundColor: '#18181899',
+                            color: '#ffffff',
+                            border: 'none'
                         }}
-                        tailw='w-[250px]'
+                        tailw='w-[250px] '
                     />
 
                     <div

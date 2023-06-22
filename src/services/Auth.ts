@@ -57,6 +57,22 @@ export const register = async ({ name, username, email, password, image }: Regis
     }
 }
 
+export const  loginErrorHandle = (error: any) => {
+    console.log(error.code);
+    switch (error.code) {
+        case "auth/invalid-email":
+            return "Invalid email address format.";
+        case "auth/user-disabled":
+            return "User disabled.";
+        case "auth/user-not-found":
+            return "User not found.";
+        case "auth/wrong-password":
+            return "Invalid password.";
+        default:
+            return "Something went wrong.";
+    }
+}
+
 // login user
 
 export const login = async ({ email, password }: { email: string; password: string }) => {
@@ -76,11 +92,17 @@ export const login = async ({ email, password }: { email: string; password: stri
 
             console.log("User logged in successfully!");
 
-            return userData;
+            return {success: true, message: "User logged in successfully!"};
         }
     } catch (error) {
-        console.error("Error logging in user", error);
-        return null;
+        console.error("Error logging in user");
+
+        const errorMessage = {
+            message: loginErrorHandle(error),
+            success: false,
+        }
+        
+        return errorMessage;
     }
 }
 

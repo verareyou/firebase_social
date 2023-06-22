@@ -84,10 +84,6 @@ const Details = ({ user, isCurrent, Follow, following, }: any) => {
                                 </div>
                                 <div>
                                     {!isCurrent && <Button
-                                        style={{
-                                            backgroundColor: '#',
-                                            // color: theme.background
-                                        }}
                                         tailw='px-6 py-[8px]'
                                         text={following ? 'Following' : 'Follow'}
                                         theme={theme}
@@ -205,12 +201,12 @@ const Details = ({ user, isCurrent, Follow, following, }: any) => {
                     user={user}
                     isCurrent={isCurrent}
                 />
-                <button onClick={async () => {
+                {/* <button onClick={async () => {
                     dispatch(setLoading(true))
                     await logout()
                     Navigate('/')
                     dispatch(setLoading(false))
-                }}>Logout</button>
+                }}>Logout</button> */}
 
             </div>
         </div>

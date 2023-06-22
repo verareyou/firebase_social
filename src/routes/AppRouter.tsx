@@ -12,6 +12,7 @@ import LoginRegisterPage from '../screens/Login/LoginRegisterScreen'
 import ExploreScreen from '../screens/Explore/ExploreScreen'
 import PostScreen from '../screens/Post/PostScreen'
 import FollowingModel from '../components/Following/FollowingModel'
+import SettingScreen from '../screens/Settings/SettingScreen'
 
 const AppRouter = () => {
     const { isAuth, theme, ProfileUpdateListener } = useSelector((state: any) => state)
@@ -39,6 +40,7 @@ const AppRouter = () => {
                 <Route path="/explore" element={<ExploreScreen />} />
                 <Route path="/accounts" >
                     <Route path="login" element={<LoginRegisterPage />} />
+                    <Route path="settings" element={<SettingScreen />} />
                 </Route>
                 <Route
                     path="*"

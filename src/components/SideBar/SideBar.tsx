@@ -90,7 +90,7 @@ const SideBar = () => {
                 borderRight: isMobile ? 'none' : `1px solid ${theme.lightBorder}`,
                 color: theme.text
             }}
-            className={`fixed md:top-0 md:bottom-0 md:flex-col md:left-0 md:justify-center items-center box-border md:p-4 md:w-[100px] justify-evenly md:gap-8 md:h-screen md:m-0 flex bottom-0 left-0 right-0 p-2 rounded-full md:rounded-none mx-8 mb-2 z-[10000]  `}
+            className={`fixed md:top-0 md:bottom-0 md:flex-col md:left-0 md:justify-center duration-200 items-center box-border md:p-4 md:w-[100px] justify-evenly md:gap-8 md:h-screen md:m-0 flex bottom-0 left-0 right-0 p-2 rounded-full md:rounded-none mx-8 mb-2 z-[10000]  `}
         >
             {/* minimal home logo */}
 

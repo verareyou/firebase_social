@@ -11,3 +11,4 @@ export { default as msg } from './msg.png';
 export { default as msgAnimated } from './msgAnimated.gif';
 export { default as lightMode } from './lightMode.png';
 export { default as darkMode } from './darkMode.png';
+export { default as menu } from './menu.png';

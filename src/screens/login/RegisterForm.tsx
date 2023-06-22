@@ -21,6 +21,8 @@ const RegisterForm = () => {
     const [invalidUsername, SetInvalidUsername] = useState(false)
     const [invalidEmail, SetInvalidEmail] = useState(false)
     const [seePassword, setSeePassword] = useState(false)
+    const [error, setError] = useState('')
+    const [showError, setShowError] = useState(false)
 
     const SignInitialValues = {
         name: '',
@@ -49,10 +51,12 @@ const RegisterForm = () => {
                     email: values.email,
                     password: values.password
                 })
-                console.log(res)
+                // console.log(res)
 
-                if (res) {
+                if (res!.success) {
                     navigate('/')
+                } else {
+                    setError(res!.message)
                 }
 
                 dispatch(setLoading(false))
@@ -79,6 +83,16 @@ const RegisterForm = () => {
         }
     }
 
+    useEffect(() => {
+        if (error) {
+            setShowError(true)
+            setTimeout(() => {
+                setError('')
+                setShowError(false)
+            }, 3000)
+        }
+    }, [error])
+
     const motionProps = {
         initial: {
             opacity: 0,
@@ -95,7 +109,17 @@ const RegisterForm = () => {
 
     return (
         <div>
-
+            
+            <div
+                style={{
+                    border: `1px solid ${theme.lightBorder}`,
+                    backgroundColor: theme.background,
+                    transform: showError ? 'translateX(0%)' : 'translateX(150%)',
+                }}
+                className={`flex justify-center items-center fixed top-10 right-4 duration-500 p-8 rounded-[30px]  `}
+            >
+                <span className="text-red-500 text-sm font-bold">{error}</span>
+            </div>
             <style>
                 {`
                 .fields:focus {
