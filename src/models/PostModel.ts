@@ -24,6 +24,8 @@ export interface PostModel {
     comments: CommentModel[];
     user_uid: string;
     createdAt: string;
+    forSubscribers: boolean;
+    
 }
 
 export interface FetchPostProps {
@@ -34,6 +36,7 @@ export interface FetchPostProps {
     likes: LikeModel[];
     comments: CommentModel[];
     createdAt: string;
+    forSubscribers: boolean;
     user:{
         user_uid: string;
         username: string;
@@ -45,4 +48,5 @@ export interface CreatePostProps {
     image: File;
     caption: string;
     user: UserProps;
+    forSubscribers: boolean;
 }

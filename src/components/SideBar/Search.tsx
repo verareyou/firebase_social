@@ -73,7 +73,7 @@ const Search = ({
           : theme.background,
         color: theme.text,
         borderRight: `1px solid ${theme.lightBorder}`,
-        transform: open ? (isMobile ? 'translateY(0%)' : 'translateX(0%)') : (isMobile ? 'translateY(120%)' : 'translateX(-130%)'),
+        transform: open ? (isMobile ? 'translateY(0%)' : 'translateX(0%)') : (isMobile ? 'translateY(120%)' : 'translateX(-150%)'),
       }}
       className={`flex search fixed flex-col justify-center z-[9999] p-2 md:w-[300px] w-full h-full duration-200 md:left-[100px] ${open ? '' : 'pointer-events-none'}`}
     >

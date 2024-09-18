@@ -4,10 +4,17 @@ import { useEffect, useState } from "react"
 import { lightMode, darkMode, menu } from "../../assets/Icons"
 import { ToggleTheme } from "../../components"
 import QuickSetting from "../../components/Home/QuickSetting"
+import { ConnectWallet } from "@thirdweb-dev/react"
+import { useNavigate } from "react-router-dom"
+import { StateType } from "../../redux/Store"
+import { getMySubscribers, getMySubscriptions, getUsersByUids } from "../../services/User"
+import FollowingCardMid from "../../components/Following/FollowingCardMid"
 
 const SuggestionCard = () => {
-    const { theme, user } = useSelector((state: any) => state)
+    const { theme, user } = useSelector((state: StateType) => state)
     const [show, setShow] = useState(false)
+
+    const navigate = useNavigate()
 
     const motionVariants = {
         initial: {
@@ -36,14 +43,26 @@ const SuggestionCard = () => {
             }}
         >
             <div
+                className='flex gap-4 justify-end'
+            >
+                <ConnectWallet
+                    style={{
+                        height: '50px',
+                        width: '100%',
+                    }}
+                />
+            </div>
+            <div
                 style={{
-                    backgroundColor: theme.secbackground,
+                    backgroundColor: theme.secBackground,
                     border: `1px solid ${theme.lightBorder}`,
                 }}
                 className='flex gap-2 z-[1] items-center justify-between rounded-full p-2'
             >
                 <div
-                    className='flex gap-2 items-center'
+                    role='button'
+                    onClick={() => navigate(`/${user.username}`)}
+                    className='flex gap-2 items-center cursor-pointer'
                 >
 
                     <img src={user.profileImage}
@@ -53,26 +72,26 @@ const SuggestionCard = () => {
                     <h1
                         className=' first-letter: font-bold'
                     >
-                        {user.username}
+                        {user.username} - {user.signAddress.slice(0, 7)}
                     </h1>
                 </div>
                 <div
                     className='mr-2 flex flex-row items-center gap-2 '
                 >
-                <ToggleTheme />
-                <div
-                    onClick={() => setShow(!show)}
-                    className='flex items-center justify-center cursor-pointer'
-                >
-                    <img
-                        style={{
-                            filter: theme.mode === 'dark' ? 'invert(1)' : 'invert(0)',
-                        }}
-                        src={menu}
-                        className='h-5 w-5 -mt-[1px] '
-                        alt="menu"
-                    />
-                </div>
+                    <ToggleTheme />
+                    <div
+                        onClick={() => setShow(!show)}
+                        className='flex items-center justify-center cursor-pointer'
+                    >
+                        <img
+                            style={{
+                                filter: theme.mode === 'dark' ? 'invert(1)' : 'invert(0)',
+                            }}
+                            src={menu}
+                            className='h-5 w-5 -mt-[1px] '
+                            alt="menu"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -88,33 +107,57 @@ const SuggestionCard = () => {
 
             {/* suggestions for you */}
 
-            <div>
-                <h1
-                    className='font-bold text-sm opacity-80 pl-2'
-                >
-                    Suggestions For You
-                </h1>
-
-            </div>
-            <div>
-                <div>
-
-                </div>
-            </div>
+            <QuickSettingHandler />
         </motion.div>
     )
 }
 
-// const QuickSettingHandler = () => {
+const QuickSettingHandler = () => {
 
-//     const { theme } = useSelector((state: any) => state)
-    
-//     return (
-//         <div>
-//             <QuickSetting />
+    const { theme, user } = useSelector((state: StateType) => state)
 
-//         </div>
-//     )
-// }
+    const [subs, setSubs] = useState<any>([])
+
+    useEffect(() => {
+        getUsersByUids(user.subscribedTo).then((res) => {
+            if (!res) return console.log('no subs')
+
+            console.log(res, res)
+            setSubs(res)
+        })
+    }, [])
+
+    return (
+        <div
+            className='flex flex-col gap-2 rounded-[30px] p-2'
+            style={{
+                backgroundColor: theme.secBackground,
+                border: `1px solid ${theme.lightBorder}`,
+
+            }}
+        >
+            <h1
+                className='font-bold text-sm opacity-80 pl-2'
+            >
+                Subscribed Users & creators
+            </h1>
+
+            <div>
+                {subs.length > 0 ? subs?.map((data: any) => (
+                    <FollowingCardMid
+                        key={data.uid}
+                        data={data}
+                    />
+                )) :
+                    <h1
+                        className="text-center flex justify-center items-center flex-1 text-xs font-semibold"
+                    >
+                        No Subscribers
+                    </h1>}
+            </div>
+
+        </div>
+    )
+}
 
 export default SuggestionCard

@@ -13,11 +13,11 @@ const PostScreen = () => {
   const { theme, user } = useSelector((state: any) => state)
 
   useEffect(() => {
-    const id = params.id  as string
+    const id = params.id as string
 
     const fetchPost = async () => {
       const res = await getPostById(id)
-      console.log(res)
+      console.log(res, 'post')
       setPost(res)
     }
 
@@ -34,9 +34,9 @@ const PostScreen = () => {
       className=' flex-1 min-h-screen items-center overflow-x-hidden justify-center md:pl-[100px] flex flex-col gap-2 p-4 '
     >
       {post &&
-     <PostScreenCard
-        post={post}
-      />
+        <PostScreenCard
+          post={post}
+        />
       }
     </div>
   )

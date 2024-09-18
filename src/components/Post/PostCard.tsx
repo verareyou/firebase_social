@@ -9,11 +9,12 @@ import { useNavigate } from 'react-router-dom'
 const PostCard = ({
   post,
   isCurrent,
+  theme,
 }: any) => {
 
-  const navigate = useNavigate()
+  if(!post)return null
 
-  const { theme } = useSelector((state: any) => state)
+  const navigate = useNavigate()
 
   return (
     <motion.div

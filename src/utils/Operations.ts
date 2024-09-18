@@ -87,6 +87,7 @@ export const getFetchPostData = ( post: any, user: any ) => {
         likes: post.likes ? post.likes : [],
         comments: post.comments,
         createdAt: post.createdAt,
+        forSubscribers: post.forSubscribers,
         user: {
             user_uid: user.uid,
             username: user.username,
@@ -110,7 +111,10 @@ export const getFetchUserData = (user: any, posts: any) => {
         Followers: user.Followers,
         Following: user.Following,
         Posts: posts,
-        SavedPosts: user.SavedPosts!
+        subscribedTo: user.subscribedTo,
+        subscribers: user.subscribers,
+        SavedPosts: user.SavedPosts!,
+        signAddress: user.signAddress
     }
 
     return fetchUserData;

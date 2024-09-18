@@ -14,8 +14,12 @@ const initialState = {
         website: "",
         Followers: [],
         Following: [],
+        subscribers: [],
+        subscribedTo: [],
         Posts: [],
-    },
+        SavedPosts: [],
+        signAddress: ""
+    } as UserProps,
     isAuth: false,
     posts: [],
     theme: DarkTheme,
@@ -33,6 +37,9 @@ const userSlice = createSlice({
             state.isAuth = action.payload ? true : false;
         },
         SetAuth: (state, action) => {
+            if(action.payload === false){
+                state.user = initialState.user;
+            }
             state.isAuth = action.payload;
         },
         SetTheme: (state) => {

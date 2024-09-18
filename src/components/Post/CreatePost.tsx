@@ -14,6 +14,7 @@ const CreatePost = ({ toggle, setRoute }: any) => {
     const [caption, setCaption] = useState<string>('')
     const [close, setClose] = useState<boolean>(false)
     const [error, setError] = useState<string>('')
+    const [forSubscribers, setForSubscribers] = useState<boolean>(false)
 
     const handleCreatePost = async () => {
         dispatch(setLoading(true))
@@ -28,7 +29,7 @@ const CreatePost = ({ toggle, setRoute }: any) => {
             return
         }
 
-        const res = await createPost({ image, caption, user })
+        const res = await createPost({ image, caption, user, forSubscribers })
         console.log(res)
         if (res) {
             dispatch(SetUser(res))
@@ -136,6 +137,16 @@ const CreatePost = ({ toggle, setRoute }: any) => {
                             value={caption}
                             onChange={(e: any) => setCaption(e.target.value)}
                         />
+
+                        <div className="form-control">
+                            <label className="label cursor-pointer">
+                                <span className="label-text">For Subscribers</span>
+                                <input type="checkbox" className="toggle" 
+                                    onChange={() => setForSubscribers(!forSubscribers)}
+                                    checked={forSubscribers}
+                                />
+                            </label>
+                        </div>
 
                         <div
                             className=' flex justify-center items-center gap-4'

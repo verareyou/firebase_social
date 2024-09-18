@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import { logout } from '../../services/Auth'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { LoadingScreen, SideBar } from '../../components'
 import Details from './Details'
 import { getUserByUsername } from '../../services/User'
 import { SetUser, setLoading } from '../../redux/userSlice'
-import { FollowUser } from '../../services/UserMutations'
+import { FollowUser, SubscribeUser } from '../../services/UserMutations'
+import { UserProps } from '../../models/UserModel'
+import { useEther } from '../../Context/EtherProvider'
+import { StateType } from '../../redux/Store'
 
 
 const ProfileScreen = () => {
     const Navigate = useNavigate()
     const dispatch = useDispatch()
-    const location = useLocation()
     const params = useParams()
-    const { user, theme, isAuth } = useSelector((state: any) => state)
-    const [CurrentUser, setCurrentUser] = useState<any>(false)
+    const { userSubscribe, userUnsubscribe } = useEther()
+    const { user, theme, isAuth } = useSelector((state: StateType) => state)
+    const [CurrentUser, setCurrentUser] = useState<boolean>(false)
     const [following, setFollowing] = useState<boolean>(false)
-    const [displayUser, setDisplayUser] = useState<any>({
-        username: '',
-        name: '',
-        profileImage: '',
-        bio: '',
-        website: '',
-        Posts: [],
-        Followers: [],
-        Following: []
-    })
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(false)
+    const [displayUser, setDisplayUser] = useState<UserProps>(null as any)
+
+    console.log(user, 'user')
 
     // useEffect(() => {
     //     if (!isAuth) {
@@ -47,13 +42,29 @@ const ProfileScreen = () => {
         setFollowing(!following)
     }
 
+    const subscribe = async () => {
+        dispatch(setLoading(true))
+        if (isSubscribed) {
+            await userUnsubscribe(displayUser.signAddress)
+            await SubscribeUser(user.uid, displayUser.uid)
+        } else {
+
+            console.log(displayUser, 'signAddress')
+            await userSubscribe(displayUser.signAddress)
+            await SubscribeUser(user.uid, displayUser.uid)
+        }
+        await fetchUser()
+        dispatch(setLoading(false))
+    }
+
     const fetchUser = async () => {
+        dispatch(setLoading(true))
 
         const username = params.id as string
 
-        dispatch(setLoading(true))
-        const newUser = await getUserByUsername(username)
+        console.log(username, 'username')
 
+        const newUser = await getUserByUsername(username) 
         if (!newUser) {
             dispatch(setLoading(false))
             Navigate('/')
@@ -61,11 +72,22 @@ const ProfileScreen = () => {
         }
 
         if (newUser.username === user.username) {
+            console.log('current user')
             setCurrentUser(true)
             setDisplayUser(newUser)
         } else {
+            console.log('not current user', newUser.signAddress)
             const isFollowing = newUser.Followers!.find((followingUser: any) => followingUser === user.uid)
             const isFollowing2 = user.Following!.find((followingUser: any) => followingUser === newUser.uid)
+            const isSubscribed1 = newUser.subscribers!.find((sub: string) => sub === user?.uid)
+            const isSubscribed2 = user.subscribedTo!.find((sub: string) => sub === newUser?.uid)
+
+            if (isSubscribed1 && isSubscribed2) {
+                setIsSubscribed(true)
+            } else {
+                setIsSubscribed(false)
+            }
+
             if (isFollowing && isFollowing2) {
                 setFollowing(true)
             } else {
@@ -76,13 +98,15 @@ const ProfileScreen = () => {
         }
         setTimeout(() => {
             dispatch(setLoading(false))
-        }, 300)
+        }, 100)
     }
+
     useEffect(() => {
         fetchUser()
-    }, [])
-    useEffect(() => {
-        fetchUser()
+
+        return () => {
+            setDisplayUser(null as any)
+        }
     }, [params.id, user])
 
     return (
@@ -94,13 +118,17 @@ const ProfileScreen = () => {
             className=' min-h-screen flex p-2 md:p-4 '
         >
             {/* <SideBar /> */}
-            <Details
-                user={displayUser}
-                isCurrent={CurrentUser}
-                Follow={Follow}
-                following={following}
+            {displayUser &&
+                <Details
+                    user={displayUser}
+                    isCurrent={CurrentUser}
+                    Follow={Follow}
+                    following={following}
+                    subscribe={subscribe}
+                    isSubscribed={isSubscribed}
 
-            />
+                />
+            }
 
         </div>
     )

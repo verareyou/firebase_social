@@ -8,12 +8,16 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import userpng from '../../assets/Icons/user.png';
-import { setLoading } from '../../redux/userSlice';
+import { SetAuth, setLoading } from '../../redux/userSlice';
+import { useEther } from '../../Context/EtherProvider';
+import toast from 'react-hot-toast';
 
 const RegisterForm = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    const { userRegister, ConnectWallet, userAddress, handleSwitchAccount } = useEther()
 
     const { isAuth, theme } = useSelector((state: any) => state)
 
@@ -21,8 +25,6 @@ const RegisterForm = () => {
     const [invalidUsername, SetInvalidUsername] = useState(false)
     const [invalidEmail, SetInvalidEmail] = useState(false)
     const [seePassword, setSeePassword] = useState(false)
-    const [error, setError] = useState('')
-    const [showError, setShowError] = useState(false)
 
     const SignInitialValues = {
         name: '',
@@ -39,59 +41,61 @@ const RegisterForm = () => {
         email: Yup.string().email('Invalid email format').required('Required'),
         password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
         confirmPassword: isLogin ? Yup.string().notRequired() : Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match').required('Required'),
-        profileImage: isLogin ? Yup.mixed().notRequired() : Yup.mixed().required('Required'),
+        profileImage: Yup.mixed().notRequired()
     })
-
 
     const onSubmit = async (values: any) => {
         dispatch(setLoading(true))
         try {
             if (isLogin) {
+                await ConnectWallet()
+
                 const res = await login({
                     email: values.email,
                     password: values.password
                 })
-                // console.log(res)
-
-                if (res!.success) {
-                    navigate('/')
-                } else {
-                    setError(res!.message)
+                if (!res) {
+                    toast.error('Invalid credentials')
+                    dispatch(setLoading(false))
+                    return
                 }
 
-                dispatch(setLoading(false))
+                if (userAddress !== res.signAddress) {
+                    console.log('switching account')
+                }
+
+                navigate('/')
             } else {
+
+                const etherRegister = await userRegister()
+
+                if (!etherRegister) {
+                    toast.error('Use another wallet / account')
+                    dispatch(setLoading(false))
+                    return
+                }
+
                 const res = await register({
                     name: values.name,
                     username: values.username,
                     email: values.email,
                     password: values.password,
-                    image: values.profileImage
+                    image: values.profileImage,
+                    address: etherRegister.address
                 })
 
-                setIsLogin(true)
-                dispatch(setLoading(false))
-
-                // if (res) {
-                //     navigate('/')
-                // }
+                if (res) {
+                    setIsLogin(true)
+                    toast.success('User registered successfully')
+                    dispatch(setLoading(false))
+                    navigate('/')
+                }
             }
-
 
         } catch (error) {
             console.log(error)
         }
     }
-
-    useEffect(() => {
-        if (error) {
-            setShowError(true)
-            setTimeout(() => {
-                setError('')
-                setShowError(false)
-            }, 3000)
-        }
-    }, [error])
 
     const motionProps = {
         initial: {
@@ -109,17 +113,7 @@ const RegisterForm = () => {
 
     return (
         <div>
-            
-            <div
-                style={{
-                    border: `1px solid ${theme.lightBorder}`,
-                    backgroundColor: theme.background,
-                    transform: showError ? 'translateX(0%)' : 'translateX(150%)',
-                }}
-                className={`flex justify-center items-center fixed top-10 right-4 duration-500 p-8 rounded-[30px]  `}
-            >
-                <span className="text-red-500 text-sm font-bold">{error}</span>
-            </div>
+
             <style>
                 {`
                 .fields:focus {
@@ -243,7 +237,7 @@ const RegisterForm = () => {
 
                         <div className={``}>
                             <Field
-                                type="email"
+                                type="text"
                                 placeholder='Email'
                                 id="email"
                                 name="email"

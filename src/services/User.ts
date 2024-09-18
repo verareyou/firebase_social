@@ -23,11 +23,71 @@ export const getUserByUid = async (uid: string) => {
     }
 }
 
+export const getUsersByUids = async (uids: string[]) => {
+    if (!uids) return null;
+
+    try {
+
+        const usersQuerySnapshot = query(collection(db, "users"), where("uid", "in", uids));
+        const usersQuerySnapshotData = await getDocs(usersQuerySnapshot);
+
+        const usersData = usersQuerySnapshotData.docs.map(doc => doc.data());
+
+        return usersData;
+    } catch (error) {
+        console.error("Error getting users", error);
+        return null;
+    }
+}
+
+// get my subscribers
+
+export const getMySubscribers = async (uid: string) => {
+
+
+    console.log("Getting subscribers...", uid);
+
+    try {
+        const querySnapshot = query(collection(db, "users"), where("subscribedTo", "array-contains", uid));
+        const querySnapshotData = await getDocs(querySnapshot);
+
+        const subscribersData = querySnapshotData.docs.map(doc => doc.data());
+
+        return subscribersData;
+    } catch (error) {
+        console.error("Error getting subscribers", error);
+        return null;
+    }
+}
+
+// get my subscriptions
+
+export const getMySubscriptions = async () => {
+
+    const uid = auth.currentUser?.uid;
+
+    try {
+        const querySnapshot = query(collection(db, "users"), where("subscribers", "array-contains", uid));
+        const querySnapshotData = await getDocs(querySnapshot);
+
+        const subscriptionsData = querySnapshotData.docs.map(doc => doc.data());
+
+        console.log("Subscriptions data", subscriptionsData);
+
+        return subscriptionsData;
+    } catch (error) {
+        console.error("Error getting subscriptions", error);
+        return null;
+    }
+}
+
 // get user by username
 
 export const getUserByUsername = async (username: string) => {
 
     if (!username) return null;
+
+    console.log("Getting user...");
 
     try {
         const querySnapshot = query(collection(db, "users"), where("username", "==", username));
@@ -55,7 +115,6 @@ export const getUserByUsername = async (username: string) => {
     }
 }
 
-
 // get all users
 
 export const getAllUsers = async () => {
@@ -77,7 +136,7 @@ export const updateProfile = async (
     { name, username, bio, website, image }: UpdateProfileProps,
     user: UserProps
 ) => {
-    
+
     console.log("Updating user profile...");
     try {
         if (user) {
@@ -93,57 +152,57 @@ export const updateProfile = async (
             }
 
             if (image) {
-            const oldProfileImageRef = ref(storage, user.profileImage);
-            await deleteObject(oldProfileImageRef);
+                // const oldProfileImageRef = ref(storage, user.profileImage);
+                // await deleteObject(oldProfileImageRef);
 
-            // upload new profile image
+                // upload new profile image
 
-            const uploadRef = ref(storage, `images/profiles/${username}`);
-            const uploaded = await uploadBytes(uploadRef, image as File);
+                const uploadRef = ref(storage, `images/profiles/${username}`);
+                const uploaded = await uploadBytes(uploadRef, image as File);
 
-            const profileImageUrl = await getDownloadURL(uploaded.ref);
+                const profileImageUrl = await getDownloadURL(uploaded.ref);
 
-            const userRef = doc(db, "users", user.uid);
-            await setDoc(userRef, {
-                name,
-                username,
-                bio,
-                website,
-                profileImage: image ? profileImageUrl : user.profileImage,
-            }, { merge: true });
+                const userRef = doc(db, "users", user.uid);
+                await setDoc(userRef, {
+                    name,
+                    username,
+                    bio,
+                    website,
+                    profileImage: image ? profileImageUrl : user.profileImage,
+                }, { merge: true });
 
-            // get updated user data
+                // get updated user data
 
-            const docSnap = await getDoc(userRef);
+                const docSnap = await getDoc(userRef);
 
-            const userData = docSnap.data() as UserProps;
+                const userData = docSnap.data() as UserProps;
 
-            console.log("User profile updated successfully!");
+                console.log("User profile updated successfully!");
 
-            return userData;
+                return userData;
 
-        } else {
+            } else {
 
-            const userRef = doc(db, "users", user.uid);
-            await setDoc(userRef, {
-                name,
-                username,
-                bio,
-                website,
-                profileImage: user.profileImage,
-            }, { merge: true });
+                const userRef = doc(db, "users", user.uid);
+                await setDoc(userRef, {
+                    name,
+                    username,
+                    bio,
+                    website,
+                    profileImage: user.profileImage,
+                }, { merge: true });
 
-            // get updated user data
+                // get updated user data
 
-            const docSnap = await getDoc(userRef);
+                const docSnap = await getDoc(userRef);
 
-            const userData = docSnap.data() as UserProps;
+                const userData = docSnap.data() as UserProps;
 
-            console.log("User profile updated successfully!");
-            
-            return userData;
+                console.log("User profile updated successfully!");
 
-        }
+                return userData;
+
+            }
         }
     } catch (error) {
         console.error("Error updating user profile", error);

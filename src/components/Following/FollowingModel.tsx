@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import FollowingCardMid from './FollowingCardMid'
+import { getUsersByUids } from '../../services/User'
 
 const FollowingModel = ({
   toggle,
@@ -13,8 +14,17 @@ const FollowingModel = ({
 
   const { theme } = useSelector((state: any) => state)
   const [close, setClose] = useState<boolean>(false)
+  const [users, setUsers] = useState<any>([])
   const navigate = useNavigate()
   // console.log('hey')
+
+  useEffect(() => {
+    if (ids.length > 0) {
+      getUsersByUids(ids).then((res) => {
+        setUsers(res)
+      })
+    }
+  }, [ids])
 
   return (
     <div
@@ -71,24 +81,24 @@ const FollowingModel = ({
         className=" rounded-3xl p-4 md:p-8 w-full md:w-[350px] h-fit max-h-[80%] min-h-[400px] overflow-y-auto scrollbar-none "
       >
         <h1
-          className="text-center text-xl font-semibold"
+          className="text-center font-semibold"
         >
           {type}
         </h1>
         <div
           className="flex flex-col gap-2 mt-4"
         >
-          {ids && ids.map((id: any) => (
+          {users.length > 0 ? users?.map((data: any) => (
             <FollowingCardMid
-              key={id}
-              id={id}
+              key={data.uid}
+              data={data}
             />
-          ))}
-          {!ids && <h1
-            className="text-center text-xl font-semibold"
-          >
-            No {type}
-          </h1>}
+          )) :
+            <h1
+              className="text-center flex justify-center items-center flex-1 text-xs font-semibold"
+            >
+              No {type}
+            </h1>}
 
         </div>
       </div>

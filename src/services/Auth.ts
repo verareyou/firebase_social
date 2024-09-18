@@ -8,12 +8,10 @@ import imageCompression from "browser-image-compression";
 
 // register and create user
 
-export const register = async ({ name, username, email, password, image }: RegisterProps) => {
+export const register = async ({ name, username, email, password, image, address }: RegisterProps) => {
     console.log("Registering user...");
 
-    console.log(name, username, email, password, image);
-
-    if (!name || !username || !email || !password || !image) return null;
+    if (!name || !username || !email || !password) return null;
 
     try {
 
@@ -22,13 +20,19 @@ export const register = async ({ name, username, email, password, image }: Regis
 
         if (user) {
 
-        const compressImage = await imageCompression(image as File, {maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true, maxIteration: 10, fileType: "image/jpeg"});
+            let profileImageUrl = "";
 
+            if (image) {
 
-            const uploadRef = ref(storage, `images/profiles/${username}`);
-            const uploaded = await uploadBytes(uploadRef, compressImage as File);
+                const compressImage = await imageCompression(image as File, { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true, maxIteration: 10, fileType: "image/jpeg" });
 
-            const profileImageUrl = await getDownloadURL(uploaded.ref);
+                const uploadRef = ref(storage, `images/profiles/${username}`);
+                const uploaded = await uploadBytes(uploadRef, compressImage as File);
+                profileImageUrl = await getDownloadURL(uploaded.ref);
+
+            }
+
+            profileImageUrl = "https://api.dicebear.com/8.x/pixel-art/svg";
 
             const userData: UserProps = {
                 uid: user.uid,
@@ -42,6 +46,9 @@ export const register = async ({ name, username, email, password, image }: Regis
                 Following: [],
                 Posts: [],
                 SavedPosts: [],
+                subscribedTo: [],
+                subscribers: [],
+                signAddress: address,
                 createdAt: Date.now(),
             };
             const createUserRef = doc(collection(db, "users"), user.uid);
@@ -57,7 +64,7 @@ export const register = async ({ name, username, email, password, image }: Regis
     }
 }
 
-export const  loginErrorHandle = (error: any) => {
+export const loginErrorHandle = (error: any) => {
     console.log(error.code);
     switch (error.code) {
         case "auth/invalid-email":
@@ -92,17 +99,14 @@ export const login = async ({ email, password }: { email: string; password: stri
 
             console.log("User logged in successfully!");
 
-            return {success: true, message: "User logged in successfully!"};
+            return userData;
         }
+
+        return false;
     } catch (error) {
         console.error("Error logging in user");
 
-        const errorMessage = {
-            message: loginErrorHandle(error),
-            success: false,
-        }
-        
-        return errorMessage;
+        return false;
     }
 }
 

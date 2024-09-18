@@ -10,12 +10,13 @@ import { useNavigate } from "react-router-dom"
 export const AuthStateListener = (listener: any) => {
     const dispatch = useDispatch()
     const { isAuth, user } = useSelector((state: any) => state)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 getUserByUid(user.uid).then((res) => {
-                    dispatch(SetUser(res))
+                    navigate('/')
                 })
             } else {
                 dispatch(SetUser(null))
@@ -24,5 +25,4 @@ export const AuthStateListener = (listener: any) => {
 
         return unsubscribe
     }, [])
-
 }

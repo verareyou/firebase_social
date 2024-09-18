@@ -3,13 +3,11 @@ import FeedCard from '../Home/FeedCard'
 import FeedMid from '../Home/FeedMid'
 
 const PostScreenCard = ({ post }: any) => {
-    
-
 
     return (
         <div className='flex flex-1 w-full flex-col items-center gap-2'>
             <div
-                className=' flex-row md:flex hidden items-center gap-2'
+                className=' flex-row hidden items-center gap-2'
             >
                 <div>
                     <img
@@ -58,7 +56,7 @@ const PostScreenCard = ({ post }: any) => {
                 </div>
             </div>
             <div
-                className='flex w-full items-center flex-1 flex-col md:hidden gap-2'
+                className='flex w-full items-center justify-center flex-1 flex-col gap-2'
             >
                 <FeedMid
                     post_id={{ id: post.uid, ...post }}

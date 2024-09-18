@@ -48,13 +48,11 @@ const ExplorePosts = () => {
 
     return (
         <motion.div
-            // {...animate}
             style={{
                 color: theme.text,
                 backgroundColor: theme.background
             }}
-            className=' flex md:flex-col flex-row flex-grow gap-2 md:p-4 p-2 '
-
+            className=' flex md:flex-col flex-row gap-2 md:p-4 p-2 '
         >
             <div
                 className='h-full md:hidden w-[50%] gap-2 flex flex-col'
@@ -64,6 +62,7 @@ const ExplorePosts = () => {
                         key={index}
                         post={post}
                         isCurrent={isCurrent}
+                        theme={theme}
                     />
                 ))}
             </div>
@@ -76,6 +75,8 @@ const ExplorePosts = () => {
                         key={index}
                         post={post}
                         isCurrent={isCurrent}
+                        theme={theme}
+
                     />
                 ))}
             </div>
@@ -86,6 +87,7 @@ const ExplorePosts = () => {
                 {Posts && Posts.map((post: any, index: any) => (
                     <PostCard
                         key={index}
+                        theme={theme}
                         post={post}
                         isCurrent={isCurrent}
                     />

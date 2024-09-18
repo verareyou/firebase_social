@@ -30,4 +30,6 @@ export const store = configureStore({
     }),
 });
 
+export type StateType = ReturnType<typeof store.getState>;
+
 export const persistor = persistStore(store);

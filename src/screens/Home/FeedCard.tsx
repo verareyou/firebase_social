@@ -126,7 +126,7 @@ const FeedCard = ({
                 onClick={() => navigate(`/${post.user.username}`)}
                     className='ml-2 font-semibold text-white'
                 >
-                    {showPost && post.user.username}
+                    {showPost && post.user.username} {post?.forSubscribers ? <span className='text-[#ff0000]'>🔒</span> : null }
                 </h1>
             </div>
             <div

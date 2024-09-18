@@ -26,7 +26,6 @@ export const updateUserByField = async (
     }
 }
 
-
 // follow and unfollow user
 
 export const FollowUser = async (
@@ -73,6 +72,51 @@ export const FollowUser = async (
     }
 }
 
+// subscribe and unsubscribe user
+
+export const SubscribeUser = async (
+    myId: string,
+    userToSubscribeId: string
+) => {
+
+    try {
+        const docref = doc(db, 'users', myId)
+        const docref2 = doc(db, 'users', userToSubscribeId)
+
+        const userDoc = (await getDoc(docref)).data()
+        const userToSubscribeDoc = (await getDoc(docref2)).data()
+
+        if (userDoc!.subscribedTo.includes(userToSubscribeId)) {
+
+            await updateDoc(docref, {
+                subscribedTo: userDoc!.subscribedTo.filter((uid: string) => uid !== userToSubscribeId)
+            })
+
+            await updateDoc(docref2, {
+                subscribers: userToSubscribeDoc!.subscribers.filter((uid: string) => uid !== myId)
+            })
+
+        } else {
+
+            await updateDoc(docref, {
+                subscribedTo: [...userDoc!.subscribedTo, userToSubscribeId]
+            })
+
+            await updateDoc(docref2, {
+                subscribers: [...userToSubscribeDoc!.subscribers, myId]
+            })
+        }
+
+        const updatedUser = (await getDoc(docref)).data()
+        const updatedUserToSubscribe = (await getDoc(docref2)).data()
+
+        return { updatedUser, updatedUserToSubscribe }
+
+    } catch (e) {
+        console.log(e)
+        return null
+    }
+}
 
 // add comment
 
